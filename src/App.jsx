@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button"
 import './global.css'
+import Header from "./components/header/header"
+import React from 'react';
 
 function App() {
   return (
     <>
-    <div className="flex justify-center h-lvh items-center">
+    <Header/>
+    <div className="flex justify-center h-screen items-center">
       <Button>Click me</Button>
     </div>
-
     </>
   )
 }

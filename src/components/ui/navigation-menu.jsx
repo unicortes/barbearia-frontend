@@ -5,6 +5,7 @@ import { cva } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+// eslint-disable-next-line react/prop-types
 const NavigationMenu = React.forwardRef(({ className, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}

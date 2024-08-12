@@ -4,6 +4,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
 import HomePage from './components/homePage/homePage.jsx'
 import Servicos from './components/servicos/servicos.jsx'
+import Products from './components/products/products.jsx'
+import ProductStock from './components/productStock/productStock.jsx'
+import Barber from './components/barber/barber.jsx'
 import React from 'react';
 import './global.css'
 
@@ -19,7 +22,20 @@ const router = createBrowserRouter([
       {
         path: "/servicos",
         element: <Servicos /> // Rota para a página Serviços
+      },
+      {
+        path: "/products",
+        element: <Products /> // Rota para a HomePage
+      },
+      {
+        path: "/productStock",
+        element: <ProductStock /> // Rota para a HomePage
       }
+      ,
+      {
+        path: "/barber",
+        element: <Barber /> // Rota para a HomePage
+      },
     ]
   }
 ]);

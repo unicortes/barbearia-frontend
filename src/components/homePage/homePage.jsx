@@ -1,6 +1,7 @@
 import * as React from "react"
 import { FaCartPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button"
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -23,7 +24,11 @@ const HomePage = () => {
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button>Cadastrar</Button>
+      <Link to="/barber">
+      <Button asChild>
+        <a>Gerenciar</a>
+      </Button>
+    </Link>
       </CardFooter>
     </Card><Card className="w-[250px]">
         <CardHeader>
@@ -36,7 +41,11 @@ const HomePage = () => {
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button>Cadastrar</Button>
+        <Link to="/servicos">
+      <Button asChild>
+        <a>Cadastrar</a>
+      </Button>
+    </Link>
         </CardFooter>
       </Card></><Card className="w-[250px]">
         <CardHeader>
@@ -49,7 +58,11 @@ const HomePage = () => {
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button>Gerenciar</Button>
+        <Link to="/productStock">
+      <Button asChild>
+        <a>Gerenciar</a>
+      </Button>
+    </Link>
         </CardFooter>
       </Card><Card className="w-[250px]">
         <CardHeader >
@@ -62,7 +75,11 @@ const HomePage = () => {
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button>Cadastrar</Button>
+        <Link to="/products">
+      <Button asChild>
+        <a>Cadastrar</a>
+      </Button>
+    </Link>
         </CardFooter>
       </Card></>
       </div>

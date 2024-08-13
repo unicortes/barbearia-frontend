@@ -26,7 +26,7 @@ const HomePage = () => {
       <CardFooter className="flex justify-center">
       <Link to="/barber">
       <Button asChild>
-        <a>Gerenciar</a>
+        <a>Cadastrar</a>
       </Button>
     </Link>
       </CardFooter>

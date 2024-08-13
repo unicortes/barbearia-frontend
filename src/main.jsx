@@ -16,6 +16,10 @@ const router = createBrowserRouter([
     element: <App />, // O App renderiza o Header e o conteúdo principal
     children: [
       {
+        index: true, // Torna essa a rota padrão quando o usuário acessa "/"
+        element: <HomePage /> // Rota para a HomePage
+      },
+      {
         path: "/pageHome",
         element: <HomePage /> // Rota para a HomePage
       },
@@ -25,16 +29,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/products",
-        element: <Products /> // Rota para a HomePage
+        element: <Products /> // Rota para a página Products
       },
       {
         path: "/productStock",
-        element: <ProductStock /> // Rota para a HomePage
-      }
-      ,
+        element: <ProductStock /> // Rota para a página ProductStock
+      },
       {
         path: "/barber",
-        element: <Barber /> // Rota para a HomePage
+        element: <Barber /> // Rota para a página Barber
       },
     ]
   }
@@ -45,3 +48,4 @@ createRoot(document.getElementById('root')).render(
     <RouterProvider router={router} />
   </StrictMode>,
 );
+

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, PlusCircle } from 'lucide-react';
+import { Search, PlusCircle, Trash2, Edit } from 'lucide-react';
 
 const rows = [
   {
@@ -56,6 +56,16 @@ const Product = () => {
       <TableCell>{row.category}</TableCell>
       <TableCell>{row.date}</TableCell>
       <TableCell>{row.price}</TableCell>
+      <TableCell>
+        <div className="flex space-x-2">
+          <button className="text-blue-500 hover:text-blue-700">
+            <Edit className="w-4 h-4" />
+          </button>
+          <button className="text-red-500 hover:text-red-700">
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </TableCell>
     </TableRow>
   ));
 
@@ -64,23 +74,17 @@ const Product = () => {
       <h1 className='text-3xl font-bold'>Produtos</h1>
       <div className='flex items-center justify-between'>
         <form className='flex items-center gap-2'>
-          <Input name="id" placeholder='ID do pedido' />
+          <Input name="id" placeholder='ID do produto' />
           <Input name="name" placeholder='Nome do produto' />
           <Button>
-            <Search className='w-4 h-4 mr-2'>
-              
-            </Search>
+            <Search className='w-4 h-4 mr-2' />
             Filtrar Resultados
           </Button>
-
-          
-        
-
           <Button>
-          <PlusCircle className='w-4 h-4 mr-2' />
-          Novo produto
+            <PlusCircle className='w-4 h-4 mr-2' />
+            Novo produto
           </Button>
-          </form>
+        </form>
       </div>
       <div className='border rounded'>
         <Table>
@@ -91,6 +95,7 @@ const Product = () => {
             <TableHead>Categoria</TableHead>
             <TableHead>Validade</TableHead>
             <TableHead>Preço</TableHead>
+            <TableHead>Ações</TableHead>
           </TableHeader>
           <TableBody>
             {tableRows}

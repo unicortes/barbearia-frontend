@@ -14,13 +14,7 @@ const Header = () => {
                         <Link to="/pageHome" className="hover:text-gray-400">Home</Link>
                     </li>
                     <li>
-                        <Link to="#" className="hover:text-gray-400">Sobre</Link>
-                    </li>
-                    <li>
                         <Link to="/servicos" className="hover:text-gray-400">Serviços</Link>
-                    </li>
-                    <li>
-                        <Link to="#" className="hover:text-gray-400">Contato</Link>
                     </li>
                 </ul>
             </nav>

@@ -7,6 +7,7 @@ import Servicos from './components/servicos/servicos.jsx'
 import Products from './components/products/products.jsx'
 import ProductStock from './components/productStock/productStock.jsx'
 import Barber from './components/barber/barber.jsx'
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import './global.css'
 
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
         path: "/barber",
         element: <Barber /> // Rota para a página Barber
       },
+      {
+        path: "/barberForm",
+        element: <barberForm /> // Rota para o formulário de Barber
+      }
     ]
   }
 ]);

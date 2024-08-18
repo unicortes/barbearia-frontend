@@ -1,15 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import App from './App.jsx'
-import HomePage from './components/homePage/homePage.jsx'
-import Servicos from './components/servicos/servicos.jsx'
-import Products from './components/products/products.jsx'
-import ProductStock from './components/productStock/productStock.jsx'
-import Barber from './components/barber/barber.jsx'
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
-import './global.css'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import App from './App.jsx';
+import HomePage from './components/homePage/homePage.jsx';
+import Servicos from './components/servicos/servicos.jsx';
+import Products from './components/products/products.jsx';
+import ProductStock from './components/productStock/productStock.jsx';
+import Barber from './components/barber/barber.jsx';
+import BarberForm from './components/barber/barberForm.jsx'; // Corrigido para o nome correto do componente
+import LoyaltyCardForm from './components/loyaltyCard/LoyaltyCardForm.jsx'; // Importar o componente de formulário de cartão de fidelidade
+import './global.css';
 
 const router = createBrowserRouter([
   {
@@ -42,7 +42,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/barberForm",
-        element: <barberForm /> // Rota para o formulário de Barber
+        element: <BarberForm /> // Rota para o formulário de Barber
+      },
+      {
+        path: "/loyaltyCardForm",
+        element: <LoyaltyCardForm /> // Rota para o formulário de Cartão de Fidelidade
       }
     ]
   }
@@ -51,6 +55,5 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
+  </StrictMode>
 );
-

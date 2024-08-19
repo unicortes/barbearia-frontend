@@ -1,4 +1,4 @@
-// src/components/loyaltyCard/LoyaltyCardEditModal.jsx
+// src/components/loyaltyCard/loyaltyCardEditModal.jsx
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { Button } from "@/components/ui/button";

@@ -11,21 +11,17 @@ import {
 
 const HomePage = () => {
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-wrap gap-6 p-6">
       <Card className="w-[250px]">
         <CardHeader>
           <CardTitle>Cadastrar Barbeiro</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4"></div>
-          </form>
+          <p>Adicione um novo barbeiro ao sistema.</p>
         </CardContent>
         <CardFooter className="flex justify-center">
           <Link to="/barber">
-            <Button asChild>
-              <a>Cadastrar</a>
-            </Button>
+            <Button>Cadastrar</Button>
           </Link>
         </CardFooter>
       </Card>
@@ -35,15 +31,11 @@ const HomePage = () => {
           <CardTitle>Cadastrar Serviço</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4"></div>
-          </form>
+          <p>Adicione um novo serviço oferecido.</p>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Link to="/servicos">
-            <Button asChild>
-              <a>Cadastrar</a>
-            </Button>
+          <Link to="/services">
+            <Button>Cadastrar</Button>
           </Link>
         </CardFooter>
       </Card>
@@ -53,15 +45,11 @@ const HomePage = () => {
           <CardTitle>Gerenciar Estoque</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4"></div>
-          </form>
+          <p>Gerencie o estoque de produtos.</p>
         </CardContent>
         <CardFooter className="flex justify-center">
           <Link to="/productStock">
-            <Button asChild>
-              <a>Gerenciar</a>
-            </Button>
+            <Button>Gerenciar</Button>
           </Link>
         </CardFooter>
       </Card>
@@ -71,15 +59,11 @@ const HomePage = () => {
           <CardTitle>Cadastrar Produto</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4"></div>
-          </form>
+          <p>Adicione um novo produto ao sistema.</p>
         </CardContent>
         <CardFooter className="flex justify-center">
           <Link to="/products">
-            <Button asChild>
-              <a>Cadastrar</a>
-            </Button>
+            <Button>Cadastrar</Button>
           </Link>
         </CardFooter>
       </Card>
@@ -89,15 +73,11 @@ const HomePage = () => {
           <CardTitle>Cadastrar Cartão de Fidelidade</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4"></div>
-          </form>
+          <p>Adicione um novo cartão de fidelidade.</p>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Link to="/loyaltyCardForm">
-            <Button asChild>
-              <a>Cadastrar</a>
-            </Button>
+          <Link to="/loyaltyCards">
+            <Button>Cadastrar</Button>
           </Link>
         </CardFooter>
       </Card>

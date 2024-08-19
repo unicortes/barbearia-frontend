@@ -5,7 +5,7 @@ import { BsScissors } from "react-icons/bs";
 const Header = () => {
     return (
         <header className="bg-black text-white p-4 shadow-md flex items-center">
-            <div className="flex items-center">
+            <div className="flex items-center flex-shrink-0">
                 <BsScissors size={32} />
             </div>
             <nav className="flex-grow flex justify-center">
@@ -14,7 +14,7 @@ const Header = () => {
                         <Link to="/pageHome" className="hover:text-gray-400">Home</Link>
                     </li>
                     <li>
-                        <Link to="/servicos" className="hover:text-gray-400">Serviços</Link>
+                        <Link to="/services" className="hover:text-gray-400">Serviços</Link>
                     </li>
                 </ul>
             </nav>

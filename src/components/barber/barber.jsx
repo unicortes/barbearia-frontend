@@ -1,64 +1,16 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit } from 'lucide-react';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
 const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
 
-const initialRows = [
-  {
-    id: 1,
-    date: '17/08/2024',
-    name: 'Paulo',
-    email: 'paulo@email.com',
-    telephone: '(87) 96633-8855',
-    cpf: '999.888.777-66',
-    salary: 'R$ 1.500,00'
-  },
-  {
-    id: 2,
-    date: '14/06/2024',
-    name: 'Pedrinho',
-    email: 'pedro@email.com',
-    telephone: '(87) 9 8185-5858',
-    cpf: '858.858.858.58',
-    salary: 'R$ 1.000,00'
-  },
-  {
-    id: 3,
-    date: '26/01/2023',
-    name: 'Mari',
-    email: 'mari@email.com',
-    telephone: '(87) 9 6666-8855',
-    cpf: '333.333.333-33',
-    salary: 'R$ 2.500,00'
-  },
-  {
-    id: 4,
-    date: '04/04/2014',
-    name: 'Joaquim',
-    email: 'joaquim@email.com',
-    telephone: '(87) 9 4444-4444',
-    cpf: '444.444.444-44',
-    salary: 'R$ 4.000,00'
-  },
-  {
-    id: 5,
-    date: '05/05/2015',
-    name: 'Barbolemeu',
-    email: 'bartolomeu@email.com',
-    telephone: '(87) 9 5555-5555',
-    cpf: '555.555.555-55',
-    salary: 'R$ 5.500,00'
-  }
-];
-
 const Barber = () => {
-  const [barbers, setBarbers] = useState(initialRows);
+  const [barbers, setBarbers] = useState([]);
   const [newBarber, setNewBarber] = useState({
     id: '',
     date: '',
@@ -70,6 +22,20 @@ const Barber = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    fetchBarbers();
+  }, []);
+
+  const fetchBarbers = async () => {
+    try {
+      const response = await axios.get('/api/barbers');
+      // Certifique-se de que a resposta é um array
+      setBarbers(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error('Error fetching barbers:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -93,7 +59,7 @@ const Barber = () => {
     return errors;
   };
 
-  const handleAddBarber = () => {
+  const handleAddBarber = async () => {
     const fieldErrors = validateFields();
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
@@ -105,18 +71,16 @@ const Barber = () => {
       return;
     }
 
-    if (editMode) {
-      handleSaveEdit(newBarber);
-    } else {
-      const newId = barbers.length > 0 ? barbers[barbers.length - 1].id + 1 : 1;
-      setBarbers((prevBarbers) => [
-        ...prevBarbers,
-        {
-          ...newBarber,
-          id: newId,
-          date: new Date().toLocaleDateString()
-        }
-      ]);
+    try {
+      if (editMode) {
+        await axios.put(`/api/barbers/${newBarber.id}`, newBarber);
+        fetchBarbers();
+      } else {
+        await axios.post('/api/barbers', { ...newBarber, date: new Date().toLocaleDateString() });
+        fetchBarbers();
+      }
+    } catch (error) {
+      console.error('Error adding/editing barber:', error);
     }
 
     setNewBarber({ id: '', date: '', name: '', email: '', telephone: '', cpf: '', salary: '' });
@@ -124,21 +88,18 @@ const Barber = () => {
     setErrors({});
   };
 
-  const handleRemoveBarber = (id) => {
-    setBarbers((prevBarbers) => prevBarbers.filter(barber => barber.id !== id));
+  const handleRemoveBarber = async (id) => {
+    try {
+      await axios.delete(`/api/barbers/${id}`);
+      fetchBarbers();
+    } catch (error) {
+      console.error('Error removing barber:', error);
+    }
   };
 
   const handleEditBarber = (barber) => {
     setNewBarber(barber);
     setEditMode(true);
-  };
-
-  const handleSaveEdit = (updatedBarber) => {
-    setBarbers((prevBarbers) =>
-      prevBarbers.map((barber) =>
-        barber.id === updatedBarber.id ? { ...updatedBarber, date: new Date().toLocaleDateString() } : barber
-      )
-    );
   };
 
   return (
@@ -202,7 +163,7 @@ const Barber = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {barbers.map((row) => (
+            {Array.isArray(barbers) && barbers.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.date}</TableCell>

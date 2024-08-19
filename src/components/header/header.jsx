@@ -13,9 +13,6 @@ const Header = () => {
                     <li>
                         <Link to="/pageHome" className="hover:text-gray-400">Home</Link>
                     </li>
-                    <li>
-                        <Link to="/services" className="hover:text-gray-400">Serviços</Link>
-                    </li>
                 </ul>
             </nav>
         </header>

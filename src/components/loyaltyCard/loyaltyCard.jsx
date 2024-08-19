@@ -1,13 +1,10 @@
-// src/components/loyaltyCard/LoyaltyCard.jsx
-// src/components/barber/barber.jsx
-// eslint-disable-next-line no-unused-vars
+// src/components/loyaltyCard/loyaltyCard.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle, Trash2, Edit } from 'lucide-react';
-import LoyaltyCardEditModal from "./LoyaltyCardEditModal.jsx";
+import LoyaltyCardEditModal from "./loyaltyCardEditModal.jsx";
 
 const initialCards = [
   { 
@@ -119,7 +116,6 @@ const LoyaltyCard = () => {
             {editCardId ? 'Salvar Alterações' : 'Adicionar Cartão'}
           </Button>
         </form>
-        <Link to="/" className="text-blue-500 hover:text-blue-700">Voltar para a HomePage</Link>
       </div>
       <div className='border rounded w-full'>
         <Table>

@@ -2,7 +2,6 @@
 // src/components/barber/barber.jsx
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -119,7 +118,6 @@ const LoyaltyCard = () => {
             {editCardId ? 'Salvar Alterações' : 'Adicionar Cartão'}
           </Button>
         </form>
-        <Link to="/" className="text-blue-500 hover:text-blue-700">Voltar para a HomePage</Link>
       </div>
       <div className='border rounded w-full'>
         <Table>

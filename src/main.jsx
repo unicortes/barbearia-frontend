@@ -1,15 +1,17 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import App from './App.jsx'
-import HomePage from './components/homePage/homePage.jsx'
-import Servicos from './components/servicos/servicos.jsx'
-import Products from './components/products/products.jsx'
-import ProductStock from './components/productStock/productStock.jsx'
-import Barber from './components/barber/barber.jsx'
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
-import './global.css'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import App from './App.jsx';
+import HomePage from './components/homePage/homePage.jsx';
+import Servicos from './components/service/service.jsx'; 
+import Products from './components/products/products.jsx';
+import ProductStock from './components/productStock/productStock.jsx';
+import Barber from './components/barber/barber.jsx';
+import BarberForm from './components/barber/barberForm.jsx'; 
+import LoyaltyCardForm from './components/loyaltyCard/LoyaltyCardForm.jsx';
+import ServiceForm from './components/service/serviceForm.jsx'; 
+import LoyaltyCard from './components/loyaltyCard/LoyaltyCard.jsx'; 
+import './global.css';
 
 const router = createBrowserRouter([
   {
@@ -25,8 +27,12 @@ const router = createBrowserRouter([
         element: <HomePage /> // Rota para a HomePage
       },
       {
-        path: "/servicos",
+        path: "/services",
         element: <Servicos /> // Rota para a página Serviços
+      },
+      {
+        path: "/serviceForm",
+        element: <ServiceForm /> // Rota para o formulário de Serviço
       },
       {
         path: "/products",
@@ -42,7 +48,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/barberForm",
-        element: <barberForm /> // Rota para o formulário de Barber
+        element: <BarberForm /> // Rota para o formulário de Barber
+      },
+      {
+        path: "/loyaltyCardForm",
+        element: <LoyaltyCardForm /> // Rota para o formulário de Cartão de Fidelidade
+      },
+      {
+        path: "/loyaltyCards",
+        element: <LoyaltyCard /> // Rota para a listagem de Cartões de Fidelidade
       }
     ]
   }
@@ -51,6 +65,5 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
+  </StrictMode>
 );
-

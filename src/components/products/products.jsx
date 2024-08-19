@@ -1,7 +1,9 @@
 import React from 'react';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose, } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from '@/components/ui/label';
 import { Search, PlusCircle, Trash2, Edit } from 'lucide-react';
 
 const rows = [
@@ -80,10 +82,60 @@ const Product = () => {
             <Search className='w-4 h-4 mr-2' />
             Filtrar Resultados
           </Button>
-          <Button>
-            <PlusCircle className='w-4 h-4 mr-2' />
-            Novo produto
-          </Button>
+          
+          <Dialog>
+            <DialogTrigger asChild >
+              <Button>
+                <PlusCircle className='w-4 h-4 mr-2' />
+                  Novo produto
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Novo Produto</DialogTitle>
+                <DialogDescription>Criar um novo produto</DialogDescription>
+              </DialogHeader>
+
+              <form className='space-y-6'>
+                <div className='grid grid-cols-4 items-center text-right gap-3'>
+                  <Label htmlFor='name'>Nome</Label>
+                  <Input className='col-span-3' id='name' />
+                
+                </div>
+                <div className='grid grid-cols-4 items-center text-right gap-3'>
+                  <Label htmlFor='description'>Descrição</Label>
+                  <Input className='col-span-3' id='description'/>
+                
+                </div>
+
+                <div className='grid grid-cols-4 items-center text-right gap-3'>
+                  <Label htmlFor='Category'>Categoria</Label>
+                  <Input className='col-span-3' id='Category'/>
+                
+                </div>
+
+                <div className='grid grid-cols-4 items-center text-right gap-3'>
+                  <Label htmlFor='Validade'>Validade</Label>
+                  <Input className='col-span-3' id='Validade'/>
+                
+                </div>
+
+                <div className='grid grid-cols-4 items-center text-right gap-3'>
+                  <Label htmlFor='price'>Preço</Label>
+                  <Input className='col-span-3' id='price' />
+                
+                </div>
+                <DialogFooter>
+                <DialogClose asChild>
+                  <Button type='button' variant='outline'>Cancelar</Button>
+                </DialogClose>
+                  <Button type='submit'>Salvar</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        
         </form>
       </div>
       <div className='border rounded'>

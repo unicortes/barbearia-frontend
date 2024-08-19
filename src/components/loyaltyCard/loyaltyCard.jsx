@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit } from 'lucide-react';
 import LoyaltyCardEditModal from "./LoyaltyCardEditModal.jsx";
 
 const initialCards = [

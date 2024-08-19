@@ -1,12 +1,10 @@
-// src/components/loyaltyCard/LoyaltyCard.jsx
-// src/components/barber/barber.jsx
-// eslint-disable-next-line no-unused-vars
+// src/components/loyaltyCard/loyaltyCard.jsx
 import React, { useState } from 'react';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Edit } from 'lucide-react';
-import LoyaltyCardEditModal from "./LoyaltyCardEditModal.jsx";
+import { PlusCircle, Trash2, Edit } from 'lucide-react';
+import LoyaltyCardEditModal from "./loyaltyCardEditModal.jsx";
 
 const initialCards = [
   { 

@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
+import api from '@/api/api';
 import axios from 'axios';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 // eslint-disable-next-line no-unused-vars
@@ -29,7 +30,7 @@ const Product = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('/api/products');
+      const response = await api.get('/products'); // Atualize conforme a rota da sua API
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -58,8 +59,8 @@ const Product = () => {
     if (!newProduct.date) {
       errors.date = "Data é obrigatória.";
     }
-    if (!newProduct.price) {
-      errors.price = "Preço é obrigatório.";
+    if (!newProduct.price || isNaN(newProduct.price)) {
+      errors.price = "Preço é obrigatório e deve ser um número válido.";
     }
     return errors;
   };
@@ -73,9 +74,9 @@ const Product = () => {
 
     try {
       if (editMode) {
-        await axios.put(`/api/products/${newProduct.id}`, newProduct);
+        await api.put(`/products/${newProduct.id}`, newProduct); // Atualize conforme a rota da sua API
       } else {
-        await axios.post('/api/products', { ...newProduct, date: new Date().toLocaleDateString() });
+        await api.post('/products', { ...newProduct, date: new Date().toLocaleDateString() }); // Atualize conforme a rota da sua API
       }
       fetchProducts();
       setNewProduct({ id: '', name: '', description: '', category: '', date: '', price: '' });
@@ -88,7 +89,7 @@ const Product = () => {
 
   const handleRemoveProduct = async (id) => {
     try {
-      await axios.delete(`/api/products/${id}`);
+      await api.delete(`/products/${id}`); // Atualize conforme a rota da sua API
       fetchProducts();
     } catch (error) {
       console.error('Error removing product:', error);
@@ -129,6 +130,7 @@ const Product = () => {
           />
           {errors.category && <p className='text-red-500'>{errors.category}</p>}
           <Input
+            type="date"
             name="date"
             placeholder='Data'
             value={newProduct.date}
@@ -141,6 +143,7 @@ const Product = () => {
             placeholder='Preço'
             value={newProduct.price}
             onChange={handleInputChange}
+            className={errors.price ? 'border-red-500' : ''}
           />
           {errors.price && <p className='text-red-500'>{errors.price}</p>}
           <Button type="submit">

@@ -1,26 +1,24 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import api from '@/api/api';
-import axios from 'axios';
+import api from '@/api/api'; 
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
-// eslint-disable-next-line no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// eslint-disable-next-line no-unused-vars
 import { Edit, Trash2 } from 'lucide-react';
 
 const Product = () => {
+  // Armazena a lista de produtos
   const [products, setProducts] = useState([]);
+  // Armazenar os dados do produto sendo adicionado ou editado
   const [newProduct, setNewProduct] = useState({
     id: '',
     name: '',
     description: '',
     category: '',
-    date: '',
-    price: ''
+    expirationDate: '', 
+    cost: '',
+    type: ''
   });
+  // Controla se o formulário está em modo de edição ou cadastro
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -28,15 +26,17 @@ const Product = () => {
     fetchProducts();
   }, []);
 
+  // Função que busca produtos da API
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products'); // Atualize conforme a rota da sua API
+      const response = await api.get('/products'); 
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   };
 
+  // Função que lida com mudanças nos campos do formulário
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewProduct((prevProduct) => ({
@@ -45,6 +45,7 @@ const Product = () => {
     }));
   };
 
+  // Função que valida os campos do formulário
   const validateFields = () => {
     const errors = {};
     if (!newProduct.name) {
@@ -56,15 +57,19 @@ const Product = () => {
     if (!newProduct.category) {
       errors.category = "Categoria é obrigatória.";
     }
-    if (!newProduct.date) {
-      errors.date = "Data é obrigatória.";
+    if (!newProduct.expirationDate) {
+      errors.expirationDate = "Data é obrigatória.";
     }
-    if (!newProduct.price || isNaN(newProduct.price)) {
-      errors.price = "Preço é obrigatório e deve ser um número válido.";
+    if (!newProduct.cost || isNaN(newProduct.cost)) {
+      errors.cost = "Preço é obrigatório e deve ser um número válido.";
+    }
+    if (!newProduct.type) {
+      errors.type = "Tipo é obrigatório.";
     }
     return errors;
   };
 
+  // Função que cadastra ou edita um produto
   const handleAddProduct = async () => {
     const fieldErrors = validateFields();
     if (Object.keys(fieldErrors).length > 0) {
@@ -73,32 +78,43 @@ const Product = () => {
     }
 
     try {
-      if (editMode) {
-        await api.put(`/products/${newProduct.id}`, newProduct); // Atualize conforme a rota da sua API
+      const productData = { ...newProduct };
+
+      if (editMode) { // Avalia se está no modo de edição
+        await api.put(`/products/${newProduct.id}`, productData); // Edita o produto
       } else {
-        await api.post('/products', { ...newProduct, date: new Date().toLocaleDateString() }); // Atualize conforme a rota da sua API
+        await api.post('/products', productData); // Cadastra um novo produto
       }
-      fetchProducts();
-      setNewProduct({ id: '', name: '', description: '', category: '', date: '', price: '' });
-      setEditMode(false);
-      setErrors({});
+
+      fetchProducts(); // Atualiza a lista de produtos
+      setNewProduct({ id: '', name: '', description: '', category: '', expirationDate: '', cost: '', type: '' }); 
+      setEditMode(false); // Sai do modo de edição
+      setErrors({}); 
     } catch (error) {
       console.error('Error adding/editing product:', error);
     }
   };
 
+  // Função que remove um produto
   const handleRemoveProduct = async (id) => {
     try {
-      await api.delete(`/products/${id}`); // Atualize conforme a rota da sua API
-      fetchProducts();
+      await api.delete(`/products/${id}`); 
+      fetchProducts(); 
     } catch (error) {
-      console.error('Error removing product:', error);
+      console.error('Erro ao remover produto:', error);
     }
   };
 
+  // Função que preenche o formulário com os dados do produto a ser editado
   const handleEditProduct = (product) => {
     setNewProduct(product);
     setEditMode(true);
+  };
+
+  // Função que formata a data para exibição mais apresentável no grid de listagem
+  const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
   return (
@@ -131,21 +147,29 @@ const Product = () => {
           {errors.category && <p className='text-red-500'>{errors.category}</p>}
           <Input
             type="date"
-            name="date"
+            name="expirationDate"
             placeholder='Data'
-            value={newProduct.date}
+            value={newProduct.expirationDate}
             onChange={handleInputChange}
-            className={errors.date ? 'border-red-500' : ''}
+            className={errors.expirationDate ? 'border-red-500' : ''}
           />
-          {errors.date && <p className='text-red-500'>{errors.date}</p>}
+          {errors.expirationDate && <p className='text-red-500'>{errors.expirationDate}</p>}
           <Input
-            name="price"
+            name="cost"
             placeholder='Preço'
-            value={newProduct.price}
+            value={newProduct.cost}
             onChange={handleInputChange}
-            className={errors.price ? 'border-red-500' : ''}
+            className={errors.cost ? 'border-red-500' : ''}
           />
-          {errors.price && <p className='text-red-500'>{errors.price}</p>}
+          {errors.cost && <p className='text-red-500'>{errors.cost}</p>}
+          <Input
+            name="type"
+            placeholder='Tipo'
+            value={newProduct.type}
+            onChange={handleInputChange}
+            className={errors.type ? 'border-red-500' : ''}
+          />
+          {errors.type && <p className='text-red-500'>{errors.type}</p>}
           <Button type="submit">
             {editMode ? 'Salvar Alterações' : 'Adicionar produto'}
           </Button>
@@ -161,6 +185,7 @@ const Product = () => {
               <TableHead>Categoria</TableHead>
               <TableHead>Validade</TableHead>
               <TableHead>Preço</TableHead>
+              <TableHead>Tipo</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -171,8 +196,9 @@ const Product = () => {
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.category}</TableCell>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>{row.price}</TableCell>
+                <TableCell>{formatDate(row.expirationDate)}</TableCell>
+                <TableCell>R$ {row.cost.toFixed(2)}</TableCell>
+                <TableCell>{row.type}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <button 

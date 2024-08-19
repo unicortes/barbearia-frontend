@@ -7,7 +7,6 @@ import Servicos from './components/service/service.jsx';
 import Products from './components/products/products.jsx';
 import ProductStock from './components/productStock/productStock.jsx';
 import Barber from './components/barber/barber.jsx';
-import LoyaltyCardForm from './components/loyaltyCard/loyaltyCardForm.jsx';
 import ServiceForm from './components/service/serviceForm.jsx'; 
 import LoyaltyCard from './components/loyaltyCard/LoyaltyCard.jsx'; 
 import './global.css';
@@ -44,10 +43,6 @@ const router = createBrowserRouter([
       {
         path: "/barber",
         element: <Barber /> // Rota para a página Barber
-      },
-      {
-        path: "/loyaltyCardForm",
-        element: <LoyaltyCardForm /> // Rota para o formulário de Cartão de Fidelidade
       },
       {
         path: "/loyaltyCards",

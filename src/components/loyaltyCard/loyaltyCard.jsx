@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Trash2, Edit } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
+import { Trash2, Edit } from 'lucide-react';
 
 const initialRows = [
   {
@@ -101,6 +103,9 @@ const LoyaltyCard = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
       <h1 className='text-3xl font-bold'>{editMode ? 'Editar Cartão de Fidelidade' : 'Cartões de Fidelidade'}</h1>
       <div className='flex items-center justify-between w-full'>
         <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddCard(); }}>

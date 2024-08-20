@@ -3,6 +3,8 @@ import api from '@/api/api';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from 'lucide-react';
 
 const Service = () => {
@@ -96,6 +98,9 @@ const Service = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
       <h1 className='text-3xl font-bold'>{editMode ? 'Editar serviço' : 'Serviços'}</h1>
       <div className='flex items-center justify-between w-full'>
         <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddService(); }}>

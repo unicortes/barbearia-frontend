@@ -11,7 +11,7 @@ const HomePage = () => {
           <Card className="h-[180px] flex flex-col justify-between p-4">
             <CardHeader className="flex flex-col items-center flex-grow">
               <User className="text-gray-800 w-16 h-16" /> 
-              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Barbeiro</CardTitle>
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Barbeiros</CardTitle>
             </CardHeader>
           </Card>
         </Link>
@@ -20,7 +20,7 @@ const HomePage = () => {
           <Card className="h-[180px] flex flex-col justify-between p-4">
             <CardHeader className="flex flex-col items-center flex-grow">
               <Scissors className="text-gray-800 w-16 h-16" /> 
-              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Serviço</CardTitle>
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Serviços</CardTitle>
             </CardHeader>
           </Card>
         </Link>
@@ -38,7 +38,7 @@ const HomePage = () => {
           <Card className="h-[180px] flex flex-col justify-between p-4">
             <CardHeader className="flex flex-col items-center flex-grow">
               <Package className="text-gray-800 w-16 h-16" /> 
-              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Produto</CardTitle>
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Produtos</CardTitle>
             </CardHeader>
           </Card>
         </Link>
@@ -47,7 +47,7 @@ const HomePage = () => {
           <Card className="h-[180px] flex flex-col justify-between p-4">
             <CardHeader className="flex flex-col items-center flex-grow">
               <CreditCard className="text-gray-800 w-16 h-16" />
-              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Cartão de Fidelidade</CardTitle>
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Cartões de Fidelidade</CardTitle>
             </CardHeader>
           </Card>
         </Link>
@@ -56,7 +56,7 @@ const HomePage = () => {
           <Card className="h-[180px] flex flex-col justify-between p-4">
             <CardHeader className="flex flex-col items-center flex-grow">
               <Megaphone className="text-gray-800 w-16 h-16" />
-              <CardTitle className="mt-2 text-center text-lg font-semibold">Promoções</CardTitle>
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Promoções</CardTitle>
             </CardHeader>
           </Card>
         </Link>

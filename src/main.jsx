@@ -7,7 +7,7 @@ import Servicos from './components/service/service.jsx';
 import Products from './components/products/products.jsx';
 import ProductStock from './components/productStock/productStock.jsx';
 import Barber from './components/barber/barber.jsx';
-import ServiceForm from './components/service/serviceForm.jsx'; 
+import ServiceForm from './components/service/service.jsx'; 
 import LoyaltyCard from './components/loyaltyCard/LoyaltyCard.jsx'; 
 import './global.css';
 
@@ -27,10 +27,6 @@ const router = createBrowserRouter([
       {
         path: "/services",
         element: <Servicos /> // Rota para a página Serviços
-      },
-      {
-        path: "/serviceForm",
-        element: <ServiceForm /> // Rota para o formulário de Serviço
       },
       {
         path: "/products",

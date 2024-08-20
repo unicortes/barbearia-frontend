@@ -15,6 +15,7 @@ const Service = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchServices();
@@ -51,7 +52,7 @@ const Service = () => {
     return errors;
   };
 
-  const handleAddService = async () => {
+  const handleAddOrEditService = async () => {
     const fieldErrors = validateFields();
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
@@ -61,16 +62,17 @@ const Service = () => {
     try {
       const serviceData = { ...newService };
 
-      if (editMode) { // Avalia se está no modo de edição
-        await api.put(`/servicos/${newService.id}`, serviceData); // Edita o produto
+      if (editMode) {
+        await api.put(`/servicos/${newService.id}`, serviceData);
       } else {
-        await api.post('/servicos', serviceData); // Cadastra um novo produto
+        await api.post('/servicos', serviceData);
       }
 
-      fetchServices(); // Atualiza a lista de produtos
-      setNewService({ id: '', name: '', description: '', category: '', expirationDate: '', cost: '', type: '' }); 
-      setEditMode(false); // Sai do modo de edição
-      setErrors({}); 
+      fetchServices();
+      setNewService({ id: '', name: '', description: '', price: '' });
+      setEditMode(false);
+      setErrors({});
+      setIsModalOpen(false);
     } catch (error) {
       console.error('Error adding/editing serviço:', error);
     }
@@ -78,54 +80,32 @@ const Service = () => {
 
   const handleRemoveService = async (id) => {
     try {
-      await api.delete(`/servicos/${id}`); 
-      fetchServices(); 
+      await api.delete(`/servicos/${id}`);
+      fetchServices();
     } catch (error) {
       console.error('Erro ao remover serviço:', error);
     }
   };
 
-  const handleEditService = (service) => {
-    setNewService(service);
-    setIsEditing(true);
+  const openModalForNewService = () => {
+    setNewService({ id: '', name: '', description: '', price: '' });
+    setEditMode(false);
+    setIsModalOpen(true);
   };
 
-  const handleDeleteService = (id) => {
-    setServices((prevServices) => prevServices.filter(service => service.id !== id));
+  const openModalForEditService = (service) => {
+    setNewService(service);
+    setEditMode(true);
+    setIsModalOpen(true);
   };
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
-      <h1 className='text-3xl font-bold'>{editMode ? 'Editar serviço' : 'Serviços'}</h1>
-      <div className='flex items-center justify-between w-full'>
-        <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddService(); }}>
-          <Input
-            name="name"
-            placeholder='Nome do serviço'
-            value={newService.name}
-            onChange={handleInputChange}
-          />
-          {errors.name && <p className='text-red-500'>{errors.name}</p>}
-          <Input
-            name="description"
-            placeholder='Descrição'
-            value={newService.description}
-            onChange={handleInputChange}
-            className={errors.description ? 'border-red-500' : ''}
-          />
-          {errors.description && <p className='text-red-500'>{errors.description}</p>}
-          <Input
-            name="price"
-            placeholder='Preço'
-            value={newService.price}
-            onChange={handleInputChange}
-            className={errors.price ? 'border-red-500' : ''}
-          />
-          {errors.price && <p className='text-red-500'>{errors.price}</p>}
-          <Button type="submit">
-            {editMode ? 'Salvar Alterações' : 'Adicionar serviço'}
-          </Button>
-        </form>
+      <h1 className='text-3xl font-bold'>Serviços</h1>
+      <div className='flex justify-end w-full mb-4'>
+        <Button onClick={openModalForNewService}>
+          Adicionar Serviço
+        </Button>
       </div>
       <div className='border rounded w-full'>
         <Table>
@@ -144,12 +124,12 @@ const Service = () => {
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.description}</TableCell>
-                <TableCell>R$ {row.price.toFixed(2)}</TableCell>
+                <TableCell>R$ {parseFloat(row.price).toFixed(2)}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <button 
                       className="text-blue-500 hover:text-blue-700"
-                      onClick={() => handleEditService(row)}
+                      onClick={() => openModalForEditService(row)}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
@@ -166,6 +146,57 @@ const Service = () => {
           </TableBody>
         </Table>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">{editMode ? 'Editar Serviço' : 'Adicionar Serviço'}</h2>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nome</label>
+                <Input
+                  name="name"
+                  placeholder='Nome do serviço'
+                  value={newService.name}
+                  onChange={handleInputChange}
+                  className={errors.name ? 'border-red-500' : ''}
+                />
+                {errors.name && <p className='text-red-500'>{errors.name}</p>}
+              </div>
+              <div>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700">Descrição</label>
+                <Input
+                  name="description"
+                  placeholder='Descrição'
+                  value={newService.description}
+                  onChange={handleInputChange}
+                  className={errors.description ? 'border-red-500' : ''}
+                />
+                {errors.description && <p className='text-red-500'>{errors.description}</p>}
+              </div>
+              <div>
+                <label htmlFor="price" className="block text-sm font-medium text-gray-700">Preço</label>
+                <Input
+                  name="price"
+                  placeholder='Preço'
+                  value={newService.price}
+                  onChange={handleInputChange}
+                  className={errors.price ? 'border-red-500' : ''}
+                />
+                {errors.price && <p className='text-red-500'>{errors.price}</p>}
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button onClick={() => setIsModalOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button onClick={handleAddOrEditService}>
+                  {editMode ? 'Salvar Alterações' : 'Adicionar Serviço'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

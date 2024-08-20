@@ -3,6 +3,8 @@ import api from '@/api/api';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from 'lucide-react';
 
 const Service = () => {
@@ -101,6 +103,39 @@ const Service = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
+      <h1 className='text-3xl font-bold'>{editMode ? 'Editar serviço' : 'Serviços'}</h1>
+      <div className='flex items-center justify-between w-full'>
+        <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddService(); }}>
+          <Input
+            name="name"
+            placeholder='Nome do serviço'
+            value={newService.name}
+            onChange={handleInputChange}
+          />
+          {errors.name && <p className='text-red-500'>{errors.name}</p>}
+          <Input
+            name="description"
+            placeholder='Descrição'
+            value={newService.description}
+            onChange={handleInputChange}
+            className={errors.description ? 'border-red-500' : ''}
+          />
+          {errors.description && <p className='text-red-500'>{errors.description}</p>}
+          <Input
+            name="price"
+            placeholder='Preço'
+            value={newService.price}
+            onChange={handleInputChange}
+            className={errors.price ? 'border-red-500' : ''}
+          />
+          {errors.price && <p className='text-red-500'>{errors.price}</p>}
+          <Button type="submit">
+            {editMode ? 'Salvar Alterações' : 'Adicionar serviço'}
+          </Button>
+        </form>
       <h1 className='text-3xl font-bold'>Serviços</h1>
       <div className='flex justify-end w-full mb-4'>
         <Button onClick={openModalForNewService}>

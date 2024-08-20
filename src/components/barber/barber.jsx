@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 import { Trash2, Edit } from 'lucide-react';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,7 +32,6 @@ const Barber = () => {
   const fetchBarbers = async () => {
     try {
       const response = await axios.get('/api/barbers');
-      // Certifique-se de que a resposta é um array
       setBarbers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching barbers:', error);
@@ -104,6 +105,9 @@ const Barber = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
       <h1 className='text-3xl font-bold'>{editMode ? 'Editar Barbeiro' : 'Barbeiros'}</h1>
       <div className='flex items-center justify-between w-full'>
         <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddBarber(); }}>

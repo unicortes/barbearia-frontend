@@ -3,7 +3,9 @@ import api from '@/api/api';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, Edit3 } from 'lucide-react';
+import { Trash2, Edit3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 
 const statusOptions = ["EM_USO", "LACRADO"];
 
@@ -110,6 +112,9 @@ const ProductStock = () => {
 
   return (
     <div className='p-6 max-w-6xl mx-auto space-y-4'>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
       <h1 className='text-3xl font-bold'>Estoque</h1>
 
       <div className="flex items-center gap-2">

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build",
+    "build": "npm install --omit=dev && npm run build",
     "start": "npm run dev",
     "lint": "eslint ."
   },

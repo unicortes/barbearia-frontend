@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         element: <Barber /> // Rota para a página Barber
       },
       {
-        path: "/loyaltyCards",
+        path: "/loyaltyCard",
         element: <LoyaltyCard /> // Rota para a listagem de Cartões de Fidelidade
       },
       {

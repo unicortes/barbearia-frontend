@@ -7,7 +7,6 @@ import Servicos from './components/service/service.jsx';
 import Products from './components/products/products.jsx';
 import ProductStock from './components/productStock/productStock.jsx';
 import Barber from './components/barber/barber.jsx';
-import ServiceForm from './components/service/service.jsx'; 
 import LoyaltyCard from './components/loyaltyCard/LoyaltyCard.jsx'; 
 import './global.css';
 

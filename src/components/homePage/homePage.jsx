@@ -1,101 +1,65 @@
 import * as React from "react";
-import { useState } from "react";
 import { Link } from 'react-router-dom';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Menu, X } from 'lucide-react';
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Scissors, ClipboardList, Package, CreditCard, Megaphone } from 'lucide-react';
 
 const HomePage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   return (
-    <div className="flex">
-      <div className={`fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-gray-800 w-64 p-4`}>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-white text-2xl font-bold">Menu</h2>
-          <button onClick={toggleSidebar} className="text-white p-2 rounded hover:bg-gray-700">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        <nav className="space-y-2">
-          <Link to="/barber" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Barbeiro</Link>
-          <Link to="/services" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Serviço</Link>
-          <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Estoque</Link>
-          <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Produto</Link>
-          <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cartão de Fidelidade</Link>
-          <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700">Promoções</Link>
-        </nav>
-      </div>
+    <div className="flex flex-col items-center p-6">
+      <div className="grid grid-cols-3 gap-6 w-full max-w-6xl">
+        <Link to="/barber" className="w-full">
+          <Card className="h-[180px] flex flex-col justify-between p-4">
+            <CardHeader className="flex flex-col items-center flex-grow">
+              <User className="text-gray-800 w-16 h-16" /> 
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Barbeiro</CardTitle>
+            </CardHeader>
+          </Card>
+        </Link>
 
-      <div className="flex-1 ml-64">
-        <header className="p-4">
-          <button onClick={toggleSidebar} className="bg-gray-800 text-white p-2 rounded hover:bg-gray-700">
-            <Menu className="w-6 h-6" />
-          </button>
-        </header>
-        <div className="flex flex-wrap gap-6 p-6">
-          <Link to="/barber" className="w-[250px]">
-            <Card>
-              <CardHeader className="flex flex-col items-center">
-                <User className="text-gray-800 w-12 h-12" /> 
-                <CardTitle>Cadastrar Barbeiro</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
+        <Link to="/services" className="w-full">
+          <Card className="h-[180px] flex flex-col justify-between p-4">
+            <CardHeader className="flex flex-col items-center flex-grow">
+              <Scissors className="text-gray-800 w-16 h-16" /> 
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Serviço</CardTitle>
+            </CardHeader>
+          </Card>
+        </Link>
 
-          <Link to="/services" className="w-[250px]">
-            <Card>
-              <CardHeader className="flex flex-col items-center">
-                <Scissors className="text-gray-800 w-12 h-12" /> 
-                <CardTitle>Cadastrar Serviço</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
+        <Link to="/productStock" className="w-full">
+          <Card className="h-[180px] flex flex-col justify-between p-4">
+            <CardHeader className="flex flex-col items-center flex-grow">
+              <ClipboardList className="text-gray-800 w-16 h-16" />
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Estoque</CardTitle>
+            </CardHeader>
+          </Card>
+        </Link>
 
-          <Link to="/productStock" className="w-[250px]">
-            <Card>
-              <CardHeader className="flex flex-col items-center">
-                <ClipboardList className="text-gray-800 w-12 h-12" />
-                <CardTitle>Gerenciar Estoque</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
+        <Link to="/products" className="w-full">
+          <Card className="h-[180px] flex flex-col justify-between p-4">
+            <CardHeader className="flex flex-col items-center flex-grow">
+              <Package className="text-gray-800 w-16 h-16" /> 
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Produto</CardTitle>
+            </CardHeader>
+          </Card>
+        </Link>
 
-          <Link to="/products" className="w-[250px]">
-            <Card>
-              <CardHeader className="flex flex-col items-center">
-                <Package className="text-gray-800 w-12 h-12" /> 
-                <CardTitle>Cadastrar Produto</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
+        <Link to="/loyaltyCards" className="w-full">
+          <Card className="h-[180px] flex flex-col justify-between p-4">
+            <CardHeader className="flex flex-col items-center flex-grow">
+              <CreditCard className="text-gray-800 w-16 h-16" />
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Cartão de Fidelidade</CardTitle>
+            </CardHeader>
+          </Card>
+        </Link>
 
-          <Link to="/loyaltyCards" className="w-[250px]">
-            <Card>
-              <CardHeader className="flex flex-col items-center text-center">
-                <CreditCard className="text-gray-800 w-12 h-12" />
-                <CardTitle>Cadastrar Cartão de Fidelidade</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
-
-          <Link to="/sales" className="w-[250px]">
-            <Card>
-              <CardHeader className="flex flex-col items-center">
-                <Megaphone className="text-gray-800 w-12 h-12" />
-                <CardTitle>Promoções</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
-        </div>
+        <Link to="/sales" className="w-full">
+          <Card className="h-[180px] flex flex-col justify-between p-4">
+            <CardHeader className="flex flex-col items-center flex-grow">
+              <Megaphone className="text-gray-800 w-16 h-16" />
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Promoções</CardTitle>
+            </CardHeader>
+          </Card>
+        </Link>
       </div>
     </div>
   );

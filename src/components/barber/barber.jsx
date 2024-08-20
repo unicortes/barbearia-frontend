@@ -74,14 +74,14 @@ const Barber = () => {
 
     try {
       if (editMode) {
-        await axios.put(`/api/barbers/${newBarber.id}`, newBarber);
+        await axios.put(`/barber/${newBarber.id}`, newBarber);
         fetchBarbers();
       } else {
-        await axios.post('/api/barbers', { ...newBarber, date: new Date().toLocaleDateString() });
+        await axios.post('/barber/', { ...newBarber, date: new Date().toLocaleDateString() });
         fetchBarbers();
       }
     } catch (error) {
-      console.error('Error adding/editing barber:', error);
+      console.error('Erro ao adicionar/editar barbeiro:', error);
     }
 
     setNewBarber({ id: '', date: '', name: '', email: '', telephone: '', cpf: '', salary: '' });
@@ -91,10 +91,10 @@ const Barber = () => {
 
   const handleRemoveBarber = async (id) => {
     try {
-      await axios.delete(`/api/barbers/${id}`);
+      await axios.delete(`/barber/${id}`);
       fetchBarbers();
     } catch (error) {
-      console.error('Error removing barber:', error);
+      console.error('Erro ao remover barbeiro:', error);
     }
   };
 

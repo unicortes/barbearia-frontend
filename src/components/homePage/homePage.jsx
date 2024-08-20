@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Menu, X } from 'lucide-react';
-import { User, Scissors, ClipboardList, Package, CreditCard } from 'lucide-react';
+import { User, Scissors, ClipboardList, Package, CreditCard, Megaphone } from 'lucide-react';
 
 const HomePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -18,7 +18,6 @@ const HomePage = () => {
 
   return (
     <div className="flex">
-      {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-gray-800 w-64 p-4`}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-white text-2xl font-bold">Menu</h2>
@@ -32,10 +31,10 @@ const HomePage = () => {
           <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Estoque</Link>
           <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Produto</Link>
           <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cartão de Fidelidade</Link>
+          <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700">Promoções</Link>
         </nav>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 ml-64">
         <header className="p-4">
           <button onClick={toggleSidebar} className="bg-gray-800 text-white p-2 rounded hover:bg-gray-700">
@@ -84,6 +83,15 @@ const HomePage = () => {
               <CardHeader className="flex flex-col items-center text-center">
                 <CreditCard className="text-gray-800 w-12 h-12" />
                 <CardTitle>Cadastrar Cartão de Fidelidade</CardTitle>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link to="/sales" className="w-[250px]">
+            <Card>
+              <CardHeader className="flex flex-col items-center">
+                <Megaphone className="text-gray-800 w-12 h-12" />
+                <CardTitle>Promoções</CardTitle>
               </CardHeader>
             </Card>
           </Link>

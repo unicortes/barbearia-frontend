@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BsScissors, BsHouse } from 'react-icons/bs'; // Ícone de casa (home)
+import { BsScissors, BsHouse } from 'react-icons/bs';
 
 const Header = () => {
     return (
@@ -11,7 +11,7 @@ const Header = () => {
             <nav className="flex-grow flex justify-center">
                 <ul className="flex space-x-6 items-center">
                     <li className="flex items-center">
-                        <BsHouse size={24} className="mr-2" /> {/* Ícone de home */}
+                        <BsHouse size={24} className="mr-2" />
                         <Link to="/pageHome" className="text-xl font-bold hover:text-gray-400">Home</Link>
                     </li>
                 </ul>

@@ -3,7 +3,9 @@ import api from '@/api/api';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, Edit3 } from 'lucide-react';
+import { Trash2, Edit3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 
 const statusOptions = ["EM_USO", "LACRADO"];
 
@@ -14,6 +16,7 @@ const ProductStock = () => {
   const [quantity, setQuantity] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [editableRowId, setEditableRowId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchStock();
@@ -64,6 +67,7 @@ const ProductStock = () => {
       setSelectedProductId('');
       setQuantity('');
       setSelectedStatus('');
+      setIsModalOpen(false);
     } catch (error) {
       console.error('Erro ao adicionar/atualizar o estoque:', error);
     }
@@ -83,6 +87,15 @@ const ProductStock = () => {
     setSelectedProductId(row.productId);
     setQuantity(row.quantity);
     setSelectedStatus(row.status);
+    setIsModalOpen(true);
+  };
+
+  const openModalForNewStock = () => {
+    setEditableRowId(null);
+    setSelectedProductId('');
+    setQuantity('');
+    setSelectedStatus('');
+    setIsModalOpen(true);
   };
 
   const getProductById = (productId) => {
@@ -110,42 +123,14 @@ const ProductStock = () => {
 
   return (
     <div className='p-6 max-w-6xl mx-auto space-y-4'>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
       <h1 className='text-3xl font-bold'>Estoque</h1>
 
-      <div className="flex items-center gap-2">
-        <select
-          className="border rounded p-2"
-          value={selectedProductId}
-          onChange={(e) => setSelectedProductId(e.target.value)}
-          disabled={editableRowId !== null} 
-        >
-          <option value="">Selecione um produto</option>
-          {products.map(product => (
-            <option key={product.id} value={product.id}>
-              {product.name}
-            </option>
-          ))}
-        </select>
-        <Input
-          type="number"
-          placeholder="Quantidade"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-        />
-        <select
-          className="border rounded p-2"
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-        >
-          <option value="">Selecione o status</option>
-          {statusOptions.map(status => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
-        <Button onClick={handleAddOrUpdateStock}>
-          {editableRowId ? 'Salvar' : 'Cadastrar'}
+      <div className="flex justify-end mb-4">
+        <Button onClick={openModalForNewStock}>
+          Adicionar ao Estoque
         </Button>
       </div>
 
@@ -164,6 +149,67 @@ const ProductStock = () => {
           </TableBody>
         </Table>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">{editableRowId ? 'Editar Estoque' : 'Adicionar ao Estoque'}</h2>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="productId" className="block text-sm font-medium text-gray-700">Produto</label>
+                <select
+                  name="productId"
+                  className="border rounded p-2 w-full"
+                  value={selectedProductId}
+                  onChange={(e) => setSelectedProductId(e.target.value)}
+                  disabled={editableRowId !== null}
+                >
+                  <option value="">Selecione um produto</option>
+                  {products.map(product => (
+                    <option key={product.id} value={product.id}>
+                      {product.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Quantidade</label>
+                <Input
+                  type="number"
+                  name="quantity"
+                  placeholder="Quantidade"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
+                <select
+                  name="status"
+                  className="border rounded p-2 w-full"
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                >
+                  <option value="">Selecione o status</option>
+                  {statusOptions.map(status => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-4">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                Cancelar
+              </Button>
+              <Button onClick={handleAddOrUpdateStock}>
+                {editableRowId ? 'Salvar' : 'Adicionar'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

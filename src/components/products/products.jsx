@@ -1,14 +1,10 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import api from '@/api/api';
-import axios from 'axios';
+import api from '@/api/api'; 
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
-// eslint-disable-next-line no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// eslint-disable-next-line no-unused-vars
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from 'lucide-react';
 
 const Product = () => {
@@ -18,11 +14,13 @@ const Product = () => {
     name: '',
     description: '',
     category: '',
-    date: '',
-    price: ''
+    expirationDate: '', 
+    cost: '',
+    type: ''
   });
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -30,7 +28,7 @@ const Product = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products'); // Atualize conforme a rota da sua API
+      const response = await api.get('/products'); 
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -56,16 +54,19 @@ const Product = () => {
     if (!newProduct.category) {
       errors.category = "Categoria é obrigatória.";
     }
-    if (!newProduct.date) {
-      errors.date = "Data é obrigatória.";
+    if (!newProduct.expirationDate) {
+      errors.expirationDate = "Data é obrigatória.";
     }
-    if (!newProduct.price || isNaN(newProduct.price)) {
-      errors.price = "Preço é obrigatório e deve ser um número válido.";
+    if (!newProduct.cost || isNaN(newProduct.cost)) {
+      errors.cost = "Preço é obrigatório e deve ser um número válido.";
+    }
+    if (!newProduct.type) {
+      errors.type = "Tipo é obrigatório.";
     }
     return errors;
   };
 
-  const handleAddProduct = async () => {
+  const handleAddOrEditProduct = async () => {
     const fieldErrors = validateFields();
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
@@ -73,15 +74,19 @@ const Product = () => {
     }
 
     try {
+      const productData = { ...newProduct };
+
       if (editMode) {
-        await api.put(`/products/${newProduct.id}`, newProduct); // Atualize conforme a rota da sua API
+        await api.put(`/products/${newProduct.id}`, productData);
       } else {
-        await api.post('/products', { ...newProduct, date: new Date().toLocaleDateString() }); // Atualize conforme a rota da sua API
+        await api.post('/products', productData);
       }
+
       fetchProducts();
-      setNewProduct({ id: '', name: '', description: '', category: '', date: '', price: '' });
+      setNewProduct({ id: '', name: '', description: '', category: '', expirationDate: '', cost: '', type: '' });
       setEditMode(false);
       setErrors({});
+      setIsModalOpen(false);
     } catch (error) {
       console.error('Error adding/editing product:', error);
     }
@@ -89,67 +94,40 @@ const Product = () => {
 
   const handleRemoveProduct = async (id) => {
     try {
-      await api.delete(`/products/${id}`); // Atualize conforme a rota da sua API
+      await api.delete(`/products/${id}`);
       fetchProducts();
     } catch (error) {
-      console.error('Error removing product:', error);
+      console.error('Erro ao remover produto:', error);
     }
   };
 
-  const handleEditProduct = (product) => {
+  const openModalForNewProduct = () => {
+    setNewProduct({ id: '', name: '', description: '', category: '', expirationDate: '', cost: '', type: '' });
+    setEditMode(false);
+    setIsModalOpen(true);
+  };
+
+  const openModalForEditProduct = (product) => {
     setNewProduct(product);
     setEditMode(true);
+    setIsModalOpen(true);
+  };
+
+  const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
-      <h1 className='text-3xl font-bold'>{editMode ? 'Editar produto' : 'Produtos'}</h1>
-      <div className='flex items-center justify-between w-full'>
-        <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddProduct(); }}>
-          <Input
-            name="name"
-            placeholder='Nome do produto'
-            value={newProduct.name}
-            onChange={handleInputChange}
-          />
-          {errors.name && <p className='text-red-500'>{errors.name}</p>}
-          <Input
-            name="description"
-            placeholder='Descrição'
-            value={newProduct.description}
-            onChange={handleInputChange}
-            className={errors.description ? 'border-red-500' : ''}
-          />
-          {errors.description && <p className='text-red-500'>{errors.description}</p>}
-          <Input
-            name="category"
-            placeholder='Categoria'
-            value={newProduct.category}
-            onChange={handleInputChange}
-            className={errors.category ? 'border-red-500' : ''}
-          />
-          {errors.category && <p className='text-red-500'>{errors.category}</p>}
-          <Input
-            type="date"
-            name="date"
-            placeholder='Data'
-            value={newProduct.date}
-            onChange={handleInputChange}
-            className={errors.date ? 'border-red-500' : ''}
-          />
-          {errors.date && <p className='text-red-500'>{errors.date}</p>}
-          <Input
-            name="price"
-            placeholder='Preço'
-            value={newProduct.price}
-            onChange={handleInputChange}
-            className={errors.price ? 'border-red-500' : ''}
-          />
-          {errors.price && <p className='text-red-500'>{errors.price}</p>}
-          <Button type="submit">
-            {editMode ? 'Salvar Alterações' : 'Adicionar produto'}
-          </Button>
-        </form>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
+      <h1 className='text-3xl font-bold'>Produtos</h1>
+      <div className='flex justify-end w-full mb-4'>
+        <Button onClick={openModalForNewProduct}>
+          Adicionar produto
+        </Button>
       </div>
       <div className='border rounded w-full'>
         <Table>
@@ -161,6 +139,7 @@ const Product = () => {
               <TableHead>Categoria</TableHead>
               <TableHead>Validade</TableHead>
               <TableHead>Preço</TableHead>
+              <TableHead>Tipo</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -171,13 +150,14 @@ const Product = () => {
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.category}</TableCell>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>{row.price}</TableCell>
+                <TableCell>{formatDate(row.expirationDate)}</TableCell>
+                <TableCell>R$ {row.cost.toFixed(2)}</TableCell>
+                <TableCell>{row.type}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <button 
                       className="text-blue-500 hover:text-blue-700"
-                      onClick={() => handleEditProduct(row)}
+                      onClick={() => openModalForEditProduct(row)}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
@@ -194,6 +174,91 @@ const Product = () => {
           </TableBody>
         </Table>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">{editMode ? 'Editar Produto' : 'Adicionar Produto'}</h2>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nome</label>
+                <Input
+                  name="name"
+                  placeholder='Nome do produto'
+                  value={newProduct.name}
+                  onChange={handleInputChange}
+                  className={errors.name ? 'border-red-500' : ''}
+                />
+                {errors.name && <p className='text-red-500'>{errors.name}</p>}
+              </div>
+              <div>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700">Descrição</label>
+                <Input
+                  name="description"
+                  placeholder='Descrição'
+                  value={newProduct.description}
+                  onChange={handleInputChange}
+                  className={errors.description ? 'border-red-500' : ''}
+                />
+                {errors.description && <p className='text-red-500'>{errors.description}</p>}
+              </div>
+              <div>
+                <label htmlFor="category" className="block text-sm font-medium text-gray-700">Categoria</label>
+                <Input
+                  name="category"
+                  placeholder='Categoria'
+                  value={newProduct.category}
+                  onChange={handleInputChange}
+                  className={errors.category ? 'border-red-500' : ''}
+                />
+                {errors.category && <p className='text-red-500'>{errors.category}</p>}
+              </div>
+              <div>
+                <label htmlFor="expirationDate" className="block text-sm font-medium text-gray-700">Validade</label>
+                <Input
+                  type="date"
+                  name="expirationDate"
+                  placeholder='Data'
+                  value={newProduct.expirationDate}
+                  onChange={handleInputChange}
+                  className={errors.expirationDate ? 'border-red-500' : ''}
+                />
+                {errors.expirationDate && <p className='text-red-500'>{errors.expirationDate}</p>}
+              </div>
+              <div>
+                <label htmlFor="cost" className="block text-sm font-medium text-gray-700">Preço</label>
+                <Input
+                  name="cost"
+                  placeholder='Preço'
+                  value={newProduct.cost}
+                  onChange={handleInputChange}
+                  className={errors.cost ? 'border-red-500' : ''}
+                />
+                {errors.cost && <p className='text-red-500'>{errors.cost}</p>}
+              </div>
+              <div>
+                <label htmlFor="type" className="block text-sm font-medium text-gray-700">Tipo</label>
+                <Input
+                  name="type"
+                  placeholder='Tipo'
+                  value={newProduct.type}
+                  onChange={handleInputChange}
+                  className={errors.type ? 'border-red-500' : ''}
+                />
+                {errors.type && <p className='text-red-500'>{errors.type}</p>}
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-4">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                Cancelar
+              </Button>
+              <Button onClick={handleAddOrEditProduct}>
+                {editMode ? 'Salvar' : 'Adicionar'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

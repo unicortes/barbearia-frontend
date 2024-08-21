@@ -1,7 +1,11 @@
+// lib/api.js
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://barbeariaUnicortes.com/api' // Substitua pelo URL base da sua API
+    baseURL: 'http://localhost:8080/barbeariaUnicortes/api',
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 export default api;

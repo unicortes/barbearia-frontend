@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
+import api from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Edit } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Edit, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { IoIosArrowBack } from "react-icons/io";
+import { Link } from 'react-router-dom';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
@@ -13,12 +15,14 @@ const Barber = () => {
   const [barbers, setBarbers] = useState([]);
   const [newBarber, setNewBarber] = useState({
     id: '',
-    date: '',
+    admissionDate: '',
     name: '',
     email: '',
-    telephone: '',
+    phone: '',
     cpf: '',
-    salary: ''
+    salary: '',
+    address: "123 Main St, Apt 4, Springfield",
+    openingHours: "08:00-17:00"
   });
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
@@ -29,8 +33,7 @@ const Barber = () => {
 
   const fetchBarbers = async () => {
     try {
-      const response = await axios.get('/api/barbers');
-      // Certifique-se de que a resposta é um array
+      const response = await api.get('/barber');
       setBarbers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching barbers:', error);
@@ -50,12 +53,12 @@ const Barber = () => {
     if (!emailRegex.test(newBarber.email)) {
       errors.email = "E-mail inválido.";
     }
-    if (!phoneRegex.test(newBarber.telephone)) {
-      errors.telephone = "Telefone deve estar no formato (XX) XXXXX-XXXX.";
-    }
-    if (!cpfRegex.test(newBarber.cpf)) {
-      errors.cpf = "CPF deve estar no formato XXX.XXX.XXX-XX.";
-    }
+    //  if (newBarber.phone.length<11 || newBarber.phone.length>11 ) {
+    //    errors.phone = "Telefone inválido, deve conter 11 digitos e estar no formato XXXXXXXXXXX.";
+    //  }
+    //  if (newBarber.cpf.length<11 || newBarber.cpf.length>11) {
+    //    errors.cpf = "CPF inválido, deve ter 11 digitos  e estar no formato XXXXXXXXXXX.";
+    //  }
     return errors;
   };
 
@@ -73,27 +76,28 @@ const Barber = () => {
 
     try {
       if (editMode) {
-        await axios.put(`/api/barbers/${newBarber.id}`, newBarber);
+        await api.put(`/barber/${newBarber.id}`, newBarber);
         fetchBarbers();
       } else {
-        await axios.post('/api/barbers', { ...newBarber, date: new Date().toLocaleDateString() });
+        const barberDate={...newBarber}
+        await api.post('/barber',barberDate)
         fetchBarbers();
       }
     } catch (error) {
-      console.error('Error adding/editing barber:', error);
+      console.error('Erro ao adicionar/editar barbeiro:', error);
     }
 
-    setNewBarber({ id: '', date: '', name: '', email: '', telephone: '', cpf: '', salary: '' });
+    setNewBarber({ id: '', admissionDate: '', name: '', email: '', phone: '', cpf: '', salary: '' });
     setEditMode(false);
     setErrors({});
   };
 
   const handleRemoveBarber = async (id) => {
     try {
-      await axios.delete(`/api/barbers/${id}`);
+      await api.delete(`/barber/${id}`);
       fetchBarbers();
     } catch (error) {
-      console.error('Error removing barber:', error);
+      console.error('Erro ao remover barbeiro:', error);
     }
   };
 
@@ -104,6 +108,9 @@ const Barber = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
+      <Link to="/">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
       <h1 className='text-3xl font-bold'>{editMode ? 'Editar Barbeiro' : 'Barbeiros'}</h1>
       <div className='flex items-center justify-between w-full'>
         <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddBarber(); }}>
@@ -122,13 +129,13 @@ const Barber = () => {
           />
           {errors.email && <p className='text-red-500'>{errors.email}</p>}
           <Input
-            name="telephone"
+            name="phone"
             placeholder='Telefone do barbeiro'
-            value={newBarber.telephone}
+            value={newBarber.phone}
             onChange={handleInputChange}
-            className={errors.telephone ? 'border-red-500' : ''}
+            className={errors.phone ? 'border-red-500' : ''}
           />
-          {errors.telephone && <p className='text-red-500'>{errors.telephone}</p>}
+          {errors.phone && <p className='text-red-500'>{errors.phone}</p>}
           <Input
             name="cpf"
             placeholder='CPF do barbeiro'
@@ -166,10 +173,10 @@ const Barber = () => {
             {Array.isArray(barbers) && barbers.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.admissionDate}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.email}</TableCell>
-                <TableCell>{row.telephone}</TableCell>
+                <TableCell>{row.phone}</TableCell>
                 <TableCell>{row.cpf}</TableCell>
                 <TableCell>{row.salary}</TableCell>
                 <TableCell>

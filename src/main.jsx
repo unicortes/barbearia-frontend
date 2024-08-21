@@ -7,9 +7,9 @@ import Servicos from './components/service/service.jsx';
 import Products from './components/products/products.jsx';
 import ProductStock from './components/productStock/productStock.jsx';
 import Barber from './components/barber/barber.jsx';
-import ServiceForm from './components/service/serviceForm.jsx'; 
 import LoyaltyCard from './components/loyaltyCard/LoyaltyCard.jsx'; 
 import './global.css';
+import Sale from './components/sale/sale.jsx';
 
 const router = createBrowserRouter([
   {
@@ -29,10 +29,6 @@ const router = createBrowserRouter([
         element: <Servicos /> // Rota para a página Serviços
       },
       {
-        path: "/serviceForm",
-        element: <ServiceForm /> // Rota para o formulário de Serviço
-      },
-      {
         path: "/products",
         element: <Products /> // Rota para a página Products
       },
@@ -47,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "/loyaltyCards",
         element: <LoyaltyCard /> // Rota para a listagem de Cartões de Fidelidade
+      },
+      {
+        path: "/sales",
+        element: <Sale /> // Rota para a listagem Promoções
       }
     ]
   }

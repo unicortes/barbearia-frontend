@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '@/api/api';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,25 +7,8 @@ import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { Trash2, Edit } from 'lucide-react';
 
-const initialRows = [
-  {
-    id: 1,
-    date: '17/08/2024',
-    cardNumber: '1234567890',
-    customerName: 'Paulo',
-    points: '50'
-  },
-  {
-    id: 2,
-    date: '14/06/2024',
-    cardNumber: '0987654321',
-    customerName: 'Pedrinho',
-    points: '30'
-  }
-];
-
 const LoyaltyCard = () => {
-  const [cards, setCards] = useState(initialRows);
+  const [cards, setCards] = useState();
   const [newCard, setNewCard] = useState({
     id: '',
     date: '',
@@ -35,6 +18,20 @@ const LoyaltyCard = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchCard();
+  }, []);
+
+  const fetchCard = async () => {
+    try {
+      const response = await api.get('/loyaltyCards'); 
+      setCards(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error('Error fetching loyaltyCards:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,47 +55,51 @@ const LoyaltyCard = () => {
     return errors;
   };
 
-  const handleAddCard = () => {
+  const handleAddOrEditProduct = async () => {
     const fieldErrors = validateFields();
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
       return;
     }
 
-    if (editMode) {
-      handleSaveEdit(newCard);
-    } else {
-      const newId = cards.length > 0 ? cards[cards.length - 1].id + 1 : 1;
-      setCards((prevCards) => [
-        ...prevCards,
-        {
-          ...newCard,
-          id: newId,
-          date: new Date().toLocaleDateString()
-        }
-      ]);
+    try {
+      const CardData = { ...newCard };
+
+      if (editMode) {
+        await api.put(`/loyaltyCards/${newCard.id}`, CardData);
+      } else {
+        await api.post('/loyaltyCards', CardData);
+      }
+
+      fetchCard();
+      setNewCard({ id: '', cardNumber: '', customerName: '', points: ''});
+      setEditMode(false);
+      setErrors({});
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error adding/editing loyaltyCards:', error);
     }
+  };
 
-    setNewCard({ id: '', date: '', cardNumber: '', customerName: '', points: '' });
+  const handleRemoveCard = async (id) => {
+    try {
+      await api.delete(`/loyaltyCards/${id}`);
+      fetchCard();
+    } catch (error) {
+      console.error('Erro ao remover loyaltyCards:', error);
+    }
+  };
+
+  const openModalForNewCard = () => {
+    setNewCard({ id: '', cardNumber: '', customerName: '', points: ''});
     setEditMode(false);
-    setErrors({});
+    setIsModalOpen(true);
   };
 
-  const handleRemoveCard = (id) => {
-    setCards((prevCards) => prevCards.filter(card => card.id !== id));
-  };
-
-  const handleEditCard = (card) => {
-    setNewCard(card);
+  const openModalForEditCard = (LoyaltyCard) => {
+    setNewCard(LoyaltyCard);
     setEditMode(true);
-  };
-
-  const handleSaveEdit = (updatedCard) => {
-    setCards((prevCards) =>
-      prevCards.map((card) =>
-        card.id === updatedCard.id ? { ...updatedCard, date: new Date().toLocaleDateString() } : card
-      )
-    );
+    setIsModalOpen(true);
   };
 
   return (
@@ -106,55 +107,26 @@ const LoyaltyCard = () => {
       <Link to="/">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
-      <h1 className='text-3xl font-bold'>{editMode ? 'Editar Cartão de Fidelidade' : 'Cartões de Fidelidade'}</h1>
-      <div className='flex items-center justify-between w-full'>
-        <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddCard(); }}>
-          <Input
-            name="cardNumber"
-            placeholder='Número do cartão'
-            value={newCard.cardNumber}
-            onChange={handleInputChange}
-            className={errors.cardNumber ? 'border-red-500' : ''}
-          />
-          {errors.cardNumber && <p className='text-red-500'>{errors.cardNumber}</p>}
-          <Input
-            name="customerName"
-            placeholder='Nome do cliente'
-            value={newCard.customerName}
-            onChange={handleInputChange}
-            className={errors.customerName ? 'border-red-500' : ''}
-          />
-          {errors.customerName && <p className='text-red-500'>{errors.customerName}</p>}
-          <Input
-            name="points"
-            placeholder='Pontos'
-            value={newCard.points}
-            onChange={handleInputChange}
-            className={errors.points ? 'border-red-500' : ''}
-          />
-          {errors.points && <p className='text-red-500'>{errors.points}</p>}
-          <Button type="submit">
-            {editMode ? 'Salvar Alterações' : 'Adicionar Cartão'}
-          </Button>
-        </form>
+      <h1 className='text-3xl font-bold'>Cartão</h1>
+      <div className='flex justify-end w-full mb-4'>
+        <Button onClick={openModalForNewCard}>
+          Adicionar produto
+        </Button>
       </div>
       <div className='border rounded w-full'>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Data de Emissão</TableHead>
-              <TableHead>Número do Cartão</TableHead>
-              <TableHead>Nome do Cliente</TableHead>
+              <TableHead>Número do cartão</TableHead>
+              <TableHead>Nome do cliente</TableHead>
               <TableHead>Pontos</TableHead>
-              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {cards.map((row) => (
+            {Array.isArray(cards) && cards.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.date}</TableCell>
                 <TableCell>{row.cardNumber}</TableCell>
                 <TableCell>{row.customerName}</TableCell>
                 <TableCell>{row.points}</TableCell>
@@ -162,7 +134,7 @@ const LoyaltyCard = () => {
                   <div className="flex space-x-2">
                     <button 
                       className="text-blue-500 hover:text-blue-700"
-                      onClick={() => handleEditCard(row)}
+                      onClick={() => openModalForEditCard(row)}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
@@ -179,6 +151,57 @@ const LoyaltyCard = () => {
           </TableBody>
         </Table>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">{editMode ? 'Editar Produto' : 'Adicionar Produto'}</h2>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">Número</label>
+                <Input
+                  name="cardNumber"
+                  placeholder='Número do cartão'
+                  value={newCard.cardNumber}
+                  onChange={handleInputChange}
+                  className={errors.cardNumber ? 'border-red-500' : ''}
+                />
+                {errors.cardNumber && <p className='text-red-500'>{errors.cardNumber}</p>}
+              </div>
+              <div>
+                <label htmlFor="customerName" className="block text-sm font-medium text-gray-700">Nome</label>
+                <Input
+                  name="customerName"
+                  placeholder='Nome do cliente'
+                  value={newCard.customerName}
+                  onChange={handleInputChange}
+                  className={errors.customerName ? 'border-red-500' : ''}
+                />
+                {errors.customerName && <p className='text-red-500'>{errors.customerName}</p>}
+              </div>
+              <div>
+                <label htmlFor="points" className="block text-sm font-medium text-gray-700">Pontos</label>
+                <Input
+                  name="points"
+                  placeholder='Pontos'
+                  value={newCard.points}
+                  onChange={handleInputChange}
+                  className={errors.points ? 'border-red-500' : ''}
+                />
+                {errors.points && <p className='text-red-500'>{errors.points}</p>}
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-4">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                Cancelar
+              </Button>
+              <Button onClick={handleAddOrEditProduct}>
+                {editMode ? 'Salvar' : 'Adicionar'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

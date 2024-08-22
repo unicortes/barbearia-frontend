@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         element: <Client /> // Rota para a página Clients
       },
       {
-        path: "/loyaltyCards",
+        path: "/loyaltyCard",
         element: <LoyaltyCard /> // Rota para a listagem de Cartões de Fidelidade
       },
       {

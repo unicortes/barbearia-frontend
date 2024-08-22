@@ -10,14 +10,15 @@ import { Edit, Trash2 } from 'lucide-react';
 const Sale = () => {
   const [sales, setSales] = useState([]);
   const [newSale, setNewSale] = useState({
-    saleId: '',
-    saleName: '',
-    saleDescription: '',
-    salePromoCode: '',
-    saleDiscount: '',
-    saleExpirationDate: '',
-    saleCategory: '',
-    saleAvailability: ''
+    id: '',
+    name: '',
+    descricao: '',
+    codigoPromocao: '',
+    desconto: '',
+    dataFim: '',
+    dataInicio: '',
+    categoria: '',
+    disponibilidade: ''
   });
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
@@ -28,7 +29,7 @@ const Sale = () => {
 
   const fetchSales = async () => {
     try {
-      const response = await api.get('/sales'); 
+      const response = await api.get('/promocoes'); 
       setSales(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching sales:', error);
@@ -45,26 +46,26 @@ const Sale = () => {
 
   const validateFields = () => {
     const errors = {};
-    if (!newSale.saleName) {
-      errors.saleName = "Nome da venda é obrigatório.";
+    if (!newSale.name) {
+      errors.name = "Nome da venda é obrigatório.";
     }
-    if (!newSale.saleDescription) {
-      errors.saleDescription = "Descrição da venda é obrigatória.";
+    if (!newSale.descricao) {
+      errors.descricao = "Descrição da venda é obrigatória.";
     }
-    if (!newSale.salePromoCode) {
-      errors.salePromoCode = "Código promocional é obrigatório.";
+    if (!newSale.codigoPromocao) {
+      errors.codigoPromocao = "Código promocional é obrigatório.";
     }
-    if (!newSale.saleDiscount || isNaN(newSale.saleDiscount)) {
-      errors.saleDiscount = "Desconto é obrigatório e deve ser um número válido.";
+    if (!newSale.desconto || isNaN(newSale.desconto)) {
+      errors.desconto = "Desconto é obrigatório e deve ser um número válido.";
     }
-    if (!newSale.saleExpirationDate) {
-      errors.saleExpirationDate = "Data de expiração é obrigatória.";
+    if (!newSale.dataFim) {
+      errors.dataFim = "Data de expiração é obrigatória.";
     }
-    if (!newSale.saleCategory) {
-      errors.saleCategory = "Categoria é obrigatória.";
+    if (!newSale.categoria) {
+      errors.categoria = "Categoria é obrigatória.";
     }
-    if (!newSale.saleAvailability) {
-      errors.saleAvailability = "Disponibilidade é obrigatória.";
+    if (!newSale.disponibilidade) {
+      errors.disponibilidade = "Disponibilidade é obrigatória.";
     }
     return errors;
   };
@@ -80,13 +81,13 @@ const Sale = () => {
       const saleData = { ...newSale };
 
       if (editMode) { 
-        await api.put(`/sales/${newSale.saleId}`, saleData); 
+        await api.put(`/promocoes/${newSale.id}`, saleData); 
       } else {
-        await api.post('/sales', saleData); 
+        await api.post('/promocoes', saleData); 
       }
 
       fetchSales(); 
-      setNewSale({ saleId: '', saleName: '', saleDescription: '', salePromoCode: '', saleDiscount: '', saleExpirationDate: '', saleCategory: '', saleAvailability: '' }); 
+      setNewSale({ id: '', name: '', descricao: '', codigoPromocao: '', desconto: '', dataFim: '', categoria: '', disponibilidade: '' }); 
       setEditMode(false); 
       setErrors({}); 
     } catch (error) {
@@ -97,7 +98,7 @@ const Sale = () => {
   
   const handleRemoveSale = async (id) => {
     try {
-      await api.delete(`/sales/${id}`); 
+      await api.delete(`/promocoes/${id}`); 
       fetchSales(); 
     } catch (error) {
       console.error('Erro ao remover venda:', error);
@@ -125,61 +126,70 @@ const Sale = () => {
       <div className='flex items-center justify-between w-full'>
         <form className='flex items-center gap-2 w-full' onSubmit={(e) => { e.preventDefault(); handleAddSale(); }}>
           <Input
-            name="saleName"
+            name="name"
             placeholder='Nome da venda'
-            value={newSale.saleName}
+            value={newSale.name}
             onChange={handleInputChange}
           />
-          {errors.saleName && <p className='text-red-500'>{errors.saleName}</p>}
+          {errors.name && <p className='text-red-500'>{errors.name}</p>}
           <Input
-            name="saleDescription"
+            name="descricao"
             placeholder='Descrição'
-            value={newSale.saleDescription}
+            value={newSale.descricao}
             onChange={handleInputChange}
-            className={errors.saleDescription ? 'border-red-500' : ''}
+            className={errors.descricao ? 'border-red-500' : ''}
           />
-          {errors.saleDescription && <p className='text-red-500'>{errors.saleDescription}</p>}
+          {errors.descricao && <p className='text-red-500'>{errors.descricao}</p>}
           <Input
-            name="salePromoCode"
+            name="codigoPromocao"
             placeholder='Código promocional'
-            value={newSale.salePromoCode}
+            value={newSale.codigoPromocao}
             onChange={handleInputChange}
-            className={errors.salePromoCode ? 'border-red-500' : ''}
+            className={errors.codigoPromocao ? 'border-red-500' : ''}
           />
-          {errors.salePromoCode && <p className='text-red-500'>{errors.salePromoCode}</p>}
+          {errors.codigoPromocao && <p className='text-red-500'>{errors.codigoPromocao}</p>}
           <Input
-            name="saleDiscount"
+            name="desconto"
             placeholder='Desconto'
-            value={newSale.saleDiscount}
+            value={newSale.desconto}
             onChange={handleInputChange}
-            className={errors.saleDiscount ? 'border-red-500' : ''}
+            className={errors.desconto ? 'border-red-500' : ''}
           />
-          {errors.saleDiscount && <p className='text-red-500'>{errors.saleDiscount}</p>}
+          {errors.desconto && <p className='text-red-500'>{errors.desconto}</p>}
           <Input
             type="date"
-            name="saleExpirationDate"
+            name="dataInicio"
             placeholder='Data de expiração'
-            value={newSale.saleExpirationDate}
+            value={newSale.dataInicio}
             onChange={handleInputChange}
-            className={errors.saleExpirationDate ? 'border-red-500' : ''}
+            className={errors.dataInicio ? 'border-red-500' : ''}
           />
-          {errors.saleExpirationDate && <p className='text-red-500'>{errors.saleExpirationDate}</p>}
+          {errors.dataInicio && <p className='text-red-500'>{errors.dataInicio}</p>}
           <Input
-            name="saleCategory"
+            type="date"
+            name="dataFim"
+            placeholder='Data de expiração'
+            value={newSale.dataFim}
+            onChange={handleInputChange}
+            className={errors.dataFim ? 'border-red-500' : ''}
+          />
+          {errors.dataFim && <p className='text-red-500'>{errors.dataFim}</p>}
+          <Input
+            name="categoria"
             placeholder='Categoria'
-            value={newSale.saleCategory}
+            value={newSale.categoria}
             onChange={handleInputChange}
-            className={errors.saleCategory ? 'border-red-500' : ''}
+            className={errors.categoria ? 'border-red-500' : ''}
           />
-          {errors.saleCategory && <p className='text-red-500'>{errors.saleCategory}</p>}
+          {errors.categoria && <p className='text-red-500'>{errors.categoria}</p>}
           <Input
-            name="saleAvailability"
+            name="disponibilidade"
             placeholder='Disponibilidade'
-            value={newSale.saleAvailability}
+            value={newSale.disponibilidade}
             onChange={handleInputChange}
-            className={errors.saleAvailability ? 'border-red-500' : ''}
+            className={errors.disponibilidade ? 'border-red-500' : ''}
           />
-          {errors.saleAvailability && <p className='text-red-500'>{errors.saleAvailability}</p>}
+          {errors.disponibilidade && <p className='text-red-500'>{errors.disponibilidade}</p>}
           <Button type="submit">
             {editMode ? 'Salvar Alterações' : 'Adicionar venda'}
           </Button>
@@ -202,15 +212,15 @@ const Sale = () => {
           </TableHeader>
           <TableBody>
             {Array.isArray(sales) && sales.map((row) => (
-              <TableRow key={row.saleId}>
-                <TableCell>{row.saleId}</TableCell>
-                <TableCell>{row.saleName}</TableCell>
-                <TableCell>{row.saleDescription}</TableCell>
-                <TableCell>{row.salePromoCode}</TableCell>
-                <TableCell>{row.saleDiscount}%</TableCell>
-                <TableCell>{formatDate(row.saleExpirationDate)}</TableCell>
-                <TableCell>{row.saleCategory}</TableCell>
-                <TableCell>{row.saleAvailability}</TableCell>
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.descricao}</TableCell>
+                <TableCell>{row.codigoPromocao}</TableCell>
+                <TableCell>{row.desconto}%</TableCell>
+                <TableCell>{formatDate(row.dataFim)}</TableCell>
+                <TableCell>{row.categoria}</TableCell>
+                <TableCell>{row.disponibilidade}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <button 
@@ -221,7 +231,7 @@ const Sale = () => {
                     </button>
                     <button 
                       className="text-red-500 hover:text-red-700"
-                      onClick={() => handleRemoveSale(row.saleId)}
+                      onClick={() => handleRemoveSale(row.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

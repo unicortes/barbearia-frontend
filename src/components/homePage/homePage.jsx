@@ -52,7 +52,7 @@ const HomePage = () => {
           </Card>
         </Link>
 
-        <Link to="/loyaltyCards" className="w-full">
+        <Link to="/loyaltyCard" className="w-full">
           <Card className="h-[180px] flex flex-col justify-between p-4">
             <CardHeader className="flex flex-col items-center flex-grow">
               <CreditCard className="text-gray-800 w-16 h-16" />

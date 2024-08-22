@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { Trash2, Edit } from 'lucide-react';
 
-
 const LoyaltyCard = () => {
   const [cards, setCards] = useState();
   const [newCard, setNewCard] = useState({

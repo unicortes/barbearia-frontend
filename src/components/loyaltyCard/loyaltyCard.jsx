@@ -8,10 +8,10 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Trash2, Edit } from 'lucide-react';
 
 const LoyaltyCard = () => {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState();
   const [newCard, setNewCard] = useState({
     id: '',
-    admissionDate: '',
+    date: '',
     cardNumber: '',
     customerName: '',
     points: ''
@@ -21,19 +21,15 @@ const LoyaltyCard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    fetchCards();
+    fetchCard();
   }, []);
 
-  const fetchCards = async () => {
+  const fetchCard = async () => {
     try {
-      const response = await api.get('/loyaltyCards');
-      if (Array.isArray(response.data)) {
-        setCards(response.data);
-      } else {
-        console.error('Data fetched is not an array:', response.data);
-      }
+      const response = await api.get('/loyaltyCards'); 
+      setCards(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error('Error fetching cards:', error);
+      console.error('Error fetching loyaltyCards:', error);
     }
   };
 
@@ -59,53 +55,49 @@ const LoyaltyCard = () => {
     return errors;
   };
 
-  // Função para obter a data atual no formato YYYY-MM-DD
-  const getCurrentDate = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  const handleAddCard = async () => {
+  const handleAddOrEditProduct = async () => {
     const fieldErrors = validateFields();
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
       return;
     }
 
-    // Atualizar admissionDate com a data atual
-    const cardData = { ...newCard, admissionDate: getCurrentDate() };
-
     try {
-      if (editMode) {
-        await api.put(`/loyaltyCards/${newCard.id}`, cardData);
-      } else {
-        await api.post('/loyaltyCards', cardData);
-      }
-      fetchCards();
-    } catch (error) {
-      console.error('Error saving card:', error);
-    }
+      const CardData = { ...newCard };
 
-    setNewCard({ id: '', admissionDate: '', cardNumber: '', customerName: '', points: '' });
-    setEditMode(false);
-    setErrors({});
-    setIsModalOpen(false);
+      if (editMode) {
+        await api.put(`/loyaltyCards/${newCard.id}`, CardData);
+      } else {
+        await api.post('/loyaltyCards', CardData);
+      }
+
+      fetchCard();
+      setNewCard({ id: '', cardNumber: '', customerName: '', points: ''});
+      setEditMode(false);
+      setErrors({});
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error adding/editing loyaltyCards:', error);
+    }
   };
 
   const handleRemoveCard = async (id) => {
     try {
-      await api.delete(`/loyaltyCards/${newLoyaltyCard.id}`);
-      fetchCards();
+      await api.delete(`/loyaltyCards/${id}`);
+      fetchCard();
     } catch (error) {
-      console.error('Error removing card:', error);
+      console.error('Erro ao remover loyaltyCards:', error);
     }
   };
 
-  const handleEditCard = (card) => {
-    setNewCard(card);
+  const openModalForNewCard = () => {
+    setNewCard({ id: '', cardNumber: '', customerName: '', points: ''});
+    setEditMode(false);
+    setIsModalOpen(true);
+  };
+
+  const openModalForEditCard = (LoyaltyCard) => {
+    setNewCard(LoyaltyCard);
     setEditMode(true);
     setIsModalOpen(true);
   };
@@ -115,35 +107,26 @@ const LoyaltyCard = () => {
       <Link to="/">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
-      <h1 className='text-3xl font-bold'>{editMode ? 'Editar Cartão de Fidelidade' : 'Cartões de Fidelidade'}</h1>
-      
-      <div className="flex justify-end mb-4">
-        <Button onClick={() => {
-          setEditMode(false);
-          setNewCard({ id: '', admissionDate: '', cardNumber: '', customerName: '', points: '' });
-          setIsModalOpen(true);
-        }}>
-          Adicionar Cartão
+      <h1 className='text-3xl font-bold'>Cartão</h1>
+      <div className='flex justify-end w-full mb-4'>
+        <Button onClick={openModalForNewCard}>
+          Adicionar produto
         </Button>
       </div>
-
       <div className='border rounded w-full'>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Data de Emissão</TableHead>
-              <TableHead>Número do Cartão</TableHead>
-              <TableHead>Nome do Cliente</TableHead>
+              <TableHead>Número do cartão</TableHead>
+              <TableHead>Nome do cliente</TableHead>
               <TableHead>Pontos</TableHead>
-              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {Array.isArray(cards) && cards.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.admissionDate}</TableCell>
                 <TableCell>{row.cardNumber}</TableCell>
                 <TableCell>{row.customerName}</TableCell>
                 <TableCell>{row.points}</TableCell>
@@ -151,7 +134,7 @@ const LoyaltyCard = () => {
                   <div className="flex space-x-2">
                     <button 
                       className="text-blue-500 hover:text-blue-700"
-                      onClick={() => handleEditCard(row)}
+                      onClick={() => openModalForEditCard(row)}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
@@ -172,13 +155,13 @@ const LoyaltyCard = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h2 className="text-xl font-bold mb-4">{editMode ? 'Editar Cartão de Fidelidade' : 'Adicionar Cartão de Fidelidade'}</h2>
+            <h2 className="text-xl font-bold mb-4">{editMode ? 'Editar Produto' : 'Adicionar Produto'}</h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">Número do Cartão</label>
+                <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">Número</label>
                 <Input
                   name="cardNumber"
-                  placeholder="Número do cartão"
+                  placeholder='Número do cartão'
                   value={newCard.cardNumber}
                   onChange={handleInputChange}
                   className={errors.cardNumber ? 'border-red-500' : ''}
@@ -186,10 +169,10 @@ const LoyaltyCard = () => {
                 {errors.cardNumber && <p className='text-red-500'>{errors.cardNumber}</p>}
               </div>
               <div>
-                <label htmlFor="customerName" className="block text-sm font-medium text-gray-700">Nome do Cliente</label>
+                <label htmlFor="customerName" className="block text-sm font-medium text-gray-700">Nome</label>
                 <Input
                   name="customerName"
-                  placeholder="Nome do cliente"
+                  placeholder='Nome do cliente'
                   value={newCard.customerName}
                   onChange={handleInputChange}
                   className={errors.customerName ? 'border-red-500' : ''}
@@ -200,7 +183,7 @@ const LoyaltyCard = () => {
                 <label htmlFor="points" className="block text-sm font-medium text-gray-700">Pontos</label>
                 <Input
                   name="points"
-                  placeholder="Pontos"
+                  placeholder='Pontos'
                   value={newCard.points}
                   onChange={handleInputChange}
                   className={errors.points ? 'border-red-500' : ''}
@@ -212,8 +195,8 @@ const LoyaltyCard = () => {
               <Button variant="outline" onClick={() => setIsModalOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={handleAddCard}>
-                {editMode ? 'Salvar Alterações' : 'Adicionar Cartão'}
+              <Button onClick={handleAddOrEditProduct}>
+                {editMode ? 'Salvar' : 'Adicionar'}
               </Button>
             </div>
           </div>

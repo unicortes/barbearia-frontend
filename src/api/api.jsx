@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8089/barbeariaUnicortes/api',
-
+    baseURL: 'https://barbearia-kgd6.onrender.com/barbeariaUnicortes/api',
     headers: {
         'Content-Type': 'application/json',
     },

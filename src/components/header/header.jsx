@@ -37,7 +37,7 @@ const Header = () => {
                 <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Estoque</Link>
                 <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Produto</Link>
                 <Link to="/clients" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cliente</Link>
-                <Link to="/loyaltyCard" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cartão de Fidelidade</Link>
+                <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cartão de Fidelidade</Link>
                 <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700">Promoções</Link>
             </nav>
             </div>

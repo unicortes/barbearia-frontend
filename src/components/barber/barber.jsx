@@ -21,9 +21,10 @@ const Barber = () => {
     phone: '',
     cpf: '',
     salary: '',
-    address: "123 Main St, Apt 4, Springfield",
-    openingHours: "08:00-17:00"
+    address: '',
+    openingHours: ''
   });
+
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -87,7 +88,7 @@ const Barber = () => {
     
     
     fetchBarbers();
-    setNewBarber({ id: '', admissionDate: '', name: '', email: '', phone: '', cpf: '', salary: '' });
+    setNewBarber({ id: '', admissionDate: '', name: '', email: '', phone: '', cpf: '', salary: '', address: '', openingHours: '' });
     setEditMode(false);
     setErrors({});
     setIsModalOpen(false);
@@ -106,7 +107,7 @@ const Barber = () => {
   };
 
   const openModalForNewBarber = () => {
-    setNewBarber({id: '', admissionDate: '', name: '', email: '', phone: '', cpf: '', salary: ''  });
+    setNewBarber({id: '', admissionDate: '', name: '', email: '', phone: '', cpf: '', salary: '', address: '', openingHours: ''  });
     setEditMode(false);
     setIsModalOpen(true);
   };
@@ -117,8 +118,13 @@ const Barber = () => {
     setIsModalOpen(true);
   };
 
+  const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('pt-BR', options);
+  };
+
   return (
-    <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
+    <div className='p-6 max-w-6xl mx-auto space-y-4 w-full'>
       <Link to="/">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
@@ -133,12 +139,14 @@ const Barber = () => {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Data de Admissão</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>E-mail</TableHead>
               <TableHead>Telefone</TableHead>
               <TableHead>CPF</TableHead>
-              <TableHead>Salário R$</TableHead>
+              <TableHead>Data de Admissão</TableHead>
+              <TableHead>Salário</TableHead>
+              <TableHead>Endereço</TableHead>
+              <TableHead>Horário de Atendimento</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -146,12 +154,14 @@ const Barber = () => {
             {Array.isArray(barbers) && barbers.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.admissionDate}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.phone}</TableCell>
                 <TableCell>{row.cpf}</TableCell>
+                <TableCell>{formatDate(row.admissionDate)}</TableCell>
                 <TableCell>R$ {parseFloat(row.salary).toFixed(2)}</TableCell>
+                <TableCell>{row.address}</TableCell>
+                <TableCell>{row.openingHours}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <button 
@@ -212,27 +222,56 @@ const Barber = () => {
                 {errors.phone && <p className='text-red-500'>{errors.phone}</p>}
               </div>
               <div>
-              <label htmlFor="cpf" className="block text-sm font-medium text-gray-700">CPF</label>
-              <Input
-                name="cpf"
-                placeholder='CPF do barbeiro'
-                value={newBarber.cpf}
-                onChange={handleInputChange}
-                className={errors.cpf ? 'border-red-500' : ''}
-              />
-          {errors.cpf && <p className='text-red-500'>{errors.cpf}</p>}
-          </div>
-          <div>
-          <label htmlFor="salary" className="block text-sm font-medium text-gray-700">Salario</label>
-          <Input
-            name="salary"
-            placeholder='Salário do barbeiro'
-            value={newBarber.salary}
-            onChange={handleInputChange}
-            className={errors.salary ? 'border-red-500' : ''}
-          />
-          {errors.salary && <p className='text-red-500'>{errors.salary}</p>}
-          </div>
+                <label htmlFor="cpf" className="block text-sm font-medium text-gray-700">CPF</label>
+                <Input
+                  name="cpf"
+                  placeholder='CPF do barbeiro'
+                  value={newBarber.cpf}
+                  onChange={handleInputChange}
+                  className={errors.cpf ? 'border-red-500' : ''}
+                />
+                {errors.cpf && <p className='text-red-500'>{errors.cpf}</p>}
+              </div>
+              <div>
+                <label htmlFor="admissionDate" className="block text-sm font-medium text-gray-700">Data de Admissão</label>
+                <Input
+                  type="date"
+                  name="admissionDate"
+                  placeholder='Data de admissão do barbeiro'
+                  value={newBarber.admissionDate}
+                  onChange={handleInputChange}
+                />
+                {errors.admissionDate && <p className='text-red-500'>{errors.admissionDate}</p>}
+              </div>
+              <div>
+                <label htmlFor="salary" className="block text-sm font-medium text-gray-700">Salario</label>
+                <Input
+                  name="salary"
+                  placeholder='Salário do barbeiro'
+                  value={newBarber.salary}
+                  onChange={handleInputChange}
+                  className={errors.salary ? 'border-red-500' : ''}
+                />
+                {errors.salary && <p className='text-red-500'>{errors.salary}</p>}
+              </div>
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Endereço</label>
+                <Input
+                  name="address"
+                  placeholder='Endereço do barbeiro'
+                  value={newBarber.address}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="openingHours" className="block text-sm font-medium text-gray-700">Horário de Atendimento</label>
+                <Input
+                  name="openingHours"
+                  placeholder='Horário de atendimento do barbeiro'
+                  value={newBarber.openingHours}
+                  onChange={handleInputChange}
+                />
+              </div>
               <div className="flex justify-end space-x-2">
                 <Button onClick={() => setIsModalOpen(false)}>
                   Cancelar

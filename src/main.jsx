@@ -50,7 +50,7 @@ const router = createBrowserRouter([
         element: <LoyaltyCard /> // Rota para a listagem de Cartões de Fidelidade
       },
       {
-        path: "/sale",
+        path: "/sales",
         element: <Sale /> // Rota para a listagem Promoções
       }
     ]

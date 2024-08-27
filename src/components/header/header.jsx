@@ -62,18 +62,25 @@ const Header = () => {
 
             {/* Menu Lateral */}
             <div className={`fixed top-0 left-0 h-full bg-gray-800 text-white p-4 shadow-lg transform transition-transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ width: '250px' }}>
-            <div className="flex items-center justify-between mb-4">
-                <h1 className="text-white text-2xl font-bold">Menu</h1>
-                <button className="text-white text-2xl" onClick={toggleMenu}>×</button>
-            </div>
-            <nav className="space-y-2">
-                <Link to="/barber" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Barbeiros</Link>
-                <Link to="/services" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Serviços</Link>
-                <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Estoque</Link>
-                <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Produto</Link>
-                <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cartão de Fidelidade</Link>
-                <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700">Promoções</Link>
-            </nav>
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-white text-2xl font-bold">Menu</h1>
+                    <button className="text-white text-2xl" onClick={toggleMenu}>×</button>
+                </div>
+                <nav className="space-y-2">
+                    {userRole === 'admin' && (
+                        <>
+                            <Link to="/barber" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Barbeiros</Link>
+                            <Link to="/services" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Serviços</Link>
+                            <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Estoque</Link>
+                            <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Produto</Link>
+                            <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cartão de Fidelidade</Link>
+                            <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700">Promoções</Link>
+                        </>
+                    )}
+                    {userRole === 'client' && (
+                        <Link to="/services" className="text-white block p-2 rounded hover:bg-gray-700">Ver Serviços</Link>
+                    )}
+                </nav>
             </div>
 
             {/* Modal de Confirmação */}

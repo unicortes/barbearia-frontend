@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
-const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+// const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
+// const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
 
 const Barber = () => {
   const [barbers, setBarbers] = useState([]);
@@ -52,9 +52,9 @@ const Barber = () => {
 
   const validateFields = () => {
     const errors = {};
-    if (!emailRegex.test(newBarber.email)) {
-      errors.email = "E-mail inválido.";
-    }
+    // if (!emailRegex.test(newBarber.email)) {
+    //   errors.email = "E-mail inválido.";
+    // }
     //  if (newBarber.phone.length<11 || newBarber.phone.length>11 ) {
     //    errors.phone = "Telefone inválido, deve conter 11 digitos e estar no formato XXXXXXXXXXX.";
     //  }

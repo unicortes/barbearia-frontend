@@ -11,6 +11,7 @@ import LoyaltyCard from './components/loyaltyCards/loyaltyCard.jsx';
 import Client from './components/clients/clients.jsx';
 import './global.css';
 import Sale from './components/sale/sale.jsx';
+import Login from './components/authentication/login.jsx';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         index: true, // Torna essa a rota padrão quando o usuário acessa "/"
         element: <HomePage /> // Rota para a HomePage
+      },
+      {
+        path: "/authentication",
+        element: <Login /> // Rota para o Login
       },
       {
         path: "/pageHome",

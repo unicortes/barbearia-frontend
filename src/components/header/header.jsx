@@ -35,9 +35,9 @@ const Header = () => {
                 <Link to="/barber" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Barbeiros</Link>
                 <Link to="/services" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Serviços</Link>
                 <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Estoque</Link>
-                <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Produtos</Link>
-                <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Cartões de Fidelidade</Link>
-                <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700">Gerenciar Promoções</Link>
+                <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Produto</Link>
+                <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700">Cadastrar Cartão de Fidelidade</Link>
+                <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700">Promoções</Link>
             </nav>
             </div>
 

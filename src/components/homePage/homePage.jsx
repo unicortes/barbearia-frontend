@@ -52,6 +52,15 @@ const HomePage = () => {
           </Card>
         </Link>
 
+        <Link to="/clients" className="w-full">
+          <Card className="h-[180px] flex flex-col justify-between p-4">
+            <CardHeader className="flex flex-col items-center flex-grow">
+              <User className="text-gray-800 w-16 h-16" /> 
+              <CardTitle className="mt-2 text-center text-lg font-semibold">Cadastrar Cliente</CardTitle>
+            </CardHeader>
+          </Card>
+        </Link>
+
         <Link to="/loyaltyCards" className="w-full">
           <Card className="h-[180px] flex flex-col justify-between p-4">
             <CardHeader className="flex flex-col items-center flex-grow">

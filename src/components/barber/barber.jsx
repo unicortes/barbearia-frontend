@@ -109,7 +109,11 @@ const Barber = () => {
     }
   };
 
+  // Mensagem de excluir barbeiro atualizada
   const handleRemoveBarber = async (id) => {
+    const confirmDelete = window.confirm("Você tem certeza que deseja excluir este barbeiro?");
+    if (!confirmDelete) return;
+  
     try {
       await api.delete(`/barber/${id}`);
       fetchBarbers();
@@ -119,6 +123,7 @@ const Barber = () => {
       toast.error('Erro ao remover barbeiro.');
     }
   };
+  
 
   const openModalForNewBarber = () => {
     setNewBarber({

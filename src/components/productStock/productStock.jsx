@@ -41,9 +41,24 @@ const ProductStock = () => {
     }
   };
 
+  const validateFields = () => {
+    const errors = {};
+    if (!selectedProductId) {
+      errors.selectedProductId = "Produto é obrigatório.";
+    }
+    if (!quantity || isNaN(quantity) || quantity <= 0) {
+      errors.quantity = "Quantidade é obrigatória e deve ser um número positivo.";
+    }
+    if (!selectedStatus) {
+      errors.selectedStatus = "Status é obrigatório.";
+    }
+    return errors;
+  };
+
   const handleAddOrUpdateStock = async () => {
-    if (!selectedProductId || !quantity || !selectedStatus) {
-      console.error('Produto, quantidade e status são obrigatórios.');
+    const fieldErrors = validateFields();
+    if (Object.keys(fieldErrors).length > 0) {
+      console.error(fieldErrors);
       return;
     }
 
@@ -74,6 +89,9 @@ const ProductStock = () => {
   };
 
   const handleRemoveStockItem = async (id) => {
+    const confirmDelete = window.confirm("Você tem certeza que deseja excluir este item do estoque?");
+    if (!confirmDelete) return;
+
     try {
       await api.delete(`/stocks/${id}`);
       fetchStock();

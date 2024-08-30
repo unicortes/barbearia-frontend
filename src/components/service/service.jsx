@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Service = () => {
   const [services, setServices] = useState([]);
@@ -28,7 +30,8 @@ const Service = () => {
       const response = await api.get('/servicos'); 
       setServices(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error('Error fetching servicos:', error);
+      console.error('Error fetching services:', error);
+      toast.error('Erro ao buscar serviços.');
     }
   };
 
@@ -66,8 +69,10 @@ const Service = () => {
 
       if (editMode) {
         await api.put(`/servicos/${newService.id}`, serviceData);
+        toast.success('Serviço atualizado com sucesso!');
       } else {
         await api.post('/servicos', serviceData);
+        toast.success('Serviço adicionado com sucesso!');
       }
 
       fetchServices();
@@ -77,6 +82,7 @@ const Service = () => {
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error adding/editing serviço:', error);
+      toast.error('Erro ao adicionar/editar serviço.');
     }
   };
 
@@ -84,8 +90,10 @@ const Service = () => {
     try {
       await api.delete(`/servicos/${id}`);
       fetchServices();
+      toast.success('Serviço removido com sucesso!');
     } catch (error) {
       console.error('Erro ao remover serviço:', error);
+      toast.error('Erro ao remover serviço.');
     }
   };
 

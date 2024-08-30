@@ -87,13 +87,16 @@ const Service = () => {
   };
 
   const handleRemoveService = async (id) => {
-    try {
-      await api.delete(`/servicos/${id}`);
-      fetchServices();
-      toast.success('Serviço removido com sucesso!');
-    } catch (error) {
-      console.error('Erro ao remover serviço:', error);
-      toast.error('Erro ao remover serviço.');
+    const confirm = window.confirm('Tem certeza que deseja excluir este serviço?');
+    if (confirm) {
+      try {
+        await api.delete(`/servicos/${id}`);
+        fetchServices();
+        toast.success('Serviço removido com sucesso!');
+      } catch (error) {
+        console.error('Erro ao remover serviço:', error);
+        toast.error('Erro ao remover serviço.');
+      }
     }
   };
 

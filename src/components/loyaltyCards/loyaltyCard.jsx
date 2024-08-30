@@ -117,11 +117,11 @@ const LoyaltyCard = () => {
     }
   };
 
-  const handleEditClick = (card) => {
-    // Atualizar a lógica para não abrir o modal
-  };
-
+  // adicionado a confirmação
   const handleRemoveCard = async (id) => {
+    const confirmDelete = window.confirm("Você tem certeza que deseja excluir este cartão?");
+    if (!confirmDelete) return;
+
     try {
       await api.delete(`/loyalty-cards/${id}`);
       fetchLoyaltyCards();

@@ -210,6 +210,7 @@ const Service = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

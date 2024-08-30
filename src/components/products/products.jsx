@@ -92,7 +92,11 @@ const Product = () => {
     }
   };
 
+  // adicionado a confirmação
   const handleRemoveProduct = async (id) => {
+    const confirmDelete = window.confirm("Você tem certeza que deseja excluir este produto?");
+    if (!confirmDelete) return;
+
     try {
       await api.delete(`/products/${id}`);
       fetchProducts();

@@ -23,6 +23,8 @@ const Sale = () => {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [saleToDelete, setSaleToDelete] = useState(null);
 
   useEffect(() => {
     fetchSales();
@@ -72,31 +74,22 @@ const Sale = () => {
       }
 
       fetchSales();
-      setNewSale({
-        id: "",
-        titulo: "",
-        descricao: "",
-        codigoPromocao: "",
-        desconto: "",
-        dataFim: "",
-        dataInicio: "",
-        categoria: "",
-        disponibilidade: false,
-      });
-      setEditMode(false);
-      setErrors({});
-      setIsModalOpen(false);
+      resetForm();
     } catch (error) {
       console.error("Error adding/editing sale:", error);
     }
   };
 
-  const handleRemoveSale = async (id) => {
+  const handleRemoveSale = async () => {
+    if (!saleToDelete) return;
+
     try {
-      await api.delete(`/promocoes/${id}`);
+      await api.delete(`/promocoes/${saleToDelete.id}`);
       fetchSales();
+      setIsConfirmDeleteOpen(false);
+      setSaleToDelete(null);
     } catch (error) {
-      console.error("Erro ao remover venda:", error);
+      console.error("Error removing sale:", error);
     }
   };
 
@@ -122,6 +115,28 @@ const Sale = () => {
     setIsModalOpen(true);
   };
 
+  const openConfirmDeleteModal = (sale) => {
+    setSaleToDelete(sale);
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const resetForm = () => {
+    setNewSale({
+      id: "",
+      titulo: "",
+      descricao: "",
+      codigoPromocao: "",
+      desconto: "",
+      dataFim: "",
+      dataInicio: "",
+      categoria: "",
+      disponibilidade: false,
+    });
+    setEditMode(false);
+    setErrors({});
+    setIsModalOpen(false);
+  };
+
   const formatDate = (dateString) => {
     const options = { day: "2-digit", month: "2-digit", year: "numeric" };
     return new Date(dateString).toLocaleDateString("pt-BR", options);
@@ -133,7 +148,7 @@ const Sale = () => {
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className="text-3xl font-bold">Promoções</h1>
-      <div className="flex justify-end w-full mb-4">
+      <div className="flex justify-end mb-4">
         <Button onClick={openModalForNewSale}>Adicionar promoção</Button>
       </div>
       <div className="border rounded w-full">
@@ -152,33 +167,47 @@ const Sale = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.isArray(sales) &&
-              sales.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.titulo}</TableCell>
-                  <TableCell>{row.descricao}</TableCell>
-                  <TableCell>{row.codigoPromocao}</TableCell>
-                  <TableCell>{row.desconto}%</TableCell>
-                  <TableCell>{formatDate(row.dataFim)}</TableCell>
-                  <TableCell>{row.categoria}</TableCell>
-                  <TableCell>{row.disponibilidade ? "Sim" : "Não"}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <button className="text-blue-500 hover:text-blue-700" onClick={() => openModalForEditSale(row)}>
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button className="text-red-500 hover:text-red-700" onClick={() => handleRemoveSale(row.id)}>
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+            {sales.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.titulo}</TableCell>
+                <TableCell>{row.descricao}</TableCell>
+                <TableCell>{row.codigoPromocao}</TableCell>
+                <TableCell>{row.desconto}%</TableCell>
+                <TableCell>{formatDate(row.dataFim)}</TableCell>
+                <TableCell>{row.categoria}</TableCell>
+                <TableCell>{row.disponibilidade ? "Sim" : "Não"}</TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <button className="text-blue-500 hover:text-blue-700" onClick={() => openModalForEditSale(row)}>
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button className="text-red-500 hover:text-red-700" onClick={() => openConfirmDeleteModal(row)}>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
 
+      {/* Modal de confirmação de exclusão */}
+      {isConfirmDeleteOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
+            <p className="mb-4">Você tem certeza de que deseja excluir esta promoção?</p>
+            <div className="flex justify-end space-x-4">
+              <Button variant="secondary" onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
+              <Button onClick={handleRemoveSale}>Excluir</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para adicionar/editar promoção */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
@@ -269,7 +298,7 @@ const Sale = () => {
                 />
               </div>
               <div className="flex justify-end space-x-4">
-                <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+                <Button variant="secondary" onClick={resetForm}>Cancelar</Button>
                 <Button onClick={handleAddOrEditSale}>
                   {editMode ? "Atualizar" : "Salvar"}
                 </Button>

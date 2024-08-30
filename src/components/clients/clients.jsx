@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Client = () => {
   const [clients, setClients] = useState([]);
@@ -19,8 +21,6 @@ const Client = () => {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(''); // Estado para mensagens de sucesso
-  const [errorMessage, setErrorMessage] = useState(''); // Estado para mensagens de erro
 
   useEffect(() => {
     fetchClients();
@@ -72,10 +72,10 @@ const Client = () => {
 
       if (editMode) {
         await api.put(`/clients/${newClient.id}`, clientData);
-        setSuccessMessage('Cliente atualizado com sucesso!');
+        toast.success('Cliente atualizado com sucesso!');
       } else {
         await api.post('/clients', clientData);
-        setSuccessMessage('Cliente adicionado com sucesso!');
+        toast.success('Cliente adicionado com sucesso!');
       }
 
       fetchClients();
@@ -84,13 +84,8 @@ const Client = () => {
       setErrors({});
       setIsModalOpen(false);
     } catch (error) {
-      setErrorMessage('Erro ao adicionar/editar cliente. Por favor, tente novamente.');
+      toast.error('Erro ao adicionar/editar cliente. Por favor, tente novamente.');
       console.error('Error adding/editing client:', error);
-    } finally {
-      setTimeout(() => {
-        setSuccessMessage('');
-        setErrorMessage('');
-      }, 7000); // Limpa as mensagens após 5 segundos
     }
   };
 
@@ -98,7 +93,9 @@ const Client = () => {
     try {
       await api.delete(`/clients/${id}`);
       fetchClients();
+      toast.success('Cliente removido com sucesso!');
     } catch (error) {
+      toast.error('Erro ao remover cliente. Por favor, tente novamente.');
       console.error('Erro ao remover cliente:', error);
     }
   };
@@ -131,10 +128,6 @@ const Client = () => {
           Adicionar cliente
         </Button>
       </div>
-
-      {/* Exibir mensagens de sucesso e erro */}
-      {successMessage && <p className='text-green-500'>{successMessage}</p>}
-      {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
 
       
       <div className='border rounded w-full'>
@@ -241,6 +234,7 @@ const Client = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

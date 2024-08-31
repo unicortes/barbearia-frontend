@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { FaCalendarAlt, FaClock } from 'react-icons/fa';
 import { User, Scissors, ClipboardList, Package, CreditCard, Megaphone } from 'lucide-react';
 
 const HomePage = () => {
@@ -38,14 +39,14 @@ const HomePage = () => {
               </Card>
             </Link>
 
-        <Link to="/products" className="w-full">
-          <Card className="h-[180px] flex flex-col justify-between p-4">
-            <CardHeader className="flex flex-col items-center flex-grow">
-              <Package className="text-gray-800 w-16 h-16" /> 
-              <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Produtos</CardTitle>
-            </CardHeader>
-          </Card>
-        </Link>
+            <Link to="/products" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <Package className="text-gray-800 w-16 h-16" /> 
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Produtos</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
 
             <Link to="/clients" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">
@@ -70,6 +71,42 @@ const HomePage = () => {
                 <CardHeader className="flex flex-col items-center flex-grow">
                   <Megaphone className="text-gray-800 w-16 h-16" />
                   <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Promoções</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link to="/avaliable-time" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <FaClock className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Gerenciar Horários</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link to="/appointment" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <FaCalendarAlt className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Agendamento</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link to="/appointments" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <FaCalendarAlt className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Agendamentos</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link to="/manege-appointments" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <FaCalendarAlt className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Agendamentos</CardTitle>
                 </CardHeader>
               </Card>
             </Link>

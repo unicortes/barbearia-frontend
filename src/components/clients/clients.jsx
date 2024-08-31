@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Client = () => {
   const [clients, setClients] = useState([]);
@@ -70,8 +72,10 @@ const Client = () => {
 
       if (editMode) {
         await api.put(`/clients/${newClient.id}`, clientData);
+        toast.success('Cliente atualizado com sucesso!');
       } else {
         await api.post('/clients', clientData);
+        toast.success('Cliente adicionado com sucesso!');
       }
 
       fetchClients();
@@ -80,6 +84,7 @@ const Client = () => {
       setErrors({});
       setIsModalOpen(false);
     } catch (error) {
+      toast.error('Erro ao adicionar/editar cliente. Por favor, tente novamente.');
       console.error('Error adding/editing client:', error);
     }
   };
@@ -88,13 +93,15 @@ const Client = () => {
     try {
       await api.delete(`/clients/${id}`);
       fetchClients();
+      toast.success('Cliente removido com sucesso!');
     } catch (error) {
+      toast.error('Erro ao remover cliente. Por favor, tente novamente.');
       console.error('Erro ao remover cliente:', error);
     }
   };
 
   const openModalForNewClient = () => {
-    setNewClient({ id: '', name: '', email: '', birthday: '', phone: '' });
+    setNewClient({ name: '', email: '', birthday: '', phone: '' });
     setEditMode(false);
     setIsModalOpen(true);
   };
@@ -121,6 +128,8 @@ const Client = () => {
           Adicionar cliente
         </Button>
       </div>
+
+      
       <div className='border rounded w-full'>
         <Table>
           <TableHeader>
@@ -225,6 +234,7 @@ const Client = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from "lucide-react";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Sale = () => {
   const [sales, setSales] = useState([]);
@@ -33,6 +35,7 @@ const Sale = () => {
       const response = await api.get("/promocoes");
       setSales(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
+      toast.error("Erro ao buscar promoções.");
       console.error("Error fetching sales:", error);
     }
   };
@@ -67,8 +70,10 @@ const Sale = () => {
       const saleData = { ...newSale };
       if (editMode) {
         await api.put(`/promocoes/${newSale.id}`, saleData);
+        toast.success("Promoção atualizada com sucesso!");
       } else {
         await api.post("/promocoes", saleData);
+        toast.success("Promoção adicionada com sucesso!");
       }
 
       fetchSales();
@@ -87,6 +92,7 @@ const Sale = () => {
       setErrors({});
       setIsModalOpen(false);
     } catch (error) {
+      toast.error("Erro ao adicionar/editar promoção.");
       console.error("Error adding/editing sale:", error);
     }
   };
@@ -95,7 +101,9 @@ const Sale = () => {
     try {
       await api.delete(`/promocoes/${id}`);
       fetchSales();
+      toast.success("Promoção removida com sucesso!");
     } catch (error) {
+      toast.error("Erro ao remover promoção.");
       console.error("Erro ao remover venda:", error);
     }
   };
@@ -278,6 +286,7 @@ const Sale = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Trash2, Edit3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const statusOptions = ["EM_USO", "LACRADO"];
 
@@ -28,6 +30,7 @@ const ProductStock = () => {
       const response = await api.get('/stocks');
       setStockRows(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
+      toast.error('Erro ao buscar o estoque.');
       console.error('Erro ao buscar o estoque:', error);
     }
   };
@@ -37,13 +40,14 @@ const ProductStock = () => {
       const response = await api.get('/products');
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
+      toast.error('Erro ao buscar produtos.');
       console.error('Erro ao buscar produtos:', error);
     }
   };
 
   const handleAddOrUpdateStock = async () => {
     if (!selectedProductId || !quantity || !selectedStatus) {
-      console.error('Produto, quantidade e status são obrigatórios.');
+      toast.error('Produto, quantidade e status são obrigatórios.');
       return;
     }
 
@@ -54,6 +58,7 @@ const ProductStock = () => {
           quantity: parseInt(quantity, 10),
           status: selectedStatus
         });
+        toast.success('Estoque atualizado com sucesso!');
         setEditableRowId(null);
       } else {
         await api.post('/stocks', {
@@ -61,6 +66,7 @@ const ProductStock = () => {
           quantity: parseInt(quantity, 10),
           status: selectedStatus
         });
+        toast.success('Item de estoque adicionado com sucesso!');
       }
 
       fetchStock();
@@ -69,6 +75,7 @@ const ProductStock = () => {
       setSelectedStatus('');
       setIsModalOpen(false);
     } catch (error) {
+      toast.error('Erro ao adicionar/atualizar o estoque.');
       console.error('Erro ao adicionar/atualizar o estoque:', error);
     }
   };
@@ -77,7 +84,9 @@ const ProductStock = () => {
     try {
       await api.delete(`/stocks/${id}`);
       fetchStock();
+      toast.success('Item de estoque removido com sucesso!');
     } catch (error) {
+      toast.error('Erro ao remover item do estoque.');
       console.error('Erro ao remover item do estoque:', error);
     }
   };
@@ -210,6 +219,7 @@ const ProductStock = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

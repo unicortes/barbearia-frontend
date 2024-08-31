@@ -6,6 +6,8 @@ import { Edit, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
@@ -77,43 +79,65 @@ const Barber = () => {
 
     try {
       const barberData = { ...newBarber };
-      
+
       if (editMode) {
         await api.put(`/barber/${newBarber.id}`, barberData);
-        fetchBarbers();
+        toast.success('Barbeiro atualizado com sucesso!');
       } else {
-        await api.post('/barber', barberData)
-        
+        await api.post('/barber', barberData);
+        toast.success('Barbeiro adicionado com sucesso!');
       }
-    
-    
-    fetchBarbers();
-    setNewBarber({ id: '', admissionDate: '', name: '', email: '', phone: '', cpf: '', salary: '', address: '', openingHours: '' });
-    setEditMode(false);
-    setErrors({});
-    setIsModalOpen(false);
-  } catch (error) {
-    console.error('Erro ao adicionar/editar barbeiro:', error);
-  }
+
+      fetchBarbers();
+      setNewBarber({
+        id: '',
+        admissionDate: '',
+        name: '',
+        email: '',
+        phone: '',
+        cpf: '',
+        salary: '',
+        address: '',
+        openingHours: ''
+      });
+      setEditMode(false);
+      setErrors({});
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Erro ao adicionar/editar barbeiro:', error);
+      toast.error('Erro ao adicionar/editar barbeiro.');
+    }
   };
 
   const handleRemoveBarber = async (id) => {
     try {
       await api.delete(`/barber/${id}`);
       fetchBarbers();
+      toast.success('Barbeiro removido com sucesso!');
     } catch (error) {
       console.error('Erro ao remover barbeiro:', error);
+      toast.error('Erro ao remover barbeiro.');
     }
   };
 
   const openModalForNewBarber = () => {
-    setNewBarber({id: '', admissionDate: '', name: '', email: '', phone: '', cpf: '', salary: '', address: '', openingHours: ''  });
+    setNewBarber({
+      id: '',
+      admissionDate: '',
+      name: '',
+      email: '',
+      phone: '',
+      cpf: '',
+      salary: '',
+      address: '',
+      openingHours: ''
+    });
     setEditMode(false);
     setIsModalOpen(true);
   };
 
-  const openModalForEditBarber = (Barber) => {
-    setNewBarber(Barber);
+  const openModalForEditBarber = (barber) => {
+    setNewBarber(barber);
     setEditMode(true);
     setIsModalOpen(true);
   };
@@ -283,7 +307,8 @@ const Barber = () => {
             </div>
           </div>
         </div>
-      )}  
+      )}
+      <ToastContainer />  
     </div>
   );
 };

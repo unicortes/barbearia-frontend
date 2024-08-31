@@ -9,6 +9,10 @@ import ProductStock from './components/productStock/productStock.jsx';
 import Barber from './components/barber/barber.jsx';
 import LoyaltyCard from './components/loyaltyCards/loyaltyCard.jsx'; 
 import Client from './components/clients/clients.jsx';
+import AvaliableTime from './components/avaliableTime/avaliableTime.jsx';
+import AppointmentsClient from './components/dailySchedule/dailyScheduleClient.jsx';
+import AppointmentsBarber from './components/dailySchedule/dailyScheduleBarber.jsx';
+import AppointmentsAdmin from './components/dailySchedule/dailyScheduleAdmin.jsx';
 import './global.css';
 import Sale from './components/sale/sale.jsx';
 import Login from './components/authentication/login.jsx';
@@ -57,6 +61,22 @@ const router = createBrowserRouter([
       {
         path: "/sales",
         element: <Sale /> // Rota para a listagem Promoções
+      },
+      {
+        path: "/avaliable-time",
+        element: <AvaliableTime /> // Rota para a listagem Horários
+      },
+      {
+        path: "/appointment",
+        element: <AppointmentsClient /> // Rota para a listagem Agendamentos
+      },
+      {
+        path: "/appointments",
+        element: <AppointmentsBarber /> // Rota para a listagem Agendamentos
+      },
+      {
+        path: "/manege-appointments",
+        element: <AppointmentsAdmin /> // Rota para a listagem Agendamentos
       }
     ]
   }

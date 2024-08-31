@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { BsList, BsHouse, BsPerson } from 'react-icons/bs';
 import Modal from 'react-modal';
+import axios from 'axios';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +13,7 @@ const Header = () => {
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
+        axios.post('http://localhost:8089/barbeariaUnicortes/logout');
         navigate('/authentication');
         console.log('Usuário deslogado');
     };

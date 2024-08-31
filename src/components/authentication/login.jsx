@@ -15,9 +15,10 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/auth/register', { email, password }); // Ajuste a URL para o endpoint correto
-
+      const response = await axios.post('http://localhost:8089/barbeariaUnicortes/login', { email, password }); // Ajuste a URL para o endpoint correto
+      
       if (response.data) {
+        console.log(response.data);
         // Supondo que a resposta contenha um token e a role do usuário
         localStorage.setItem('authToken', response.data.token);
         localStorage.setItem('userRole', response.data.role);

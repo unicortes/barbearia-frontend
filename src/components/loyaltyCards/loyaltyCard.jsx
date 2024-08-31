@@ -29,6 +29,7 @@ const LoyaltyCard = () => {
   const fetchLoyaltyCards = async () => {
     try {
       const response = await api.get('/loyalty-cards');
+      console.log(response.data);
       setCards(response.data);
     } catch (error) {
       console.error("Erro ao buscar cartões de fidelidade:", error);

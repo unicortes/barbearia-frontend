@@ -121,40 +121,18 @@ const HomePage = () => {
                 <CardHeader className="flex flex-col items-center flex-grow">
                   <Scissors className="text-gray-800 w-16 h-16" />
                   <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Ver Serviços
+                    Serviços
                   </CardTitle>
                 </CardHeader>
               </Card>
             </Link>
 
-            <Link to="/appointments/schedule" className="w-full">
+            <Link to="/appointments" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">
                 <CardHeader className="flex flex-col items-center flex-grow">
                   <FaCalendarAlt className="text-gray-800 w-16 h-16" />
                   <CardTitle className="mt-2 text-center text-lg font-semibold">
                     Agendar Serviços
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/appointments/history" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <FaCalendarAlt className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Histórico de Serviços
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/appointments/manage" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <FaCalendarAlt className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Agendamentos
                   </CardTitle>
                 </CardHeader>
               </Card>

@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { FaCalendarAlt, FaClock } from 'react-icons/fa';
-import { User, Scissors, ClipboardList, Package, CreditCard, Megaphone } from 'lucide-react';
+import { ClipboardList, CreditCard, Megaphone, Package, Scissors, User } from 'lucide-react';
+import { FaCalendarAlt, FaClock, FaHistory } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
-  const userRole = localStorage.getItem('userRole'); // Obtém o papel do usuário
-
+  const userRole = localStorage.getItem('role'); // Obtém o papel do usuário
+  
   return (
     <div className="flex flex-col items-center p-6">
       <div className="grid grid-cols-3 gap-6 w-full max-w-6xl">
@@ -110,7 +110,17 @@ const HomePage = () => {
                 </CardHeader>
               </Card>
             </Link>
+
+            <Link to="/historys" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <FaHistory className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Histórico</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
           </>
+          
         )}
         
         {userRole === 'client' && (

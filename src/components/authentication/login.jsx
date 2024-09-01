@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import api from "@/api/api";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Scissors } from 'lucide-react';
-import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,12 +15,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/auth/register', { email, password }); // Ajuste a URL para o endpoint correto
+      const response = await api.post('/login', { email, password }); // Ajuste a URL para o endpoint correto
 
       if (response.data) {
         // Supondo que a resposta contenha um token e a role do usuário
         localStorage.setItem('authToken', response.data.token);
         localStorage.setItem('userRole', response.data.role);
+        localStorage.setItem('userId', response.data.id);
         navigate('/pageHome');
       } else {
         alert('E-mail ou senha inválidos');

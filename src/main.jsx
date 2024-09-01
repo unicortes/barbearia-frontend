@@ -2,20 +2,21 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx';
+import Login from './components/authentication/login.jsx';
+import AvaliableTime from './components/avaliableTime/avaliableTime.jsx';
+import Barber from './components/barber/barber.jsx';
+import Client from './components/clients/clients.jsx';
+import AppointmentsAdmin from './components/dailySchedule/dailyScheduleAdmin.jsx';
+import AppointmentsBarber from './components/dailySchedule/dailyScheduleBarber.jsx';
+import AppointmentsClient from './components/dailySchedule/dailyScheduleClient.jsx';
+import History from './components/history/history.jsx';
 import HomePage from './components/homePage/homePage.jsx';
-import Servicos from './components/service/service.jsx'; 
+import LoyaltyCard from './components/loyaltyCards/loyaltyCard.jsx';
 import Products from './components/products/products.jsx';
 import ProductStock from './components/productStock/productStock.jsx';
-import Barber from './components/barber/barber.jsx';
-import LoyaltyCard from './components/loyaltyCards/loyaltyCard.jsx'; 
-import Client from './components/clients/clients.jsx';
-import AvaliableTime from './components/avaliableTime/avaliableTime.jsx';
-import AppointmentsClient from './components/dailySchedule/dailyScheduleClient.jsx';
-import AppointmentsBarber from './components/dailySchedule/dailyScheduleBarber.jsx';
-import AppointmentsAdmin from './components/dailySchedule/dailyScheduleAdmin.jsx';
-import './global.css';
 import Sale from './components/sale/sale.jsx';
-import Login from './components/authentication/login.jsx';
+import Servicos from './components/service/service.jsx';
+import './global.css';
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "/manege-appointments",
         element: <AppointmentsAdmin /> // Rota para a listagem Agendamentos
+      },
+      {
+        path: "/historys",
+        element: <History/>
       }
     ]
   }

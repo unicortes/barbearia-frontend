@@ -4,10 +4,12 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Scissors } from "lucide-react";
+import api from "@/api/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -49,6 +51,28 @@ const Login = () => {
     }
   };
 
+  //   try {
+  //     const response = await api.post("/login", {
+  //       email,
+  //       password,
+  //     });
+
+  //     const { token, role } = response.data;
+
+  //     localStorage.setItem("authToken", token);
+  //     localStorage.setItem("userRole", role);
+
+  //     if (role === "ADMIN" || role === "BARBER" || role === "CLIENT") {
+  //       navigate("/pageHome");
+  //     } else {
+  //       setError("Login inválido.");
+  //     }
+  //   } catch (err) {
+  //     console.error("Erro de login:", err);
+  //     setError("E-mail ou senha inválidos");
+  //   }
+  // };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Card
@@ -60,10 +84,11 @@ const Login = () => {
       >
         <Scissors className="text-white w-20 h-20" />
         <h1 className="mt-4 text-center text-3xl font-semibold text-white">
-          Unicortes
+          UniCortes
         </h1>
 
         <form onSubmit={handleLogin} className="mt-6 space-y-6 w-full">
+          {error && <p className="text-red-500 text-center">{error}</p>}
           <Input
             type="email"
             placeholder="E-mail"

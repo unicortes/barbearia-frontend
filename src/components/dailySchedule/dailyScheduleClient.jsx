@@ -6,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import api from "@/api/api";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DailyScheduleClient = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [barbers, setBarbers] = useState([]);
   const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
@@ -22,6 +25,7 @@ const DailyScheduleClient = () => {
     status: 'PENDENTE', // Status padrão
     available: true,
   });
+  const [appointmentToDelete, setAppointmentToDelete] = useState(null);
 
   useEffect(() => {
     fetchBarbers();
@@ -96,9 +100,35 @@ const DailyScheduleClient = () => {
         available: true,
       });
       setAvailableTimes([]);
+      toast.success('Agendamento criado com sucesso!');
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
+      toast.error('Erro ao criar agendamento.');
     }
+  };
+
+  const handleDeleteAppointment = async () => {
+    try {
+      if (appointmentToDelete) {
+        await api.delete(`/appointments/${appointmentToDelete}`);
+        toast.success('Agendamento removido com sucesso!');
+        setAppointmentToDelete(null);
+        setIsConfirmDeleteOpen(false);
+      }
+    } catch (error) {
+      toast.error('Erro ao remover agendamento.');
+      console.error('Erro ao remover agendamento:', error);
+    }
+  };
+
+  const openConfirmDeleteModal = (appointmentId) => {
+    setAppointmentToDelete(appointmentId);
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const closeConfirmDeleteModal = () => {
+    setIsConfirmDeleteOpen(false);
+    setAppointmentToDelete(null);
   };
 
   return (
@@ -188,6 +218,25 @@ const DailyScheduleClient = () => {
           </div>
         </div>
       )}
+
+      {isConfirmDeleteOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir este agendamento?</p>
+            <div className="mt-4 flex justify-end space-x-4">
+              <Button variant="outline" onClick={closeConfirmDeleteModal}>
+                Cancelar
+              </Button>
+              <Button onClick={handleDeleteAppointment} variant="destructive">
+                Confirmar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ToastContainer />
     </div>
   );
 };

@@ -1,17 +1,17 @@
-import { Link } from "react-router-dom";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { FaCalendarAlt } from "react-icons/fa";
 import {
   BsPerson as BsBarber,
-  BsPerson as BsClient,
-  BsScissors,
-  BsClock,
   BsBox,
-  BsCart,
-  BsCardChecklist,
-  BsTag,
   BsCalendar,
+  BsCardChecklist,
+  BsCart,
+  BsPerson as BsClient,
+  BsClock,
+  BsScissors,
+  BsTag,
 } from "react-icons/bs";
+import { FaCalendarAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const userRole = localStorage.getItem("userRole");

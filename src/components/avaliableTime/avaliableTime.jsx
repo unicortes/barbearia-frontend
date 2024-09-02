@@ -144,19 +144,19 @@ const AvailableTime = () => {
         return barber ? barber.name : 'Barbeiro não encontrado';
     };
 
-    const tableRows = availableTimes.map(row => (
-        <TableRow key={row.id}>
+    const tableRows = availableTimes.map((row, index) => (
+        <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
             <TableCell className="text-center px-4 py-2">{getServiceById(row.serviceId)}</TableCell>
             <TableCell className="text-center px-4 py-2">{getBarberById(row.barberId)}</TableCell>
             <TableCell className="text-center px-4 py-2">{row.timeStart} - {row.timeEnd}</TableCell>
             <TableCell className="text-center px-4 py-2">
                 <div className="flex justify-center space-x-4">
-                <button onClick={() => handleEditClick(row)}>
-                    <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
-                </button>
-                <button onClick={() => openConfirmDeleteModal(row)}>
-                    <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
-                </button>
+                    <button onClick={() => handleEditClick(row)}>
+                        <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
+                    </button>
+                    <button onClick={() => openConfirmDeleteModal(row)}>
+                        <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
+                    </button>
                 </div>
             </TableCell>
         </TableRow>
@@ -171,23 +171,23 @@ const AvailableTime = () => {
 
             <div className="flex justify-end mb-4">
                 <Button onClick={openModalForNewAvailableTime}>
-                Adicionar Horário
+                    Adicionar Horário
                 </Button>
             </div>
 
             <div className='border rounded overflow-x-auto'>
                 <Table className="min-w-full">
-                <TableHeader>
-                    <TableRow>
-                    <TableHead className="text-center px-4 py-2">Serviço</TableHead>
-                    <TableHead className="text-center px-4 py-2">Barbeiro</TableHead>
-                    <TableHead className="text-center px-4 py-2">Horário</TableHead>
-                    <TableHead className="text-center px-4 py-2">Ações</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {tableRows}
-                </TableBody>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="text-center px-4 py-2">Serviço</TableHead>
+                            <TableHead className="text-center px-4 py-2">Barbeiro</TableHead>
+                            <TableHead className="text-center px-4 py-2">Horário</TableHead>
+                            <TableHead className="text-center px-4 py-2">Ações</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {tableRows}
+                    </TableBody>
                 </Table>
             </div>
 
@@ -218,10 +218,10 @@ const AvailableTime = () => {
                                     value={selectedServiceId}
                                     onChange={(e) => setSelectedServiceId(e.target.value)}
                                 >
-                                <option value="">Selecione um serviço</option>
+                                    <option value="">Selecione um serviço</option>
                                     {services.map(service => (
                                         <option key={service.id} value={service.id}>
-                                        {service.name}
+                                            {service.name}
                                         </option>
                                     ))}
                                 </select>
@@ -234,10 +234,10 @@ const AvailableTime = () => {
                                     value={selectedBarberId}
                                     onChange={(e) => setSelectedBarberId(e.target.value)}
                                 >
-                                <option value="">Selecione um barbeiro</option>
+                                    <option value="">Selecione um barbeiro</option>
                                     {barbers.map(barber => (
                                         <option key={barber.id} value={barber.id}>
-                                        {barber.name}
+                                            {barber.name}
                                         </option>
                                     ))}
                                 </select>
@@ -260,18 +260,18 @@ const AvailableTime = () => {
                                     onChange={(e) => setTimeEnd(e.target.value)}
                                 />
                             </div>
-                            </div>
-                            <div className="mt-6 flex justify-end space-x-4">
-                                <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-                                    Cancelar
-                                </Button>
-                                <Button onClick={handleAddOrUpdateAvailableTime}>
-                                    {editableRowId ? 'Salvar' : 'Adicionar'}
-                                </Button>
-                            </div>
+                        </div>
+                        <div className="mt-6 flex justify-end space-x-4">
+                            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                                Cancelar
+                            </Button>
+                            <Button onClick={handleAddOrUpdateAvailableTime}>
+                                {editableRowId ? 'Salvar' : 'Adicionar'}
+                            </Button>
                         </div>
                     </div>
-                )}
+                </div>
+            )}
             <ToastContainer />
         </div>
     );

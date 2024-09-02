@@ -148,8 +148,8 @@ const Client = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.isArray(clients) && clients.map((row) => (
-              <TableRow key={row.id}>
+            {Array.isArray(clients) && clients.map((row, index) => (
+              <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.email}</TableCell>

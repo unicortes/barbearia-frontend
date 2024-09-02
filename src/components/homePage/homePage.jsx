@@ -10,7 +10,7 @@ import {
   BsScissors,
   BsTag,
 } from "react-icons/bs";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaHistory } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
@@ -119,6 +119,14 @@ const HomePage = () => {
                 </CardHeader>
               </Card>
             </Link>
+            <Link to="/historys" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <FaHistory className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Histórico</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
           </>
         )}
 
@@ -135,6 +143,14 @@ const HomePage = () => {
                   </CardHeader>
                 </Card>
               </Link>
+              <Link to="/historys" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <FaHistory className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">Histórico</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
             </div>
           </>
         )}

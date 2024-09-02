@@ -15,7 +15,7 @@ const History = () => {
 
   const fetchHistorysAdmin = async () => {
     try {
-      const response = await api.get('/api/appointments', {
+      const response = await api.get('/appointments', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -28,7 +28,7 @@ const History = () => {
 
   const fetchHistorys = async () => {
     try {
-      const response = await api.get(`/api/appointments/barber/${idUser}`, {
+      const response = await api.get(`/appointments/barber/${idUser}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

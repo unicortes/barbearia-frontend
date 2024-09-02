@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Product = () => {
   const [products, setProducts] = useState([]);
@@ -31,6 +33,7 @@ const Product = () => {
       const response = await api.get('/products'); 
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
+      toast.error('Erro ao buscar produtos.');
       console.error('Error fetching products:', error);
     }
   };
@@ -78,8 +81,10 @@ const Product = () => {
 
       if (editMode) {
         await api.put(`/products/${newProduct.id}`, productData);
+        toast.success('Produto atualizado com sucesso!');
       } else {
         await api.post('/products', productData);
+        toast.success('Produto adicionado com sucesso!');
       }
 
       fetchProducts();
@@ -88,6 +93,7 @@ const Product = () => {
       setErrors({});
       setIsModalOpen(false);
     } catch (error) {
+      toast.error('Erro ao adicionar/editar produto.');
       console.error('Error adding/editing product:', error);
     }
   };
@@ -100,7 +106,9 @@ const Product = () => {
     try {
       await api.delete(`/products/${id}`);
       fetchProducts();
+      toast.success('Produto removido com sucesso!');
     } catch (error) {
+      toast.error('Erro ao remover produto.');
       console.error('Erro ao remover produto:', error);
     }
   };
@@ -263,6 +271,7 @@ const Product = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

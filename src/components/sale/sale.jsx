@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { Edit, Trash2 } from "lucide-react";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Sale = () => {
   const [sales, setSales] = useState([]);
@@ -35,6 +37,7 @@ const Sale = () => {
       const response = await api.get("/promocoes");
       setSales(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
+      toast.error("Erro ao buscar promoções.");
       console.error("Error fetching sales:", error);
     }
   };
@@ -69,13 +72,16 @@ const Sale = () => {
       const saleData = { ...newSale };
       if (editMode) {
         await api.put(`/promocoes/${newSale.id}`, saleData);
+        toast.success("Promoção atualizada com sucesso!");
       } else {
         await api.post("/promocoes", saleData);
+        toast.success("Promoção adicionada com sucesso!");
       }
 
       fetchSales();
       resetForm();
     } catch (error) {
+      toast.error("Erro ao adicionar/editar promoção.");
       console.error("Error adding/editing sale:", error);
     }
   };
@@ -86,10 +92,12 @@ const Sale = () => {
     try {
       await api.delete(`/promocoes/${saleToDelete.id}`);
       fetchSales();
-      setIsConfirmDeleteOpen(false);
-      setSaleToDelete(null);
+      setIsConfirmDeleteOpen(false);  // Fechar o modal de confirmação
+      setSaleToDelete(null);          // Limpar o estado da venda a ser deletada
+      toast.success("Promoção removida com sucesso!"); // Exibir mensagem de sucesso
     } catch (error) {
-      console.error("Error removing sale:", error);
+      toast.error("Erro ao remover promoção."); // Exibir mensagem de erro
+      console.error("Erro ao remover venda:", error);
     }
   };
 
@@ -195,118 +203,87 @@ const Sale = () => {
 
       {/* Modal de confirmação de exclusão */}
       {isConfirmDeleteOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
-            <p className="mb-4">Você tem certeza de que deseja excluir esta promoção?</p>
-            <div className="flex justify-end space-x-4">
-              <Button variant="secondary" onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded">
+            <h2 className="text-xl font-bold mb-4">Confirmação</h2>
+            <p className="mb-4">Deseja realmente excluir esta promoção?</p>
+            <div className="flex justify-end space-x-2">
+              <Button onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
               <Button onClick={handleRemoveSale}>Excluir</Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Modal para adicionar/editar promoção */}
+      {/* Modal de edição/adicionar nova promoção */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded">
             <h2 className="text-xl font-bold mb-4">{editMode ? "Editar Promoção" : "Adicionar Promoção"}</h2>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="titulo" className="block text-sm font-medium text-gray-700">Nome</label>
-                <Input
-                  name="titulo"
-                  placeholder="Nome da promoção"
-                  value={newSale.titulo}
-                  onChange={handleInputChange}
-                  className={errors.titulo ? "border-red-500" : ""}
-                />
-                {errors.titulo && <p className="text-red-500">{errors.titulo}</p>}
-              </div>
-              <div>
-                <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">Descrição</label>
-                <Input
-                  name="descricao"
-                  placeholder="Descrição"
-                  value={newSale.descricao}
-                  onChange={handleInputChange}
-                  className={errors.descricao ? "border-red-500" : ""}
-                />
-                {errors.descricao && <p className="text-red-500">{errors.descricao}</p>}
-              </div>
-              <div>
-                <label htmlFor="codigoPromocao" className="block text-sm font-medium text-gray-700">Código Promocional</label>
-                <Input
-                  name="codigoPromocao"
-                  placeholder="Código promocional"
-                  value={newSale.codigoPromocao}
-                  onChange={handleInputChange}
-                  className={errors.codigoPromocao ? "border-red-500" : ""}
-                />
-                {errors.codigoPromocao && <p className="text-red-500">{errors.codigoPromocao}</p>}
-              </div>
-              <div>
-                <label htmlFor="desconto" className="block text-sm font-medium text-gray-700">Desconto</label>
-                <Input
-                  name="desconto"
-                  placeholder="Desconto"
-                  value={newSale.desconto}
-                  onChange={handleInputChange}
-                  className={errors.desconto ? "border-red-500" : ""}
-                />
-                {errors.desconto && <p className="text-red-500">{errors.desconto}</p>}
-              </div>
-              <div>
-                <label htmlFor="dataInicio" className="block text-sm font-medium text-gray-700">Data de Início</label>
-                <Input
-                  type="date"
-                  name="dataInicio"
-                  value={newSale.dataInicio}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="dataFim" className="block text-sm font-medium text-gray-700">Data de Expiração</label>
-                <Input
-                  type="date"
-                  name="dataFim"
-                  value={newSale.dataFim}
-                  onChange={handleInputChange}
-                  className={errors.dataFim ? "border-red-500" : ""}
-                />
-                {errors.dataFim && <p className="text-red-500">{errors.dataFim}</p>}
-              </div>
-              <div>
-                <label htmlFor="categoria" className="block text-sm font-medium text-gray-700">Categoria</label>
-                <Input
-                  name="categoria"
-                  placeholder="Categoria"
-                  value={newSale.categoria}
-                  onChange={handleInputChange}
-                  className={errors.categoria ? "border-red-500" : ""}
-                />
-                {errors.categoria && <p className="text-red-500">{errors.categoria}</p>}
-              </div>
-              <div>
-                <label htmlFor="disponibilidade" className="block text-sm font-medium text-gray-700">Disponível?</label>
+            <div className="grid grid-cols-1 gap-4">
+              <Input
+                name="titulo"
+                placeholder="Nome da Promoção"
+                value={newSale.titulo}
+                onChange={handleInputChange}
+                error={errors.titulo}
+              />
+              <Input
+                name="descricao"
+                placeholder="Descrição"
+                value={newSale.descricao}
+                onChange={handleInputChange}
+                error={errors.descricao}
+              />
+              <Input
+                name="codigoPromocao"
+                placeholder="Código Promocional"
+                value={newSale.codigoPromocao}
+                onChange={handleInputChange}
+                error={errors.codigoPromocao}
+              />
+              <Input
+                name="desconto"
+                placeholder="Desconto (%)"
+                type="number"
+                value={newSale.desconto}
+                onChange={handleInputChange}
+                error={errors.desconto}
+              />
+              <Input
+                name="dataFim"
+                placeholder="Data de Expiração"
+                type="date"
+                value={newSale.dataFim}
+                onChange={handleInputChange}
+                error={errors.dataFim}
+              />
+              <Input
+                name="categoria"
+                placeholder="Categoria"
+                value={newSale.categoria}
+                onChange={handleInputChange}
+                error={errors.categoria}
+              />
+              <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   name="disponibilidade"
                   checked={newSale.disponibilidade}
                   onChange={handleInputChange}
                 />
+                <label htmlFor="disponibilidade">Disponibilidade</label>
               </div>
-              <div className="flex justify-end space-x-4">
-                <Button variant="secondary" onClick={resetForm}>Cancelar</Button>
-                <Button onClick={handleAddOrEditSale}>
-                  {editMode ? "Atualizar" : "Salvar"}
-                </Button>
+              <div className="flex justify-end space-x-2">
+                <Button onClick={resetForm}>Cancelar</Button>
+                <Button onClick={handleAddOrEditSale}>{editMode ? "Atualizar" : "Adicionar"}</Button>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      <ToastContainer />
     </div>
   );
 };

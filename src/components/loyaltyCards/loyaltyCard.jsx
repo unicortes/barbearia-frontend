@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Trash2, Plus } from 'lucide-react';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoyaltyCard = () => {
   const [cards, setCards] = useState([]);
@@ -32,6 +34,7 @@ const LoyaltyCard = () => {
       setCards(response.data);
     } catch (error) {
       console.error("Erro ao buscar cartões de fidelidade:", error);
+      toast.error('Erro ao buscar cartões de fidelidade.');
     }
   };
 
@@ -41,6 +44,7 @@ const LoyaltyCard = () => {
       setClients(response.data);
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
+      toast.error('Erro ao buscar clientes.');
     }
   };
 
@@ -50,18 +54,18 @@ const LoyaltyCard = () => {
       setServices(response.data);
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);
+      toast.error('Erro ao buscar serviços.');
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'points') {
-      // Desconsidera a alteração do campo points no modal
       return;
     } else if (name === 'clientId' || name === 'serviceId') {
       setSelectedCard((prevCard) => ({
         ...prevCard,
-        [name]: Number(value) // Garantir que clientId e serviceId sejam números
+        [name]: Number(value)
       }));
     } else if (name === 'dateAdmission') {
       setSelectedCard((prevCard) => ({
@@ -91,21 +95,22 @@ const LoyaltyCard = () => {
       return;
     }
 
-    // Formatação da data no formato YYYY-MM-DD
     const formattedDateAdmission = new Date(selectedCard.dateAdmission).toISOString().split('T')[0];
 
     const payload = {
       dateAdmission: formattedDateAdmission,
       clientId: selectedCard.clientId,
       serviceId: selectedCard.serviceId,
-      points: 0 // O valor de points deve ser 0 ao criar um novo cartão
+      points: 0 
     };
 
     try {
       if (selectedCard.id) {
         await api.put(`/loyalty-cards/${selectedCard.id}`, payload);
+        toast.success('Cartão de fidelidade atualizado com sucesso!');
       } else {
         await api.post('/loyalty-cards', payload);
+        toast.success('Cartão de fidelidade adicionado com sucesso!');
       }
 
       fetchLoyaltyCards();
@@ -114,19 +119,22 @@ const LoyaltyCard = () => {
       setErrors({});
     } catch (error) {
       console.error("Erro ao salvar cartão de fidelidade:", error);
+      toast.error('Erro ao salvar cartão de fidelidade.');
     }
   };
 
-  // adicionado a confirmação
   const handleRemoveCard = async (id) => {
+    // adicionado a confirmação
     const confirmDelete = window.confirm("Você tem certeza que deseja excluir este cartão?");
     if (!confirmDelete) return;
 
     try {
       await api.delete(`/loyalty-cards/${id}`);
       fetchLoyaltyCards();
+      toast.success('Cartão de fidelidade removido com sucesso!');
     } catch (error) {
       console.error("Erro ao remover cartão de fidelidade:", error);
+      toast.error('Erro ao remover cartão de fidelidade.');
     }
   };
 
@@ -135,8 +143,10 @@ const LoyaltyCard = () => {
       const updatedCard = { ...card, points: card.points + 1 };
       await api.put(`/loyalty-cards/${card.id}`, updatedCard);
       fetchLoyaltyCards();
+      toast.success('Ponto adicionado com sucesso!');
     } catch (error) {
       console.error("Erro ao adicionar ponto:", error);
+      toast.error('Erro ao adicionar ponto.');
     }
   };
 
@@ -260,6 +270,7 @@ const LoyaltyCard = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

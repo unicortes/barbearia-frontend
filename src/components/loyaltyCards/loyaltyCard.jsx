@@ -124,6 +124,10 @@ const LoyaltyCard = () => {
   };
 
   const handleRemoveCard = async (id) => {
+    // adicionado a confirmação
+    const confirmDelete = window.confirm("Você tem certeza que deseja excluir este cartão?");
+    if (!confirmDelete) return;
+
     try {
       await api.delete(`/loyalty-cards/${id}`);
       fetchLoyaltyCards();

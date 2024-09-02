@@ -25,6 +25,8 @@ const Sale = () => {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [saleToDelete, setSaleToDelete] = useState(null);
 
   useEffect(() => {
     fetchSales();
@@ -77,33 +79,24 @@ const Sale = () => {
       }
 
       fetchSales();
-      setNewSale({
-        id: "",
-        titulo: "",
-        descricao: "",
-        codigoPromocao: "",
-        desconto: "",
-        dataFim: "",
-        dataInicio: "",
-        categoria: "",
-        disponibilidade: false,
-      });
-      setEditMode(false);
-      setErrors({});
-      setIsModalOpen(false);
+      resetForm();
     } catch (error) {
       toast.error("Erro ao adicionar/editar promoção.");
       console.error("Error adding/editing sale:", error);
     }
   };
 
-  const handleRemoveSale = async (id) => {
+  const handleRemoveSale = async () => {
+    if (!saleToDelete) return;
+
     try {
-      await api.delete(`/promocoes/${id}`);
+      await api.delete(`/promocoes/${saleToDelete.id}`);
       fetchSales();
-      toast.success("Promoção removida com sucesso!");
+      setIsConfirmDeleteOpen(false);  // Fechar o modal de confirmação
+      setSaleToDelete(null);          // Limpar o estado da venda a ser deletada
+      toast.success("Promoção removida com sucesso!"); // Exibir mensagem de sucesso
     } catch (error) {
-      toast.error("Erro ao remover promoção.");
+      toast.error("Erro ao remover promoção."); // Exibir mensagem de erro
       console.error("Erro ao remover venda:", error);
     }
   };
@@ -130,6 +123,28 @@ const Sale = () => {
     setIsModalOpen(true);
   };
 
+  const openConfirmDeleteModal = (sale) => {
+    setSaleToDelete(sale);
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const resetForm = () => {
+    setNewSale({
+      id: "",
+      titulo: "",
+      descricao: "",
+      codigoPromocao: "",
+      desconto: "",
+      dataFim: "",
+      dataInicio: "",
+      categoria: "",
+      disponibilidade: false,
+    });
+    setEditMode(false);
+    setErrors({});
+    setIsModalOpen(false);
+  };
+
   const formatDate = (dateString) => {
     const options = { day: "2-digit", month: "2-digit", year: "numeric" };
     return new Date(dateString).toLocaleDateString("pt-BR", options);
@@ -141,7 +156,7 @@ const Sale = () => {
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className="text-3xl font-bold">Promoções</h1>
-      <div className="flex justify-end w-full mb-4">
+      <div className="flex justify-end mb-4">
         <Button onClick={openModalForNewSale}>Adicionar promoção</Button>
       </div>
       <div className="border rounded w-full">
@@ -160,132 +175,114 @@ const Sale = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.isArray(sales) &&
-              sales.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.titulo}</TableCell>
-                  <TableCell>{row.descricao}</TableCell>
-                  <TableCell>{row.codigoPromocao}</TableCell>
-                  <TableCell>{row.desconto}%</TableCell>
-                  <TableCell>{formatDate(row.dataFim)}</TableCell>
-                  <TableCell>{row.categoria}</TableCell>
-                  <TableCell>{row.disponibilidade ? "Sim" : "Não"}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <button className="text-blue-500 hover:text-blue-700" onClick={() => openModalForEditSale(row)}>
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button className="text-red-500 hover:text-red-700" onClick={() => handleRemoveSale(row.id)}>
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+            {sales.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.titulo}</TableCell>
+                <TableCell>{row.descricao}</TableCell>
+                <TableCell>{row.codigoPromocao}</TableCell>
+                <TableCell>{row.desconto}%</TableCell>
+                <TableCell>{formatDate(row.dataFim)}</TableCell>
+                <TableCell>{row.categoria}</TableCell>
+                <TableCell>{row.disponibilidade ? "Sim" : "Não"}</TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <button className="text-blue-500 hover:text-blue-700" onClick={() => openModalForEditSale(row)}>
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button className="text-red-500 hover:text-red-700" onClick={() => openConfirmDeleteModal(row)}>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
 
+      {/* Modal de confirmação de exclusão */}
+      {isConfirmDeleteOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded">
+            <h2 className="text-xl font-bold mb-4">Confirmação</h2>
+            <p className="mb-4">Deseja realmente excluir esta promoção?</p>
+            <div className="flex justify-end space-x-2">
+              <Button onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
+              <Button onClick={handleRemoveSale}>Excluir</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de edição/adicionar nova promoção */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded">
             <h2 className="text-xl font-bold mb-4">{editMode ? "Editar Promoção" : "Adicionar Promoção"}</h2>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="titulo" className="block text-sm font-medium text-gray-700">Nome</label>
-                <Input
-                  name="titulo"
-                  placeholder="Nome da promoção"
-                  value={newSale.titulo}
-                  onChange={handleInputChange}
-                  className={errors.titulo ? "border-red-500" : ""}
-                />
-                {errors.titulo && <p className="text-red-500">{errors.titulo}</p>}
-              </div>
-              <div>
-                <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">Descrição</label>
-                <Input
-                  name="descricao"
-                  placeholder="Descrição"
-                  value={newSale.descricao}
-                  onChange={handleInputChange}
-                  className={errors.descricao ? "border-red-500" : ""}
-                />
-                {errors.descricao && <p className="text-red-500">{errors.descricao}</p>}
-              </div>
-              <div>
-                <label htmlFor="codigoPromocao" className="block text-sm font-medium text-gray-700">Código Promocional</label>
-                <Input
-                  name="codigoPromocao"
-                  placeholder="Código promocional"
-                  value={newSale.codigoPromocao}
-                  onChange={handleInputChange}
-                  className={errors.codigoPromocao ? "border-red-500" : ""}
-                />
-                {errors.codigoPromocao && <p className="text-red-500">{errors.codigoPromocao}</p>}
-              </div>
-              <div>
-                <label htmlFor="desconto" className="block text-sm font-medium text-gray-700">Desconto</label>
-                <Input
-                  name="desconto"
-                  placeholder="Desconto"
-                  value={newSale.desconto}
-                  onChange={handleInputChange}
-                  className={errors.desconto ? "border-red-500" : ""}
-                />
-                {errors.desconto && <p className="text-red-500">{errors.desconto}</p>}
-              </div>
-              <div>
-                <label htmlFor="dataInicio" className="block text-sm font-medium text-gray-700">Data de Início</label>
-                <Input
-                  type="date"
-                  name="dataInicio"
-                  value={newSale.dataInicio}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="dataFim" className="block text-sm font-medium text-gray-700">Data de Expiração</label>
-                <Input
-                  type="date"
-                  name="dataFim"
-                  value={newSale.dataFim}
-                  onChange={handleInputChange}
-                  className={errors.dataFim ? "border-red-500" : ""}
-                />
-                {errors.dataFim && <p className="text-red-500">{errors.dataFim}</p>}
-              </div>
-              <div>
-                <label htmlFor="categoria" className="block text-sm font-medium text-gray-700">Categoria</label>
-                <Input
-                  name="categoria"
-                  placeholder="Categoria"
-                  value={newSale.categoria}
-                  onChange={handleInputChange}
-                  className={errors.categoria ? "border-red-500" : ""}
-                />
-                {errors.categoria && <p className="text-red-500">{errors.categoria}</p>}
-              </div>
-              <div>
-                <label htmlFor="disponibilidade" className="block text-sm font-medium text-gray-700">Disponível?</label>
+            <div className="grid grid-cols-1 gap-4">
+              <Input
+                name="titulo"
+                placeholder="Nome da Promoção"
+                value={newSale.titulo}
+                onChange={handleInputChange}
+                error={errors.titulo}
+              />
+              <Input
+                name="descricao"
+                placeholder="Descrição"
+                value={newSale.descricao}
+                onChange={handleInputChange}
+                error={errors.descricao}
+              />
+              <Input
+                name="codigoPromocao"
+                placeholder="Código Promocional"
+                value={newSale.codigoPromocao}
+                onChange={handleInputChange}
+                error={errors.codigoPromocao}
+              />
+              <Input
+                name="desconto"
+                placeholder="Desconto (%)"
+                type="number"
+                value={newSale.desconto}
+                onChange={handleInputChange}
+                error={errors.desconto}
+              />
+              <Input
+                name="dataFim"
+                placeholder="Data de Expiração"
+                type="date"
+                value={newSale.dataFim}
+                onChange={handleInputChange}
+                error={errors.dataFim}
+              />
+              <Input
+                name="categoria"
+                placeholder="Categoria"
+                value={newSale.categoria}
+                onChange={handleInputChange}
+                error={errors.categoria}
+              />
+              <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   name="disponibilidade"
                   checked={newSale.disponibilidade}
                   onChange={handleInputChange}
                 />
+                <label htmlFor="disponibilidade">Disponibilidade</label>
               </div>
-              <div className="flex justify-end space-x-4">
-                <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
-                <Button onClick={handleAddOrEditSale}>
-                  {editMode ? "Atualizar" : "Salvar"}
-                </Button>
+              <div className="flex justify-end space-x-2">
+                <Button onClick={resetForm}>Cancelar</Button>
+                <Button onClick={handleAddOrEditSale}>{editMode ? "Atualizar" : "Adicionar"}</Button>
               </div>
             </div>
           </div>
         </div>
       )}
+
       <ToastContainer />
     </div>
   );

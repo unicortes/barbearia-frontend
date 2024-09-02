@@ -28,7 +28,7 @@ const Client = () => {
 
   const fetchClients = async () => {
     try {
-      const response = await api.get('/clients'); 
+      const response = await api.get('/api/clients'); 
       setClients(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching clients:', error);
@@ -71,10 +71,10 @@ const Client = () => {
       const clientData = { ...newClient };
 
       if (editMode) {
-        await api.put(`/clients/${newClient.id}`, clientData);
+        await api.put(`/api/clients/${newClient.id}`, clientData);
         toast.success('Cliente atualizado com sucesso!');
       } else {
-        await api.post('/clients', clientData);
+        await api.post('/api/clients', clientData);
         toast.success('Cliente adicionado com sucesso!');
       }
 
@@ -95,7 +95,7 @@ const Client = () => {
     if (!confirmDelete) return;
   
     try {
-      await api.delete(`/clients/${id}`);
+      await api.delete(`/api/clients/${id}`);
       fetchClients();
       toast.success('Cliente removido com sucesso!');
     } catch (error) {
@@ -124,7 +124,7 @@ const Client = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className='text-3xl font-bold'>Clientes</h1>

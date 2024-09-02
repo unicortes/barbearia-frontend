@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true, // Torna essa a rota padrão quando o usuário acessa "/"
-        element: <HomePage />, // Rota para a HomePage
+        element: <Login />, // Rota para a Login
       },
       {
         path: "*",

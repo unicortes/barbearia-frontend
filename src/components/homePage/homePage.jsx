@@ -5,6 +5,7 @@ import {
   BsPerson as BsBarber,
   BsPerson as BsClient,
   BsScissors,
+  BsClock,
   BsBox,
   BsCart,
   BsCardChecklist,
@@ -37,6 +38,17 @@ const HomePage = () => {
                   <BsClient className="text-gray-800 w-16 h-16" />
                   <CardTitle className="mt-2 text-center text-lg font-semibold">
                     Gerenciar Cliente
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link to="/avaliable-time" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <BsClock className="text-gray-800 w-16 h-16" />{" "}
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">
+                    Gerenciar Horários
                   </CardTitle>
                 </CardHeader>
               </Card>

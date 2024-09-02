@@ -33,7 +33,7 @@ const Barber = () => {
 
   const fetchBarbers = async () => {
     try {
-      const response = await api.get('/barber');
+      const response = await api.get('/api/barber');
       setBarbers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching barbers:', error);
@@ -68,10 +68,10 @@ const Barber = () => {
       const barberData = { ...newBarber };
 
       if (editMode) {
-        await api.put(`/barber/${newBarber.id}`, barberData);
+        await api.put(`/api/barber/${newBarber.id}`, barberData);
         toast.success('Barbeiro atualizado com sucesso!');
       } else {
-        await api.post('/barber', barberData);
+        await api.post('/api/barber', barberData);
         toast.success('Barbeiro adicionado com sucesso!');
       }
 
@@ -101,7 +101,7 @@ const Barber = () => {
     if (!confirmDelete) return;
   
     try {
-      await api.delete(`/barber/${id}`);
+      await api.delete(`/api/barber/${id}`);
       fetchBarbers();
       toast.success('Barbeiro removido com sucesso!');
     } catch (error) {
@@ -139,7 +139,7 @@ const Barber = () => {
 
   return (
     <div className='p-6 max-w-6xl mx-auto space-y-4 w-full'>
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className='text-3xl font-bold'>Barbeiro</h1>

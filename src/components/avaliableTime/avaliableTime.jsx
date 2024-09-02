@@ -19,6 +19,8 @@ const AvailableTime = () => {
     const [timeEnd, setTimeEnd] = useState('');
     const [editableRowId, setEditableRowId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+    const [rowToDelete, setRowToDelete] = useState(null);
 
     useEffect(() => {
         fetchAvailableTimes();
@@ -94,11 +96,15 @@ const AvailableTime = () => {
         }
     };
 
-    const handleRemoveAvailableTimeItem = async (id) => {
+    const handleRemoveAvailableTimeItem = async () => {
         try {
-            await api.delete(`/available-times/${id}`);
-            fetchAvailableTimes();
-            toast.success('Horário removido com sucesso!');
+            if (rowToDelete) {
+                await api.delete(`/available-times/${rowToDelete.id}`);
+                fetchAvailableTimes();
+                toast.success('Horário removido com sucesso!');
+                setIsConfirmDeleteOpen(false);
+                setRowToDelete(null);
+            }
         } catch (error) {
             toast.error('Erro ao remover horário.');
             console.error('Erro ao remover horário:', error);
@@ -123,6 +129,11 @@ const AvailableTime = () => {
         setIsModalOpen(true);
     };
 
+    const openConfirmDeleteModal = (row) => {
+        setRowToDelete(row);
+        setIsConfirmDeleteOpen(true);
+    };
+
     const getServiceById = (serviceId) => {
         const service = services.find(service => service.id === serviceId);
         return service ? service.name : 'Serviço não encontrado';
@@ -143,7 +154,7 @@ const AvailableTime = () => {
                 <button onClick={() => handleEditClick(row)}>
                     <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
                 </button>
-                <button onClick={() => handleRemoveAvailableTimeItem(row.id)}>
+                <button onClick={() => openConfirmDeleteModal(row)}>
                     <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
                 </button>
                 </div>
@@ -179,6 +190,20 @@ const AvailableTime = () => {
                 </TableBody>
                 </Table>
             </div>
+
+            {/* Modal de confirmação de exclusão */}
+            {isConfirmDeleteOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg max-w-md w-full">
+                        <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
+                        <p className="mb-4">Você tem certeza que deseja excluir este horário?</p>
+                        <div className="flex justify-end space-x-4">
+                            <Button variant="outline" onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
+                            <Button onClick={handleRemoveAvailableTimeItem}>Excluir</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

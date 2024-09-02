@@ -18,7 +18,7 @@ const DailyScheduleBarber = () => {
 
   const fetchAppointments = async (date) => {
     try {
-      const response = await api.get(`/appointments?date=${date.toISOString().split('T')[0]}`);
+      const response = await api.get(`/api/appointments?date=${date.toISOString().split('T')[0]}`);
       setAppointments(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar agendamentos:", error);
@@ -27,7 +27,7 @@ const DailyScheduleBarber = () => {
 
   const handleStatusChange = async (appointmentId, status) => {
     try {
-      await api.patch(`/appointments/${appointmentId}`, { status });
+      await api.patch(`/api/appointments/${appointmentId}`, { status });
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
           appointment.id === appointmentId ? { ...appointment, status } : appointment
@@ -41,7 +41,7 @@ const DailyScheduleBarber = () => {
   const handleRemoveAppointment = async () => {
     try {
       if (selectedAppointmentId) {
-        await api.delete(`/appointments/${selectedAppointmentId}`);
+        await api.delete(`/api/appointments/${selectedAppointmentId}`);
         fetchAppointments(selectedDate);
         toast.success('Agendamento removido com sucesso!');
       }
@@ -65,7 +65,7 @@ const DailyScheduleBarber = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className="text-3xl font-bold mb-4 text-center">Agenda do Barbeiro</h1>

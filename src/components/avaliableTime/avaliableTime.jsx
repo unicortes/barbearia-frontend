@@ -30,7 +30,7 @@ const AvailableTime = () => {
 
     const fetchAvailableTimes = async () => {
         try {
-            const response = await api.get('/available-times');
+            const response = await api.get('/api/available-times');
             setAvailableTimes(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             toast.error('Erro ao buscar horários disponíveis.');
@@ -40,7 +40,7 @@ const AvailableTime = () => {
 
     const fetchServices = async () => {
         try {
-            const response = await api.get('/servicos');
+            const response = await api.get('/api/servicos');
             setServices(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             toast.error('Erro ao buscar serviços.');
@@ -50,7 +50,7 @@ const AvailableTime = () => {
 
     const fetchBarbers = async () => {
         try {
-            const response = await api.get('/barbers');
+            const response = await api.get('/api/barbers');
             setBarbers(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             toast.error('Erro ao buscar barbeiros.');
@@ -66,7 +66,7 @@ const AvailableTime = () => {
 
         try {
             if (editableRowId) {
-                await api.put(`/available-times/${editableRowId}`, {
+                await api.put(`/api/available-times/${editableRowId}`, {
                     serviceId: selectedServiceId,
                     barberId: selectedBarberId,
                     timeStart,
@@ -75,7 +75,7 @@ const AvailableTime = () => {
                 toast.success('Horário atualizado com sucesso!');
                 setEditableRowId(null);
             } else {
-                await api.post('/available-times', {
+                await api.post('/api/available-times', {
                     serviceId: selectedServiceId,
                     barberId: selectedBarberId,
                     timeStart,
@@ -99,7 +99,7 @@ const AvailableTime = () => {
     const handleRemoveAvailableTimeItem = async () => {
         try {
             if (rowToDelete) {
-                await api.delete(`/available-times/${rowToDelete.id}`);
+                await api.delete(`/api/available-times/${rowToDelete.id}`);
                 fetchAvailableTimes();
                 toast.success('Horário removido com sucesso!');
                 setIsConfirmDeleteOpen(false);

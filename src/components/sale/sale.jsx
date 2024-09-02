@@ -71,10 +71,10 @@ const Sale = () => {
     try {
       const saleData = { ...newSale };
       if (editMode) {
-        await api.put(`/promocoes/${newSale.id}`, saleData);
+        await api.put(`/api/promocoes/${newSale.id}`, saleData);
         toast.success("Promoção atualizada com sucesso!");
       } else {
-        await api.post("/promocoes", saleData);
+        await api.post("/api/promocoes", saleData);
         toast.success("Promoção adicionada com sucesso!");
       }
 
@@ -90,7 +90,7 @@ const Sale = () => {
     if (!saleToDelete) return;
 
     try {
-      await api.delete(`/promocoes/${saleToDelete.id}`);
+      await api.delete(`/api/promocoes/${saleToDelete.id}`);
       fetchSales();
       setIsConfirmDeleteOpen(false);  // Fechar o modal de confirmação
       setSaleToDelete(null);          // Limpar o estado da venda a ser deletada
@@ -152,7 +152,7 @@ const Sale = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-4 w-full">
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className="text-3xl font-bold">Promoções</h1>

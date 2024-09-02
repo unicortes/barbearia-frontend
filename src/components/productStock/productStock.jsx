@@ -27,7 +27,7 @@ const ProductStock = () => {
 
   const fetchStock = async () => {
     try {
-      const response = await api.get('/stocks');
+      const response = await api.get('/api/stocks');
       setStockRows(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       toast.error('Erro ao buscar o estoque.');
@@ -37,7 +37,7 @@ const ProductStock = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products');
+      const response = await api.get('/api/products');
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       toast.error('Erro ao buscar produtos.');
@@ -69,7 +69,7 @@ const ProductStock = () => {
 
     try {
       if (editableRowId) {
-        await api.put(`/stocks/${editableRowId}`, {
+        await api.put(`/api/stocks/${editableRowId}`, {
           productId: selectedProductId,
           quantity: parseInt(quantity, 10),
           status: selectedStatus
@@ -77,7 +77,7 @@ const ProductStock = () => {
         toast.success('Estoque atualizado com sucesso!');
         setEditableRowId(null);
       } else {
-        await api.post('/stocks', {
+        await api.post('/api/stocks', {
           productId: selectedProductId,
           quantity: parseInt(quantity, 10),
           status: selectedStatus
@@ -101,7 +101,7 @@ const ProductStock = () => {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/stocks/${id}`);
+      await api.delete(`/api/stocks/${id}`);
       fetchStock();
       toast.success('Item de estoque removido com sucesso!');
     } catch (error) {
@@ -133,7 +133,7 @@ const ProductStock = () => {
 
   return (
     <div className='p-6 max-w-6xl mx-auto space-y-4'>
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className='text-3xl font-bold'>Estoque</h1>

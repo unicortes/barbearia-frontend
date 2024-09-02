@@ -40,7 +40,7 @@ const DailyScheduleClient = () => {
 
   const fetchBarbers = async () => {
     try {
-      const response = await api.get("/barbers");
+      const response = await api.get("/api/barbers");
       setBarbers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar barbeiros:", error);
@@ -58,7 +58,7 @@ const DailyScheduleClient = () => {
 
   const fetchAvailableTimes = async (barberId, serviceId) => {
     try {
-      const response = await api.get(`/available-times?barberId=${barberId}&serviceId=${serviceId}`);
+      const response = await api.get(`/api/available-times?barberId=${barberId}&serviceId=${serviceId}`);
       setAvailableTimes(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar horários disponíveis:", error);
@@ -88,7 +88,7 @@ const DailyScheduleClient = () => {
         ...newAppointment,
         appointmentDateTime: `${selectedDate.toISOString().split("T")[0]}T${newAppointment.availableTimeId}`,
       };
-      await api.post("/appointments", appointmentData);
+      await api.post("/api/appointments", appointmentData);
       setIsModalOpen(false);
       setNewAppointment({
         barberId: '',
@@ -110,7 +110,7 @@ const DailyScheduleClient = () => {
   const handleDeleteAppointment = async () => {
     try {
       if (appointmentToDelete) {
-        await api.delete(`/appointments/${appointmentToDelete}`);
+        await api.delete(`/api/appointments/${appointmentToDelete}`);
         toast.success('Agendamento removido com sucesso!');
         setAppointmentToDelete(null);
         setIsConfirmDeleteOpen(false);
@@ -133,7 +133,7 @@ const DailyScheduleClient = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className="text-3xl font-bold mb-4 text-center">Agendamento Cliente</h1>

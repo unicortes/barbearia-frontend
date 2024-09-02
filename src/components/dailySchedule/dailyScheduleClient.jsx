@@ -49,7 +49,7 @@ const DailyScheduleClient = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await api.get("/services");
+      const response = await api.get("/api/services");
       setServices(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);

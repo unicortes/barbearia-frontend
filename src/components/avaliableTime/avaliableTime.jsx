@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '@/api/api';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,8 @@ const AvailableTime = () => {
     const [timeEnd, setTimeEnd] = useState('');
     const [editableRowId, setEditableRowId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+    const [rowToDelete, setRowToDelete] = useState(null);
 
     useEffect(() => {
         fetchAvailableTimes();
@@ -28,7 +30,7 @@ const AvailableTime = () => {
 
     const fetchAvailableTimes = async () => {
         try {
-            const response = await api.get('/available-times');
+            const response = await api.get('/api/available-times');
             setAvailableTimes(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             toast.error('Erro ao buscar horários disponíveis.');
@@ -38,7 +40,7 @@ const AvailableTime = () => {
 
     const fetchServices = async () => {
         try {
-            const response = await api.get('/servicos');
+            const response = await api.get('/api/servicos');
             setServices(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             toast.error('Erro ao buscar serviços.');
@@ -48,7 +50,7 @@ const AvailableTime = () => {
 
     const fetchBarbers = async () => {
         try {
-            const response = await api.get('/barbers');
+            const response = await api.get('/api/barbers');
             setBarbers(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             toast.error('Erro ao buscar barbeiros.');
@@ -64,7 +66,7 @@ const AvailableTime = () => {
 
         try {
             if (editableRowId) {
-                await api.put(`/available-times/${editableRowId}`, {
+                await api.put(`/api/available-times/${editableRowId}`, {
                     serviceId: selectedServiceId,
                     barberId: selectedBarberId,
                     timeStart,
@@ -73,7 +75,7 @@ const AvailableTime = () => {
                 toast.success('Horário atualizado com sucesso!');
                 setEditableRowId(null);
             } else {
-                await api.post('/available-times', {
+                await api.post('/api/available-times', {
                     serviceId: selectedServiceId,
                     barberId: selectedBarberId,
                     timeStart,
@@ -94,11 +96,15 @@ const AvailableTime = () => {
         }
     };
 
-    const handleRemoveAvailableTimeItem = async (id) => {
+    const handleRemoveAvailableTimeItem = async () => {
         try {
-            await api.delete(`/available-times/${id}`);
-            fetchAvailableTimes();
-            toast.success('Horário removido com sucesso!');
+            if (rowToDelete) {
+                await api.delete(`/api/available-times/${rowToDelete.id}`);
+                fetchAvailableTimes();
+                toast.success('Horário removido com sucesso!');
+                setIsConfirmDeleteOpen(false);
+                setRowToDelete(null);
+            }
         } catch (error) {
             toast.error('Erro ao remover horário.');
             console.error('Erro ao remover horário:', error);
@@ -123,6 +129,11 @@ const AvailableTime = () => {
         setIsModalOpen(true);
     };
 
+    const openConfirmDeleteModal = (row) => {
+        setRowToDelete(row);
+        setIsConfirmDeleteOpen(true);
+    };
+
     const getServiceById = (serviceId) => {
         const service = services.find(service => service.id === serviceId);
         return service ? service.name : 'Serviço não encontrado';
@@ -133,19 +144,19 @@ const AvailableTime = () => {
         return barber ? barber.name : 'Barbeiro não encontrado';
     };
 
-    const tableRows = availableTimes.map(row => (
-        <TableRow key={row.id}>
+    const tableRows = availableTimes.map((row, index) => (
+        <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
             <TableCell className="text-center px-4 py-2">{getServiceById(row.serviceId)}</TableCell>
             <TableCell className="text-center px-4 py-2">{getBarberById(row.barberId)}</TableCell>
             <TableCell className="text-center px-4 py-2">{row.timeStart} - {row.timeEnd}</TableCell>
             <TableCell className="text-center px-4 py-2">
                 <div className="flex justify-center space-x-4">
-                <button onClick={() => handleEditClick(row)}>
-                    <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
-                </button>
-                <button onClick={() => handleRemoveAvailableTimeItem(row.id)}>
-                    <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
-                </button>
+                    <button onClick={() => handleEditClick(row)}>
+                        <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
+                    </button>
+                    <button onClick={() => openConfirmDeleteModal(row)}>
+                        <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
+                    </button>
                 </div>
             </TableCell>
         </TableRow>
@@ -160,25 +171,39 @@ const AvailableTime = () => {
 
             <div className="flex justify-end mb-4">
                 <Button onClick={openModalForNewAvailableTime}>
-                Adicionar Horário
+                    Adicionar Horário
                 </Button>
             </div>
 
             <div className='border rounded overflow-x-auto'>
                 <Table className="min-w-full">
-                <TableHeader>
-                    <TableRow>
-                    <TableHead className="text-center px-4 py-2">Serviço</TableHead>
-                    <TableHead className="text-center px-4 py-2">Barbeiro</TableHead>
-                    <TableHead className="text-center px-4 py-2">Horário</TableHead>
-                    <TableHead className="text-center px-4 py-2">Ações</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {tableRows}
-                </TableBody>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="text-center px-4 py-2">Serviço</TableHead>
+                            <TableHead className="text-center px-4 py-2">Barbeiro</TableHead>
+                            <TableHead className="text-center px-4 py-2">Horário</TableHead>
+                            <TableHead className="text-center px-4 py-2">Ações</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {tableRows}
+                    </TableBody>
                 </Table>
             </div>
+
+            {/* Modal de confirmação de exclusão */}
+            {isConfirmDeleteOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg max-w-md w-full">
+                        <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
+                        <p className="mb-4">Você tem certeza que deseja excluir este horário?</p>
+                        <div className="flex justify-end space-x-4">
+                            <Button variant="outline" onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
+                            <Button onClick={handleRemoveAvailableTimeItem}>Excluir</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -193,10 +218,10 @@ const AvailableTime = () => {
                                     value={selectedServiceId}
                                     onChange={(e) => setSelectedServiceId(e.target.value)}
                                 >
-                                <option value="">Selecione um serviço</option>
+                                    <option value="">Selecione um serviço</option>
                                     {services.map(service => (
                                         <option key={service.id} value={service.id}>
-                                        {service.name}
+                                            {service.name}
                                         </option>
                                     ))}
                                 </select>
@@ -209,10 +234,10 @@ const AvailableTime = () => {
                                     value={selectedBarberId}
                                     onChange={(e) => setSelectedBarberId(e.target.value)}
                                 >
-                                <option value="">Selecione um barbeiro</option>
+                                    <option value="">Selecione um barbeiro</option>
                                     {barbers.map(barber => (
                                         <option key={barber.id} value={barber.id}>
-                                        {barber.name}
+                                            {barber.name}
                                         </option>
                                     ))}
                                 </select>
@@ -235,18 +260,18 @@ const AvailableTime = () => {
                                     onChange={(e) => setTimeEnd(e.target.value)}
                                 />
                             </div>
-                            </div>
-                            <div className="mt-6 flex justify-end space-x-4">
-                                <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-                                    Cancelar
-                                </Button>
-                                <Button onClick={handleAddOrUpdateAvailableTime}>
-                                    {editableRowId ? 'Salvar' : 'Adicionar'}
-                                </Button>
-                            </div>
+                        </div>
+                        <div className="mt-6 flex justify-end space-x-4">
+                            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                                Cancelar
+                            </Button>
+                            <Button onClick={handleAddOrUpdateAvailableTime}>
+                                {editableRowId ? 'Salvar' : 'Adicionar'}
+                            </Button>
                         </div>
                     </div>
-                )}
+                </div>
+            )}
             <ToastContainer />
         </div>
     );

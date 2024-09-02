@@ -27,7 +27,7 @@ const Service = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await api.get('/servicos'); 
+      const response = await api.get('/api/servicos'); 
       setServices(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching services:', error);
@@ -68,10 +68,10 @@ const Service = () => {
       const serviceData = { ...newService };
 
       if (editMode) {
-        await api.put(`/servicos/${newService.id}`, serviceData);
+        await api.put(`/api/servicos/${newService.id}`, serviceData);
         toast.success('Serviço atualizado com sucesso!');
       } else {
-        await api.post('/servicos', serviceData);
+        await api.post('/api/servicos', serviceData);
         toast.success('Serviço adicionado com sucesso!');
       }
 
@@ -87,13 +87,16 @@ const Service = () => {
   };
 
   const handleRemoveService = async (id) => {
-    try {
-      await api.delete(`/servicos/${id}`);
-      fetchServices();
-      toast.success('Serviço removido com sucesso!');
-    } catch (error) {
-      console.error('Erro ao remover serviço:', error);
-      toast.error('Erro ao remover serviço.');
+    const confirm = window.confirm('Tem certeza que deseja excluir este serviço?');
+    if (confirm) {
+      try {
+        await api.delete(`/api/servicos/${id}`);
+        fetchServices();
+        toast.success('Serviço removido com sucesso!');
+      } catch (error) {
+        console.error('Erro ao remover serviço:', error);
+        toast.error('Erro ao remover serviço.');
+      }
     }
   };
 
@@ -111,7 +114,7 @@ const Service = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className='text-3xl font-bold'>Serviços</h1>
@@ -132,8 +135,8 @@ const Service = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.isArray(services) && services.map((row) => (
-              <TableRow key={row.id}>
+            {Array.isArray(services) && services.map((row, index) => (
+              <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.description}</TableCell>

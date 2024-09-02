@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { Button } from "@/components/ui/button";
@@ -6,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import api from "@/api/api";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DailyScheduleClient = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [barbers, setBarbers] = useState([]);
   const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
@@ -22,6 +25,7 @@ const DailyScheduleClient = () => {
     status: 'PENDENTE', // Status padrão
     available: true,
   });
+  const [appointmentToDelete, setAppointmentToDelete] = useState(null);
 
   useEffect(() => {
     fetchBarbers();
@@ -36,7 +40,7 @@ const DailyScheduleClient = () => {
 
   const fetchBarbers = async () => {
     try {
-      const response = await api.get("/barbers");
+      const response = await api.get("/api/barbers");
       setBarbers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar barbeiros:", error);
@@ -45,7 +49,7 @@ const DailyScheduleClient = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await api.get("/services");
+      const response = await api.get("/api/services");
       setServices(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);
@@ -54,7 +58,7 @@ const DailyScheduleClient = () => {
 
   const fetchAvailableTimes = async (barberId, serviceId) => {
     try {
-      const response = await api.get(`/available-times?barberId=${barberId}&serviceId=${serviceId}`);
+      const response = await api.get(`/api/available-times?barberId=${barberId}&serviceId=${serviceId}`);
       setAvailableTimes(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar horários disponíveis:", error);
@@ -84,7 +88,7 @@ const DailyScheduleClient = () => {
         ...newAppointment,
         appointmentDateTime: `${selectedDate.toISOString().split("T")[0]}T${newAppointment.availableTimeId}`,
       };
-      await api.post("/appointments", appointmentData);
+      await api.post("/api/appointments", appointmentData);
       setIsModalOpen(false);
       setNewAppointment({
         barberId: '',
@@ -96,14 +100,40 @@ const DailyScheduleClient = () => {
         available: true,
       });
       setAvailableTimes([]);
+      toast.success('Agendamento criado com sucesso!');
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
+      toast.error('Erro ao criar agendamento.');
     }
+  };
+
+  const handleDeleteAppointment = async () => {
+    try {
+      if (appointmentToDelete) {
+        await api.delete(`/api/appointments/${appointmentToDelete}`);
+        toast.success('Agendamento removido com sucesso!');
+        setAppointmentToDelete(null);
+        setIsConfirmDeleteOpen(false);
+      }
+    } catch (error) {
+      toast.error('Erro ao remover agendamento.');
+      console.error('Erro ao remover agendamento:', error);
+    }
+  };
+
+  const openConfirmDeleteModal = (appointmentId) => {
+    setAppointmentToDelete(appointmentId);
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const closeConfirmDeleteModal = () => {
+    setIsConfirmDeleteOpen(false);
+    setAppointmentToDelete(null);
   };
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className="text-3xl font-bold mb-4 text-center">Agendamento Cliente</h1>
@@ -188,6 +218,25 @@ const DailyScheduleClient = () => {
           </div>
         </div>
       )}
+
+      {isConfirmDeleteOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir este agendamento?</p>
+            <div className="mt-4 flex justify-end space-x-4">
+              <Button variant="outline" onClick={closeConfirmDeleteModal}>
+                Cancelar
+              </Button>
+              <Button onClick={handleDeleteAppointment} variant="destructive">
+                Confirmar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ToastContainer />
     </div>
   );
 };

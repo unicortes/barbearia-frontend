@@ -175,8 +175,8 @@ const Sale = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sales.map((row) => (
-              <TableRow key={row.id}>
+            {sales.map((row, index) => (
+              <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.titulo}</TableCell>
                 <TableCell>{row.descricao}</TableCell>

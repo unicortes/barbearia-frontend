@@ -124,7 +124,6 @@ const LoyaltyCard = () => {
   };
 
   const handleRemoveCard = async (id) => {
-    // adicionado a confirmação
     const confirmDelete = window.confirm("Você tem certeza que deseja excluir este cartão?");
     if (!confirmDelete) return;
 
@@ -165,8 +164,8 @@ const LoyaltyCard = () => {
     return service ? service.name : 'Serviço não encontrado';
   };
 
-  const tableRows = cards.map(card => (
-    <TableRow key={card.id}>
+  const tableRows = cards.map((card, index) => (
+    <TableRow key={card.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
       <TableCell className="text-center px-4 py-2">{getClientNameById(card.clientId)}</TableCell>
       <TableCell className="text-center px-4 py-2">{getServiceNameById(card.serviceId)}</TableCell>
       <TableCell className="text-center px-4 py-2">{card.points}</TableCell>

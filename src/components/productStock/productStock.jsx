@@ -131,24 +131,6 @@ const ProductStock = () => {
     return product ? product.name : 'Produto não encontrado';
   };
 
-  const tableRows = stockRows.map(row => (
-    <TableRow key={row.id}>
-      <TableCell className="text-center px-4 py-2">{getProductById(row.productId)}</TableCell>
-      <TableCell className="text-center px-4 py-2">{row.quantity}</TableCell>
-      <TableCell className="text-center px-4 py-2">{row.status}</TableCell>
-      <TableCell className="text-center px-4 py-2">
-        <div className="flex justify-center space-x-4">
-          <button onClick={() => handleEditClick(row)}>
-            <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
-          </button>
-          <button onClick={() => handleRemoveStockItem(row.id)}>
-            <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
-          </button>
-        </div>
-      </TableCell>
-    </TableRow>
-  ));
-
   return (
     <div className='p-6 max-w-6xl mx-auto space-y-4'>
       <Link to="/">
@@ -173,7 +155,23 @@ const ProductStock = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tableRows}
+            {stockRows.map((row, index) => (
+              <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
+                <TableCell className="text-center px-4 py-2">{getProductById(row.productId)}</TableCell>
+                <TableCell className="text-center px-4 py-2">{row.quantity}</TableCell>
+                <TableCell className="text-center px-4 py-2">{row.status}</TableCell>
+                <TableCell className="text-center px-4 py-2">
+                  <div className="flex justify-center space-x-4">
+                    <button onClick={() => handleEditClick(row)}>
+                      <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
+                    </button>
+                    <button onClick={() => handleRemoveStockItem(row.id)}>
+                      <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

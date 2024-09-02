@@ -9,10 +9,6 @@ import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
-// const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-
 const Barber = () => {
   const [barbers, setBarbers] = useState([]);
   const [newBarber, setNewBarber] = useState({
@@ -54,15 +50,6 @@ const Barber = () => {
 
   const validateFields = () => {
     const errors = {};
-    // if (!emailRegex.test(newBarber.email)) {
-    //   errors.email = "E-mail inválido.";
-    // }
-    //  if (newBarber.phone.length<11 || newBarber.phone.length>11 ) {
-    //    errors.phone = "Telefone inválido, deve conter 11 digitos e estar no formato XXXXXXXXXXX.";
-    //  }
-    //  if (newBarber.cpf.length<11 || newBarber.cpf.length>11) {
-    //    errors.cpf = "CPF inválido, deve ter 11 digitos  e estar no formato XXXXXXXXXXX.";
-    //  }
     if (!newBarber.name || !newBarber.salary) {
       alert("Por favor, preencha todos os campos.");
       return;
@@ -109,7 +96,6 @@ const Barber = () => {
     }
   };
 
-  // Mensagem de excluir barbeiro atualizada
   const handleRemoveBarber = async (id) => {
     const confirmDelete = window.confirm("Você tem certeza que deseja excluir este barbeiro?");
     if (!confirmDelete) return;
@@ -124,7 +110,6 @@ const Barber = () => {
     }
   };
   
-
   const openModalForNewBarber = () => {
     setNewBarber({
       id: '',
@@ -159,7 +144,7 @@ const Barber = () => {
       </Link>
       <h1 className='text-3xl font-bold'>Barbeiro</h1>
       <div className='flex justify-end w-full mb-4'>
-      <Button onClick={openModalForNewBarber}>
+        <Button onClick={openModalForNewBarber}>
           Adicionar Barbeiro
         </Button>
       </div>
@@ -180,8 +165,8 @@ const Barber = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.isArray(barbers) && barbers.map((row) => (
-              <TableRow key={row.id}>
+            {Array.isArray(barbers) && barbers.map((row, index) => (
+              <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.email}</TableCell>

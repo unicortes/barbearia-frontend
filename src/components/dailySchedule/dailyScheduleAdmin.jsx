@@ -69,8 +69,8 @@ const AdminSchedule = () => {
               </TableHeader>
               <TableBody>
                 {barber.appointments.length > 0 ? (
-                  barber.appointments.map(appointment => (
-                    <TableRow key={appointment.id}>
+                  barber.appointments.map((appointment, index) => (
+                    <TableRow key={appointment.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
                       <TableCell className="border p-2">{appointment.clientName}</TableCell>
                       <TableCell className="border p-2">{appointment.service.name}</TableCell>
                       <TableCell className="border p-2">{new Date(appointment.appointmentDateTime).toLocaleDateString()}</TableCell>

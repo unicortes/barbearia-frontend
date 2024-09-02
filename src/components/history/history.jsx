@@ -15,7 +15,7 @@ const History = () => {
 
   const fetchHistorysAdmin = async () => {
     try {
-      const response = await api.get('api/appointments', {
+      const response = await api.get('/api/appointments', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -28,7 +28,7 @@ const History = () => {
 
   const fetchHistorys = async () => {
     try {
-      const response = await api.get(`api/appointments/barber/${idUser}`, {
+      const response = await api.get(`/api/appointments/barber/${idUser}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -62,7 +62,7 @@ const History = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-4 w-full">
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className="text-3xl font-bold">Histórico</h1>

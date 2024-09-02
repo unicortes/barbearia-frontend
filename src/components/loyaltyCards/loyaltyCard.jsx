@@ -30,7 +30,7 @@ const LoyaltyCard = () => {
 
   const fetchLoyaltyCards = async () => {
     try {
-      const response = await api.get('/loyalty-cards');
+      const response = await api.get('/api/loyalty-cards');
       setCards(response.data);
     } catch (error) {
       console.error("Erro ao buscar cartões de fidelidade:", error);
@@ -40,7 +40,7 @@ const LoyaltyCard = () => {
 
   const fetchClients = async () => {
     try {
-      const response = await api.get('/clients');
+      const response = await api.get('/api/clients');
       setClients(response.data);
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
@@ -50,7 +50,7 @@ const LoyaltyCard = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await api.get('/servicos');
+      const response = await api.get('/api/servicos');
       setServices(response.data);
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);
@@ -106,10 +106,10 @@ const LoyaltyCard = () => {
 
     try {
       if (selectedCard.id) {
-        await api.put(`/loyalty-cards/${selectedCard.id}`, payload);
+        await api.put(`/api/loyalty-cards/${selectedCard.id}`, payload);
         toast.success('Cartão de fidelidade atualizado com sucesso!');
       } else {
-        await api.post('/loyalty-cards', payload);
+        await api.post('/api/loyalty-cards', payload);
         toast.success('Cartão de fidelidade adicionado com sucesso!');
       }
 
@@ -128,7 +128,7 @@ const LoyaltyCard = () => {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/loyalty-cards/${id}`);
+      await api.delete(`/api/loyalty-cards/${id}`);
       fetchLoyaltyCards();
       toast.success('Cartão de fidelidade removido com sucesso!');
     } catch (error) {
@@ -140,7 +140,7 @@ const LoyaltyCard = () => {
   const handleAddPoint = async (card) => {
     try {
       const updatedCard = { ...card, points: card.points + 1 };
-      await api.put(`/loyalty-cards/${card.id}`, updatedCard);
+      await api.put(`/api/loyalty-cards/${card.id}`, updatedCard);
       fetchLoyaltyCards();
       toast.success('Ponto adicionado com sucesso!');
     } catch (error) {
@@ -184,7 +184,7 @@ const LoyaltyCard = () => {
 
   return (
     <div className='p-6 max-w-6xl mx-auto space-y-4'>
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className='text-3xl font-bold'>Cartões de Fidelidade</h1>

@@ -30,7 +30,7 @@ const Product = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products'); 
+      const response = await api.get('/api/products'); 
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       toast.error('Erro ao buscar produtos.');
@@ -80,10 +80,10 @@ const Product = () => {
       const productData = { ...newProduct };
 
       if (editMode) {
-        await api.put(`/products/${newProduct.id}`, productData);
+        await api.put(`/api/products/${newProduct.id}`, productData);
         toast.success('Produto atualizado com sucesso!');
       } else {
-        await api.post('/products', productData);
+        await api.post('/api/products', productData);
         toast.success('Produto adicionado com sucesso!');
       }
 
@@ -104,7 +104,7 @@ const Product = () => {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/products/${id}`);
+      await api.delete(`/api/products/${id}`);
       fetchProducts();
       toast.success('Produto removido com sucesso!');
     } catch (error) {
@@ -132,7 +132,7 @@ const Product = () => {
 
   return (
     <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
-      <Link to="/">
+      <Link to="/pageHome">
         <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
       </Link>
       <h1 className='text-3xl font-bold'>Produtos</h1>

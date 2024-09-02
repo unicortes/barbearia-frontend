@@ -16,7 +16,7 @@ const AdminSchedule = () => {
 
   const fetchBarbersAndAppointments = async () => {
     try {
-      const response = await api.get('/barbers/appointments');
+      const response = await api.get('/api/barbers/appointments');
       setBarbers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Erro ao buscar barbeiros e agendamentos:', error);
@@ -27,7 +27,7 @@ const AdminSchedule = () => {
   const handleRemoveAppointment = async () => {
     try {
       if (selectedAppointmentId) {
-        await api.delete(`/appointments/${selectedAppointmentId}`);
+        await api.delete(`/api/appointments/${selectedAppointmentId}`);
         fetchBarbersAndAppointments();
         toast.success('Agendamento removido com sucesso!');
       }

@@ -22,7 +22,7 @@ const History = () => {
       }); 
       setHistorys(response.data);
     } catch (error) {
-      toast.error('Erro ao recuperar estorico');
+      toast.error('Erro ao recuperar historico');
     }
   };
 
@@ -51,15 +51,14 @@ const History = () => {
 
   useEffect(() => {
     if (token) {
-      console.log(role)
-      if(role=='ADMIN'){
+      if (role?.trim() === 'ADMIN') {
         fetchHistorysAdmin();
-      }else if(role=='BARBER'){
+      }else if(role?.trim() =='BARBER'){
         fetchHistorys();
       }
       
     }
-  }, [token]); 
+  }, [token, role, idUser]); 
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-4 w-full">
@@ -81,7 +80,7 @@ const History = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {historys.map((item) => (
+            { Array.isArray(historys) && historys.map((item) => (
               <TableRow key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.service.name}</td>

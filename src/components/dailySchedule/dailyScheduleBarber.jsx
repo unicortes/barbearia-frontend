@@ -71,8 +71,11 @@ const DailyScheduleBarber = () => {
       <h1 className="text-3xl font-bold mb-4 text-center">Agenda do Barbeiro</h1>
       <div className="space-y-4">
         {appointments.length > 0 ? (
-          appointments.map((appointment) => (
-            <div key={appointment.id} className="border p-4 rounded-lg">
+          appointments.map((appointment, index) => (
+            <div
+              key={appointment.id}
+              className={`border p-4 rounded-lg ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`} // Linhas com cores alternadas
+            >
               <h3 className="text-lg font-semibold">Nome: {appointment.name}</h3>
               <p>Serviço: {appointment.service.name}</p>
               <p>Horário: {new Date(appointment.appointmentDateTime).toLocaleTimeString()}</p>

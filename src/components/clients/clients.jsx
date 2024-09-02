@@ -89,7 +89,11 @@ const Client = () => {
     }
   };
 
+  // adicionado confirmação
   const handleRemoveClient = async (id) => {
+    const confirmDelete = window.confirm("Você tem certeza que deseja excluir este cliente?");
+    if (!confirmDelete) return;
+  
     try {
       await api.delete(`/clients/${id}`);
       fetchClients();
@@ -99,6 +103,7 @@ const Client = () => {
       console.error('Erro ao remover cliente:', error);
     }
   };
+  
 
   const openModalForNewClient = () => {
     setNewClient({ name: '', email: '', birthday: '', phone: '' });

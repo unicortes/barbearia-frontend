@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
-  BsList,
-  BsScissors,
-  BsPerson,
-  BsCalendar,
-  BsGear,
-  BsBox,
-  BsTag,
-  BsCardChecklist,
-  BsCart,
+  BsList, BsScissors, BsPerson, BsCalendar, BsGear, BsBox, BsTag, BsCardChecklist, BsCart
 } from "react-icons/bs";
 import Modal from "react-modal";
 
@@ -73,6 +65,8 @@ const Header = () => {
             </li>
           </ul>
         </nav>
+        
+
         {/* Perfil e Logout */}
         <div className="ml-auto relative">
           <BsPerson
@@ -87,8 +81,7 @@ const Header = () => {
       <div
         className={`fixed top-0 left-0 h-full bg-gray-800 text-white p-4 shadow-lg transform transition-transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-        style={{ width: "250px" }}
+        } w-64`}
       >
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-white text-2xl font-bold">Menu</h1>
@@ -169,7 +162,7 @@ const Header = () => {
                 Agendar Serviços
               </Link>
               {/* <Link
-                to="/*"
+                to="/myAppointments"
                 className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
               >
                 <BsCalendar className="mr-2" />

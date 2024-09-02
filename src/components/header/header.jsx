@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   BsList, BsScissors, BsPerson, BsCalendar, BsGear, BsBox, BsTag, BsCardChecklist, BsCart
@@ -7,9 +7,16 @@ import Modal from "react-modal";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Para controlar o modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar autenticação
   const navigate = useNavigate();
-  const location = useLocation(); // Obtém a rota atual
+  const location = useLocation();
+
+  useEffect(() => {
+    // Verifica se o usuário está autenticado
+    const token = localStorage.getItem("authToken");
+    setIsAuthenticated(!!token);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -37,8 +44,8 @@ const Header = () => {
 
   const userRole = localStorage.getItem("userRole");
 
-  // Verifica se a rota atual é a de login
-  if (location.pathname === "/authentication") {
+  // Verifica se a rota atual é a de login ou se o usuário não está autenticado
+  if (location.pathname === "/authentication" || !isAuthenticated) {
     return null;
   }
 
@@ -65,9 +72,6 @@ const Header = () => {
             </li>
           </ul>
         </nav>
-        
-
-        {/* Perfil e Logout */}
         <div className="ml-auto relative">
           <BsPerson
             size={24}
@@ -77,7 +81,6 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Menu Lateral */}
       <div
         className={`fixed top-0 left-0 h-full bg-gray-800 text-white p-4 shadow-lg transform transition-transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
@@ -173,7 +176,6 @@ const Header = () => {
         </nav>
       </div>
 
-      {/* Modal de Confirmação */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}

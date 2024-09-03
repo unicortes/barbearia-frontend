@@ -35,7 +35,7 @@ const History = () => {
       }); 
       setHistorys(response.data);
     } catch (error) {
-      toast.error('Erro ao recuperar estorico');
+      toast.error('Erro ao recuperar historico');
     }
   };
 

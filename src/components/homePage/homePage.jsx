@@ -42,7 +42,7 @@ const HomePage = () => {
                 </CardHeader>
               </Card>
             </Link>
-
+            {/* 
             <Link to="/avaliable-time" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">
                 <CardHeader className="flex flex-col items-center flex-grow">
@@ -52,7 +52,7 @@ const HomePage = () => {
                   </CardTitle>
                 </CardHeader>
               </Card>
-            </Link>
+            </Link> */}
 
             <Link to="/manage-appointments" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">
@@ -123,7 +123,9 @@ const HomePage = () => {
               <Card className="h-[180px] flex flex-col justify-between p-4">
                 <CardHeader className="flex flex-col items-center flex-grow">
                   <FaHistory className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">Histórico</CardTitle>
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">
+                    Histórico
+                  </CardTitle>
                 </CardHeader>
               </Card>
             </Link>
@@ -144,10 +146,42 @@ const HomePage = () => {
                 </Card>
               </Link>
               <Link to="/historys" className="w-full">
+                <Card className="h-[180px] flex flex-col justify-between p-4">
+                  <CardHeader className="flex flex-col items-center flex-grow">
+                    <FaHistory className="text-gray-800 w-16 h-16" />
+                    <CardTitle className="mt-2 text-center text-lg font-semibold">
+                      Histórico
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </Link>
+              <Link to="/productStock" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">
                 <CardHeader className="flex flex-col items-center flex-grow">
-                  <FaHistory className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">Histórico</CardTitle>
+                  <BsBox className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">
+                    Gerenciar Estoque
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+            <Link to="/services" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <BsScissors className="text-gray-800 w-16 h-16" />
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">
+                    Gerenciar Serviços
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+            <Link to="/avaliable-time" className="w-full">
+              <Card className="h-[180px] flex flex-col justify-between p-4">
+                <CardHeader className="flex flex-col items-center flex-grow">
+                  <BsClock className="text-gray-800 w-16 h-16" />{" "}
+                  <CardTitle className="mt-2 text-center text-lg font-semibold">
+                    Gerenciar Horários
+                  </CardTitle>
                 </CardHeader>
               </Card>
             </Link>

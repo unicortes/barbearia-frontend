@@ -14,13 +14,13 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    console.log(email, password);
     try {
       const response = await api.post("/login", {
         email,
         password
       });
-
+      
       const { token, role } = response.data;
 
       localStorage.setItem("authToken", token);

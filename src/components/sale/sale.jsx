@@ -34,7 +34,7 @@ const Sale = () => {
 
   const fetchSales = async () => {
     try {
-      const response = await api.get("/promocoes");
+      const response = await api.get("/api/promocoes");
       setSales(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       toast.error("Erro ao buscar promoções.");

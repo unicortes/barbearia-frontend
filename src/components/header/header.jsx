@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   BsList, BsScissors, BsPerson, BsCalendar, BsGear, BsBox, BsTag, BsCardChecklist, BsCart
 } from "react-icons/bs";
+import { FaCalendarAlt, FaHistory } from "react-icons/fa";
 import Modal from "react-modal";
 
 const Header = () => {
@@ -147,13 +148,50 @@ const Header = () => {
             </>
           )}
           {userRole === "BARBER" && (
+            <>
             <Link
               to="/appointments"
               className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
             >
               <BsCalendar className="mr-2" />
               Agendamentos
+              
+            
             </Link>
+            <Link
+                to="/services"
+                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
+              >
+                <BsGear className="mr-2" />
+                Gerenciar Serviços
+              </Link>
+              
+              <Link
+                to="/productStock"
+                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
+              >
+                <BsBox className="mr-2" />
+                Gerenciar Estoque
+              </Link>
+
+              <Link
+                to="/avaliable-time"
+                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
+              >
+                <FaCalendarAlt className="mr-2" />
+                Gerenciar Horario
+              </Link>
+              
+              <Link
+                to="/historys"
+                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
+              >
+                <FaHistory className="mr-2" />
+                Histórico
+              </Link>
+            </>
+            
+            
           )}
           {userRole === "CLIENT" && (
             <>

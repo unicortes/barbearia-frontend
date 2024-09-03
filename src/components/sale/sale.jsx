@@ -168,6 +168,7 @@ const Sale = () => {
               <TableHead>Descrição</TableHead>
               <TableHead>Código Promocional</TableHead>
               <TableHead>Desconto</TableHead>
+              <TableHead>Data de Início</TableHead>
               <TableHead>Data de Expiração</TableHead>
               <TableHead>Categoria</TableHead>
               <TableHead>Disponibilidade</TableHead>
@@ -182,6 +183,7 @@ const Sale = () => {
                 <TableCell>{row.descricao}</TableCell>
                 <TableCell>{row.codigoPromocao}</TableCell>
                 <TableCell>{row.desconto}%</TableCell>
+                <TableCell>{formatDate(row.dataInicio)}</TableCell>
                 <TableCell>{formatDate(row.dataFim)}</TableCell>
                 <TableCell>{row.categoria}</TableCell>
                 <TableCell>{row.disponibilidade ? "Sim" : "Não"}</TableCell>
@@ -249,6 +251,14 @@ const Sale = () => {
                 value={newSale.desconto}
                 onChange={handleInputChange}
                 error={errors.desconto}
+              />
+              <Input
+                name="dataInicio"
+                placeholder="Data de Inicio"
+                type="date"
+                value={newSale.dataInicio}
+                onChange={handleInputChange}
+                error={errors.dataInicio}
               />
               <Input
                 name="dataFim"

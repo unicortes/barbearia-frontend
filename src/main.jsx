@@ -81,7 +81,7 @@ const router = createBrowserRouter([
         element: <AppointmentsBarber />, // Rota para a listagem Agendamentos
       },
       {
-        path: "/manege-appointments",
+        path: "/manage-appointments",
         element: <AppointmentsAdmin />, // Rota para a listagem Agendamentos
       },
       {

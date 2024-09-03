@@ -134,7 +134,7 @@ const HomePage = () => {
 
         {userRole === "BARBER" && (
           <>
-            <div className="flex justify-center w-full">
+            
               <Link to="/appointments" className="w-full max-w-sm">
                 <Card className="h-[180px] flex flex-col justify-between p-4">
                   <CardHeader className="flex flex-col items-center flex-grow">
@@ -164,8 +164,8 @@ const HomePage = () => {
                   </CardTitle>
                 </CardHeader>
               </Card>
-            </Link>
-            <Link to="/services" className="w-full">
+              </Link>
+              <Link to="/services" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">
                 <CardHeader className="flex flex-col items-center flex-grow">
                   <BsScissors className="text-gray-800 w-16 h-16" />
@@ -174,8 +174,8 @@ const HomePage = () => {
                   </CardTitle>
                 </CardHeader>
               </Card>
-            </Link>
-            <Link to="/avaliable-time" className="w-full">
+              </Link>
+              <Link to="/avaliable-time" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">
                 <CardHeader className="flex flex-col items-center flex-grow">
                   <BsClock className="text-gray-800 w-16 h-16" />{" "}
@@ -184,8 +184,7 @@ const HomePage = () => {
                   </CardTitle>
                 </CardHeader>
               </Card>
-            </Link>
-            </div>
+              </Link>
           </>
         )}
 

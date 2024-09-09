@@ -122,63 +122,8 @@ const Client = () => {
     return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
-  return (
-    <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
-      <Link to="/pageHome">
-        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
-      </Link>
-      <h1 className='text-3xl font-bold'>Clientes</h1>
-      <div className='flex justify-end w-full mb-4'>
-        <Button onClick={openModalForNewClient}>
-          Adicionar cliente
-        </Button>
-      </div>
-
-      
-      <div className='border rounded w-full'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Data de Aniversário</TableHead>
-              <TableHead>Telefone</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.isArray(clients) && clients.map((row, index) => (
-              <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{formatDate(row.birthday)}</TableCell>
-                <TableCell>{row.phone}</TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    <button 
-                      className="text-blue-500 hover:text-blue-700"
-                      onClick={() => openModalForEditClient(row)}
-                    >
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button 
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleRemoveClient(row.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  const renderClientModal = () => (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">{editMode ? 'Editar Cliente' : 'Adicionar Cliente'}</h2>
             <div className="space-y-4">
@@ -238,7 +183,64 @@ const Client = () => {
             </div>
           </div>
         </div>
-      )}
+  );
+
+  return (
+    <div className='p-6 max-w-4xl mx-auto space-y-4 w-full'>
+      <Link to="/pageHome">
+        <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
+      </Link>
+      <h1 className='text-3xl font-bold'>Clientes</h1>
+      <div className='flex justify-end w-full mb-4'>
+        <Button onClick={openModalForNewClient}>
+          Adicionar cliente
+        </Button>
+      </div>
+
+      
+      <div className='border rounded w-full'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Data de Aniversário</TableHead>
+              <TableHead>Telefone</TableHead>
+              <TableHead>Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.isArray(clients) && clients.map((row, index) => (
+              <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{formatDate(row.birthday)}</TableCell>
+                <TableCell>{row.phone}</TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <button 
+                      className="text-blue-500 hover:text-blue-700"
+                      onClick={() => openModalForEditClient(row)}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button 
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => handleRemoveClient(row.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {isModalOpen && renderClientModal ()}
       <ToastContainer />
     </div>
   );

@@ -64,6 +64,7 @@ const HomePage = () => {
         {userRole === "CLIENT" && (
           <>
             <CardItem to="/appointment" icon={BsAppointments} title="Agendar Serviços" />
+            <CardItem to="/historys" icon={BsHistorys} title="Histórico de Agendamentos"/>
           </>
         )}
       </div>

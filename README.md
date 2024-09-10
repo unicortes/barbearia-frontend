@@ -10,9 +10,9 @@ O projeto visa desenvolver um sistema que atenda às necessidades de um barbeiro
 ## :round_pushpin: Objetivos
 O sistema será desenvolvido para permitir que um cliente de barbearia faça o cadastramento completo de suas informações pessoais e gerencie os serviços prestados de forma eficiente. O cliente pode inserir seu nome completo, CPF e uma senha segura para acessar o sistema. Com esses dados cadastrados, o cliente pode então registrar os serviços que deseja contratar na barbearia, vinculando cada serviço ao seu perfil. É possível fornecer detalhes específicos sobre cada serviço, como tipo de corte ou tratamento, e adicionar materiais necessários para a realização dos serviços, como produtos para cabelo ou barba. Além disso, o cliente pode verificar a disponibilidade de horários para agendamento dos serviços, garantindo que escolha o momento mais conveniente para realizar o atendimento. 
 ## :hammer_and_wrench: Tecnologias Usadas
- ### [JavaScript][(https://nodejs.org/pt)]
+ ### [JavaScript](https://nodejs.org/pt)
 *   Versão 22.6.0
- ### [React][(https://react.dev/))]
+ ### [React](https://react.dev/)
 *   Versão 18.2
  ### [PostgreSQL](https://www.postgresql.org)
 ## :construction: Status do Projeto

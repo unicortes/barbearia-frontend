@@ -13,14 +13,14 @@ const Sale = () => {
   const [sales, setSales] = useState([]);
   const [newSale, setNewSale] = useState({
     id: "",
-    titulo: "",
-    descricao: "",
-    codigoPromocao: "",
-    desconto: "",
-    dataFim: "",
-    dataInicio: "",
-    categoria: "",
-    disponibilidade: false,
+    name: "",
+    description: "",
+    promotionCode: "",
+    discount: "",
+    endDate: "",
+    startDate: "",
+    category: "",
+    availability: '',
   });
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
@@ -34,7 +34,7 @@ const Sale = () => {
 
   const fetchSales = async () => {
     try {
-      const response = await api.get("/api/promocoes");
+      const response = await api.get('/api/promotions');
       setSales(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       toast.error("Erro ao buscar promoções.");
@@ -52,12 +52,14 @@ const Sale = () => {
 
   const validateFields = () => {
     const errors = {};
-    if (!newSale.titulo) errors.titulo = "Nome da venda é obrigatório.";
-    if (!newSale.descricao) errors.descricao = "Descrição da venda é obrigatória.";
-    if (!newSale.codigoPromocao) errors.codigoPromocao = "Código promocional é obrigatório.";
-    if (!newSale.desconto || isNaN(newSale.desconto)) errors.desconto = "Desconto é obrigatório e deve ser um número válido.";
-    if (!newSale.dataFim) errors.dataFim = "Data de expiração é obrigatória.";
-    if (!newSale.categoria) errors.categoria = "Categoria é obrigatória.";
+    if (!newSale.name) errors.name = "Nome da promoção é obrigatório.";
+    if (!newSale.description) errors.descricao = "Descrição da venda é obrigatória.";
+    if (!newSale.promotionCode) errors.promotionCode = "Código promocional é obrigatório.";
+    if (!newSale.discount || isNaN(newSale.discount)) errors.discount = "Desconto é obrigatório e deve ser um número válido.";
+    if (!newSale.startDate) errors.startDate = "Data de início é obrigatória.";
+    if (!newSale.endDate) errors.endDate = "Data de expiração é obrigatória.";
+    if (!newSale.category) errors.category = "Categoria é obrigatória.";
+    if (newSale.availability === "") errors.availability = "Disponibilidade é obrigatória.";
     return errors;
   };
 
@@ -71,10 +73,10 @@ const Sale = () => {
     try {
       const saleData = { ...newSale };
       if (editMode) {
-        await api.put(`/api/promocoes/${newSale.id}`, saleData);
+        await api.put(`/api/promotions/${newSale.id}`, saleData);
         toast.success("Promoção atualizada com sucesso!");
       } else {
-        await api.post("/api/promocoes", saleData);
+        await api.post('/api/promotions', saleData);
         toast.success("Promoção adicionada com sucesso!");
       }
 
@@ -90,7 +92,7 @@ const Sale = () => {
     if (!saleToDelete) return;
 
     try {
-      await api.delete(`/api/promocoes/${saleToDelete.id}`);
+      await api.delete(`/api/promotions/${saleToDelete.id}`);
       fetchSales();
       setIsConfirmDeleteOpen(false);  // Fechar o modal de confirmação
       setSaleToDelete(null);          // Limpar o estado da venda a ser deletada
@@ -104,14 +106,14 @@ const Sale = () => {
   const openModalForNewSale = () => {
     setNewSale({
       id: "",
-      titulo: "",
-      descricao: "",
-      codigoPromocao: "",
-      desconto: "",
-      dataFim: "",
-      dataInicio: "",
-      categoria: "",
-      disponibilidade: false,
+      name: "",
+      description: "",
+      promotionCode: "",
+      discount: "",
+      endDate: "",
+      startDate: "",
+      category: "",
+      availability: '',
     });
     setEditMode(false);
     setIsModalOpen(true);
@@ -131,14 +133,14 @@ const Sale = () => {
   const resetForm = () => {
     setNewSale({
       id: "",
-      titulo: "",
-      descricao: "",
-      codigoPromocao: "",
-      desconto: "",
-      dataFim: "",
-      dataInicio: "",
-      categoria: "",
-      disponibilidade: false,
+      name: "",
+      description: "",
+      promotionCode: "",
+      discount: "",
+      endDate: "",
+      startDate: "",
+      category: "",
+      availability: '',
     });
     setEditMode(false);
     setErrors({});
@@ -179,14 +181,14 @@ const Sale = () => {
             {sales.map((row, index) => (
               <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.titulo}</TableCell>
-                <TableCell>{row.descricao}</TableCell>
-                <TableCell>{row.codigoPromocao}</TableCell>
-                <TableCell>{row.desconto}%</TableCell>
-                <TableCell>{formatDate(row.dataInicio)}</TableCell>
-                <TableCell>{formatDate(row.dataFim)}</TableCell>
-                <TableCell>{row.categoria}</TableCell>
-                <TableCell>{row.disponibilidade ? "Sim" : "Não"}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.description}</TableCell>
+                <TableCell>{row.promotionCode}</TableCell>
+                <TableCell>{row.discount}%</TableCell>
+                <TableCell>{formatDate(row.startDate)}</TableCell>
+                <TableCell>{formatDate(row.endDate)}</TableCell>
+                <TableCell>{row.category}</TableCell>
+                <TableCell>{row.availability ? "Sim" : "Não"}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <button className="text-blue-500 hover:text-blue-700" onClick={() => openModalForEditSale(row)}>
@@ -224,65 +226,65 @@ const Sale = () => {
             <h2 className="text-xl font-bold mb-4">{editMode ? "Editar Promoção" : "Adicionar Promoção"}</h2>
             <div className="grid grid-cols-1 gap-4">
               <Input
-                name="titulo"
+                name="name"
                 placeholder="Nome da Promoção"
-                value={newSale.titulo}
+                value={newSale.name}
                 onChange={handleInputChange}
-                error={errors.titulo}
+                error={errors.name}
               />
               <Input
-                name="descricao"
+                name="description"
                 placeholder="Descrição"
-                value={newSale.descricao}
+                value={newSale.description}
                 onChange={handleInputChange}
-                error={errors.descricao}
+                error={errors.description}
               />
               <Input
-                name="codigoPromocao"
+                name="promotionCode"
                 placeholder="Código Promocional"
-                value={newSale.codigoPromocao}
+                value={newSale.promotionCode}
                 onChange={handleInputChange}
-                error={errors.codigoPromocao}
+                error={errors.promotionCode}
               />
               <Input
-                name="desconto"
+                name="discount"
                 placeholder="Desconto (%)"
                 type="number"
-                value={newSale.desconto}
+                value={newSale.discount}
                 onChange={handleInputChange}
-                error={errors.desconto}
+                error={errors.discount}
               />
               <Input
-                name="dataInicio"
+                name="startDate"
                 placeholder="Data de Inicio"
                 type="date"
-                value={newSale.dataInicio}
+                value={newSale.startDate}
                 onChange={handleInputChange}
-                error={errors.dataInicio}
+                error={errors.startDate}
               />
               <Input
-                name="dataFim"
+                name="endDate"
                 placeholder="Data de Expiração"
                 type="date"
-                value={newSale.dataFim}
+                value={newSale.endDate}
                 onChange={handleInputChange}
-                error={errors.dataFim}
+                error={errors.endDate}
               />
               <Input
-                name="categoria"
+                name="category"
                 placeholder="Categoria"
-                value={newSale.categoria}
+                value={newSale.category}
                 onChange={handleInputChange}
-                error={errors.categoria}
+                error={errors.category}
               />
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  name="disponibilidade"
-                  checked={newSale.disponibilidade}
+                  name="availability"
+                  checked={newSale.availability}
                   onChange={handleInputChange}
                 />
-                <label htmlFor="disponibilidade">Disponibilidade</label>
+                <label htmlFor="availability">Disponibilidade</label>
               </div>
               <div className="flex justify-end space-x-2">
                 <Button onClick={resetForm}>Cancelar</Button>

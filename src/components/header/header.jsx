@@ -109,7 +109,7 @@ const Header = () => {
                 <BsCardChecklist className="mr-2" />
                 Cartões de Fidelidade
               </Link>
-              <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+              <Link to="/promotions" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
                 <BsTag className="mr-2" />
                 Promoções
               </Link>

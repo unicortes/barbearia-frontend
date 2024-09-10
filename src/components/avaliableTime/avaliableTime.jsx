@@ -175,7 +175,7 @@ const AvailableTime = () => {
 
     return (
         <div className='p-6 max-w-6xl mx-auto space-y-4'>
-            <Link to="/">
+            <Link to="/pageHome">
                 <IoIosArrowBack className="mr-2 text-lg cursor-pointer" />
             </Link>
             <h1 className='text-3xl font-bold'>Horários Disponíveis</h1>

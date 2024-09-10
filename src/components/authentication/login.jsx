@@ -14,17 +14,17 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(email, password);
     try {
       const response = await api.post("/login", {
         email,
         password
       });
       
-      const { token, role } = response.data;
+      const { token, role, id } = response.data;
 
       localStorage.setItem("authToken", token);
       localStorage.setItem("userRole", role);
+      localStorage.setItem("userId",id);
 
       if (["ADMIN", "BARBER", "CLIENT"].includes(role)) {
         navigate("/pageHome");

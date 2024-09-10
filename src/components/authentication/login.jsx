@@ -20,10 +20,11 @@ const Login = () => {
         password
       });
       
-      const { token, role } = response.data;
+      const { token, role, id } = response.data;
 
       localStorage.setItem("authToken", token);
       localStorage.setItem("userRole", role);
+      localStorage.setItem("userId",id);
 
       if (["ADMIN", "BARBER", "CLIENT"].includes(role)) {
         navigate("/pageHome");

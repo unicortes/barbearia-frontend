@@ -1,17 +1,35 @@
+import PropTypes from 'prop-types';
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  BsPerson as BsBarber,
-  BsBox,
-  BsCalendar,
-  BsCardChecklist,
-  BsCart,
+  BsBasket as BsProductStock,
+  BsCalendar3Week as BsAppointments,
+  BsCardChecklist as BsLoyaltyCards,
+  BsPeople as BsBarber,
   BsPerson as BsClient,
-  BsClock,
-  BsScissors,
-  BsTag,
+  BsClock as BsAvaliableTime,
+  BsScissors as BsService,
+  BsTag as BsSales,
+  BsClipboardData as BsHistorys,
+  BsCart as BsProduct
 } from "react-icons/bs";
-import { FaCalendarAlt, FaHistory } from "react-icons/fa";
 import { Link } from "react-router-dom";
+
+const CardItem = ({ to, icon: Icon, title }) => (
+  <Link to={to} className="w-full">
+    <Card className="h-[180px] flex flex-col justify-between p-4">
+      <CardHeader className="flex flex-col items-center flex-grow">
+        <Icon className="text-gray-800 w-16 h-16" />
+        <CardTitle className="mt-2 text-center text-lg font-semibold">{title}</CardTitle>
+      </CardHeader>
+    </Card>
+  </Link>
+);
+
+CardItem.propTypes = {
+  to: PropTypes.string.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  title: PropTypes.string.isRequired, // Adicionada a validação de title
+};
 
 const HomePage = () => {
   const userRole = localStorage.getItem("userRole");
@@ -21,206 +39,31 @@ const HomePage = () => {
       <div className="grid grid-cols-3 gap-6 w-full max-w-6xl">
         {userRole === "ADMIN" && (
           <>
-            <Link to="/barber" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsBarber className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Barbeiros
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/clients" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsClient className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Cliente
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-            {/* 
-            <Link to="/avaliable-time" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsClock className="text-gray-800 w-16 h-16" />{" "}
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Horários
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link> */}
-
-            <Link to="/manage-appointments" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsCalendar className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Agendamentos
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/services" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsScissors className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Serviços
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/productStock" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsBox className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Estoque
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/products" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsCart className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Produtos
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/loyaltyCards" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsCardChecklist className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Cartões de Fidelidade
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/sales" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsTag className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Promoções
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-            <Link to="/historys" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <FaHistory className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Histórico
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
+            <CardItem to="/barber" icon={BsBarber} title="Barbeiros" />
+            <CardItem to="/clients" icon={BsClient} title="Clientes" />
+            <CardItem to="/manage-appointments" icon={BsAppointments} title="Agendamentos" />
+            <CardItem to="/services" icon={BsService} title="Serviços" />
+            <CardItem to="/productStock" icon={BsProductStock} title="Estoque" />
+            <CardItem to="/products" icon={BsProduct} title="Produtos" />
+            <CardItem to="/loyaltyCards" icon={BsLoyaltyCards} title="Cartões de Fidelidade" />
+            <CardItem to="/sales" icon={BsSales} title="Promoções" />
+            <CardItem to="/historys" icon={BsHistorys} title="Histórico de Agendamentos" />
           </>
         )}
 
         {userRole === "BARBER" && (
           <>
-            
-              <Link to="/appointments" className="w-full max-w-sm">
-                <Card className="h-[180px] flex flex-col justify-between p-4">
-                  <CardHeader className="flex flex-col items-center flex-grow">
-                    <FaCalendarAlt className="text-gray-800 w-16 h-16" />
-                    <CardTitle className="mt-2 text-center text-lg font-semibold">
-                      Gerenciar Agendamentos
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              </Link>
-              <Link to="/historys" className="w-full">
-                <Card className="h-[180px] flex flex-col justify-between p-4">
-                  <CardHeader className="flex flex-col items-center flex-grow">
-                    <FaHistory className="text-gray-800 w-16 h-16" />
-                    <CardTitle className="mt-2 text-center text-lg font-semibold">
-                      Histórico
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              </Link>
-              <Link to="/productStock" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsBox className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Estoque
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-              </Link>
-              <Link to="/services" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsScissors className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Serviços
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-              </Link>
-              <Link to="/avaliable-time" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsClock className="text-gray-800 w-16 h-16" />{" "}
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Gerenciar Horários
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-              </Link>
+            <CardItem to="/appointments" icon={BsAppointments} title="Agendamentos" />
+            <CardItem to="/historys" icon={BsHistorys} title="Histórico de Agendamentos" />
+            <CardItem to="/productStock" icon={BsProductStock} title="Estoque" />
+            <CardItem to="/services" icon={BsService} title="Serviços" />
+            <CardItem to="/avaliable-time" icon={BsAvaliableTime} title="Horários de Atendimento" />
           </>
         )}
 
         {userRole === "CLIENT" && (
           <>
-            <Link to="/appointment" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsCalendar className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Agendar Serviços
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-            <Link to="/historys" className="w-full">
-                <Card className="h-[180px] flex flex-col justify-between p-4">
-                  <CardHeader className="flex flex-col items-center flex-grow">
-                    <FaHistory className="text-gray-800 w-16 h-16" />
-                    <CardTitle className="mt-2 text-center text-lg font-semibold">
-                      Histórico
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              </Link>
-            {/* 
-            <Link to="/*" className="w-full">
-              <Card className="h-[180px] flex flex-col justify-between p-4">
-                <CardHeader className="flex flex-col items-center flex-grow">
-                  <BsCalendar className="text-gray-800 w-16 h-16" />
-                  <CardTitle className="mt-2 text-center text-lg font-semibold">
-                    Meus Agendamentos
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link> */}
+            <CardItem to="/appointment" icon={BsAppointments} title="Agendar Serviços" />
           </>
         )}
       </div>

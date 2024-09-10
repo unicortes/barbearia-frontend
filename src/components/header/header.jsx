@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
-  BsList, BsScissors, BsPerson, BsCalendar, BsGear, BsBox, BsTag, BsCardChecklist, BsCart
+  BsList, BsPeople as BsBarber, BsBasket as BsProductStock, BsScissors as BsService, BsScissors, BsCalendar3Week as BsAppointments,
+  BsTag, BsCardChecklist, BsCart as BsProduct, BsPerson, BsClipboardData as BsHistorys, BsClockHistory as BsAvaliableTime
 } from "react-icons/bs";
-import { FaCalendarAlt, FaHistory } from "react-icons/fa";
 import Modal from "react-modal";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar autenticação
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // Verifica se o usuário está autenticado
     const token = localStorage.getItem("authToken");
     setIsAuthenticated(!!token);
   }, []);
@@ -23,21 +22,11 @@ const Header = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
     navigate("/authentication");
-    console.log("Usuário deslogado");
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   const confirmLogout = () => {
     handleLogout();
     closeModal();
@@ -45,7 +34,6 @@ const Header = () => {
 
   const userRole = localStorage.getItem("userRole");
 
-  // Verifica se a rota atual é a de login ou se o usuário não está autenticado
   if (location.pathname === "/authentication" || !isAuthenticated) {
     return null;
   }
@@ -64,10 +52,7 @@ const Header = () => {
           <ul className="flex space-x-6 items-center">
             <li className="flex items-center">
               <BsScissors size={24} className="mr-2" />
-              <Link
-                to="/pageHome"
-                className="text-xl font-bold hover:text-gray-400"
-              >
+              <Link to="/pageHome" className="text-xl font-bold hover:text-gray-400">
                 UniCortes
               </Link>
             </li>
@@ -96,120 +81,73 @@ const Header = () => {
         <nav className="space-y-2">
           {userRole === "ADMIN" && (
             <>
-              <Link
-                to="/barber"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
+              <Link to="/barber" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsBarber className="mr-2" />
+                Barbeiros
+              </Link>
+              <Link to="/clients" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
                 <BsPerson className="mr-2" />
-                Gerenciar Barbeiros
+                Cliente
               </Link>
-              <Link
-                to="/services"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsGear className="mr-2" />
-                Gerenciar Serviços
+              <Link to="/appointments" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsAppointments className="mr-2" />
+                Agendamentos
               </Link>
-              <Link
-                to="/productStock"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsBox className="mr-2" />
-                Gerenciar Estoque
+              <Link to="/services" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsService className="mr-2" />
+                Serviços
               </Link>
-              <Link
-                to="/products"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsCart className="mr-2" />
-                Cadastrar Produto
+              <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsProductStock className="mr-2" />
+                Estoque
               </Link>
-              <Link
-                to="/loyaltyCards"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
+              <Link to="/products" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsProduct className="mr-2" />
+                Produtos
+              </Link>
+              <Link to="/loyaltyCards" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
                 <BsCardChecklist className="mr-2" />
-                Cadastrar Cartão de Fidelidade
+                Cartões de Fidelidade
               </Link>
-              <Link
-                to="/sales"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
+              <Link to="/sales" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
                 <BsTag className="mr-2" />
                 Promoções
               </Link>
-              <Link
-                to="/appointments"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsCalendar className="mr-2" />
-                Gerenciar Agendamentos
+              <Link to="/historys" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsHistorys className="mr-2" />
+                Histórico de Agendamentos
               </Link>
             </>
           )}
           {userRole === "BARBER" && (
             <>
-            <Link
-              to="/appointments"
-              className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-            >
-              <BsCalendar className="mr-2" />
-              Agendamentos
-              
-            
-            </Link>
-            <Link
-                to="/services"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsGear className="mr-2" />
-                Gerenciar Serviços
+              <Link to="/appointments" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsAppointments className="mr-2" />
+                Agendamentos
               </Link>
-              
-              <Link
-                to="/productStock"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsBox className="mr-2" />
-                Gerenciar Estoque
+              <Link to="/historys" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsHistorys className="mr-2" />
+                Histórico de Agendamentos
               </Link>
-
-              <Link
-                to="/avaliable-time"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <FaCalendarAlt className="mr-2" />
-                Gerenciar Horario
+              <Link to="/productStock" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsProductStock className="mr-2" />
+                Estoque
               </Link>
-              
-              <Link
-                to="/historys"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <FaHistory className="mr-2" />
-                Histórico
+              <Link to="/services" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsService className="mr-2" />
+                Serviços
+              </Link>
+              <Link to="/avaliable-time" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsAvaliableTime className="mr-2" />
+                Horário de Atendimento
               </Link>
             </>
-            
-            
           )}
           {userRole === "CLIENT" && (
-            <>
-              <Link
-                to="/appointment"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsCalendar className="mr-2" />
-                Agendar Serviços
-              </Link>
-              {/* <Link
-                to="/myAppointments"
-                className="text-white block p-2 rounded hover:bg-gray-700 flex items-center"
-              >
-                <BsCalendar className="mr-2" />
-                Meus Agendamentos
-              </Link> */}
-            </>
+            <Link to="/appointment" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+              <BsAppointments className="mr-2" />
+              Agendar Serviços
+            </Link>
           )}
         </nav>
       </div>

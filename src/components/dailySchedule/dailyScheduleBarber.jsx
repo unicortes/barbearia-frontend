@@ -27,7 +27,7 @@ const DailyScheduleBarber = () => {
 
   const handleStatusChange = async (appointmentId, status) => {
     try {
-      await api.patch(`/api/appointments/${appointmentId}`, { status });
+      await api.put(`/api/appointments/${appointmentId}/${status}`, { status });
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
           appointment.id === appointmentId ? { ...appointment, status } : appointment

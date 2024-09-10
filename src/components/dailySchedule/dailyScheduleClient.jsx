@@ -8,6 +8,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import api from "@/api/api";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import dayjs from 'dayjs';
 
 const DailyScheduleClient = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -17,12 +18,12 @@ const DailyScheduleClient = () => {
   const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [newAppointment, setNewAppointment] = useState({
-    barberId: '',
-    serviceId: '',
-    availableTimeId: '',
-    name: '',
+    barber: '',
+    service: '',
+    availableTime: '',
+    clientName: '',
     appointmentDateTime: '',
-    status: 'PENDENTE', // Status padrão
+    status: 'PENDENTE',
     available: true,
   });
   const [appointmentToDelete, setAppointmentToDelete] = useState(null);
@@ -33,14 +34,14 @@ const DailyScheduleClient = () => {
   }, []);
 
   useEffect(() => {
-    if (newAppointment.barberId && newAppointment.serviceId) {
-      fetchAvailableTimes(newAppointment.barberId, newAppointment.serviceId);
+    if (newAppointment.barber && newAppointment.service) {
+      fetchAvailableTimes(newAppointment.barber, newAppointment.service);
     }
-  }, [newAppointment.barberId, newAppointment.serviceId]);
+  }, [newAppointment.barber, newAppointment.service]);
 
   const fetchBarbers = async () => {
     try {
-      const response = await api.get("/api/barbers");
+      const response = await api.get("/api/barber");
       setBarbers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar barbeiros:", error);
@@ -49,17 +50,25 @@ const DailyScheduleClient = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await api.get("/api/services");
+      const response = await api.get("/api/servicos");
       setServices(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);
     }
   };
 
-  const fetchAvailableTimes = async (barberId, serviceId) => {
+  const fetchAvailableTimes = async (service) => {
     try {
-      const response = await api.get(`/api/available-times?barberId=${barberId}&serviceId=${serviceId}`);
-      setAvailableTimes(Array.isArray(response.data) ? response.data : []);
+      const response = await api.get(`/api/available-times?service=${service}`);
+      console.log("Fetched Available Times:", response.data);
+      if (Array.isArray(response.data)) {
+        const formattedTimes = response.data.map(time => ({
+          ...time,
+          timeStart: dayjs(time.timeStart).format('HH:mm'), 
+          timeEnd: dayjs(time.timeEnd).format('HH:mm'), 
+        }));
+        setAvailableTimes(formattedTimes);
+      }
     } catch (error) {
       console.error("Erro ao buscar horários disponíveis:", error);
     }
@@ -76,6 +85,7 @@ const DailyScheduleClient = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Input Change - ${name}: ${value}`); 
     setNewAppointment((prev) => ({
       ...prev,
       [name]: value,
@@ -84,19 +94,37 @@ const DailyScheduleClient = () => {
 
   const handleCreateAppointment = async () => {
     try {
+      if (!selectedDate || !newAppointment.availableTime) {
+        toast.error('Selecione a data e o horário.');
+        return;
+      }
+      const selectedTime = availableTimes.find(time => time.id === parseInt(newAppointment.availableTime, 10));
+      
+      if (!selectedTime) {
+        toast.error('Horário selecionado é inválido.');
+        return;
+      }
+
+      const timeStart = selectedTime.timeStart; 
+      const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD');
+      const appointmentDateTime = `${formattedDate}T${timeStart}:00`;
+
       const appointmentData = {
         ...newAppointment,
-        appointmentDateTime: `${selectedDate.toISOString().split("T")[0]}T${newAppointment.availableTimeId}`,
+        barber: parseInt(newAppointment.barber, 10),
+        service: parseInt(newAppointment.service, 10),
+        availableTime: parseInt(newAppointment.availableTime, 10),
+        appointmentDateTime,
       };
       await api.post("/api/appointments", appointmentData);
       setIsModalOpen(false);
       setNewAppointment({
-        barberId: '',
-        serviceId: '',
-        availableTimeId: '',
-        name: '',
+        barber: '',
+        service: '',
+        availableTime: '',
+        clientName: '',
         appointmentDateTime: '',
-        status: 'PENDENTE', // Resetar status padrão ao criar um novo agendamento
+        status: 'PENDENTE', 
         available: true,
       });
       setAvailableTimes([]);
@@ -151,11 +179,11 @@ const DailyScheduleClient = () => {
             <h2 className="text-xl font-bold mb-4">Novo Agendamento</h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="barberId" className="block text-sm font-medium text-gray-700">Barbeiro</label>
+                <label htmlFor="barber" className="block text-sm font-medium text-gray-700">Barbeiro</label>
                 <select
-                  name="barberId"
+                  name="barber"
                   className="border rounded p-2 w-full"
-                  value={newAppointment.barberId}
+                  value={newAppointment.barber}
                   onChange={handleInputChange}
                 >
                   <option value="">Selecione um barbeiro</option>
@@ -167,11 +195,11 @@ const DailyScheduleClient = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="serviceId" className="block text-sm font-medium text-gray-700">Serviço</label>
+                <label htmlFor="service" className="block text-sm font-medium text-gray-700">Serviço</label>
                 <select
-                  name="serviceId"
+                  name="service"
                   className="border rounded p-2 w-full"
-                  value={newAppointment.serviceId}
+                  value={newAppointment.service}
                   onChange={handleInputChange}
                 >
                   <option value="">Selecione um serviço</option>
@@ -183,11 +211,11 @@ const DailyScheduleClient = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="availableTimeId" className="block text-sm font-medium text-gray-700">Horário Disponível</label>
+                <label htmlFor="availableTime" className="block text-sm font-medium text-gray-700">Horário Disponível</label>
                 <select
-                  name="availableTimeId"
+                  name="availableTime"
                   className="border rounded p-2 w-full"
-                  value={newAppointment.availableTimeId}
+                  value={newAppointment.availableTime}
                   onChange={handleInputChange}
                 >
                   <option value="">Selecione um horário</option>
@@ -199,21 +227,17 @@ const DailyScheduleClient = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nome</label>
+                <label htmlFor="clientName" className="block text-sm font-medium text-gray-700">Nome do Cliente</label>
                 <Input
-                  type="text"
-                  name="name"
-                  value={newAppointment.name}
+                  name="clientName"
+                  value={newAppointment.clientName}
                   onChange={handleInputChange}
-                  className="border rounded-lg w-full"
                 />
               </div>
-            </div>
-            <div className="mt-6 flex justify-end space-x-4">
-              <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-                Cancelar
-              </Button>
-              <Button onClick={handleCreateAppointment}>Agendar</Button>
+              <div className="flex justify-end space-x-2 mt-4">
+                <Button onClick={handleCreateAppointment} className="bg-blue-500 text-white">Confirmar</Button>
+                <Button onClick={() => setIsModalOpen(false)} className="bg-gray-500 text-white">Cancelar</Button>
+              </div>
             </div>
           </div>
         </div>
@@ -221,16 +245,12 @@ const DailyScheduleClient = () => {
 
       {isConfirmDeleteOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg max-w-sm w-full shadow-lg">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full shadow-lg">
             <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
-            <p>Tem certeza que deseja excluir este agendamento?</p>
-            <div className="mt-4 flex justify-end space-x-4">
-              <Button variant="outline" onClick={closeConfirmDeleteModal}>
-                Cancelar
-              </Button>
-              <Button onClick={handleDeleteAppointment} variant="destructive">
-                Confirmar
-              </Button>
+            <p>Você tem certeza de que deseja excluir este agendamento?</p>
+            <div className="flex justify-end mt-4 space-x-2">
+              <Button onClick={handleDeleteAppointment} className="bg-red-500 text-white">Excluir</Button>
+              <Button onClick={closeConfirmDeleteModal} className="bg-gray-500 text-white">Cancelar</Button>
             </div>
           </div>
         </div>

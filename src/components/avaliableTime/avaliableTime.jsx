@@ -3,18 +3,24 @@ import api from '@/api/api';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Edit3 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from "react-icons/io";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const AvailableTime = () => {
     const [availableTimes, setAvailableTimes] = useState([]);
     const [services, setServices] = useState([]);
     const [barbers, setBarbers] = useState([]);
-    const [selectedServiceId, setSelectedServiceId] = useState('');
-    const [selectedBarberId, setSelectedBarberId] = useState('');
+    const [selectedService, setSelectedService] = useState('');
+    const [selectedBarber, setSelectedBarber] = useState('');
     const [timeStart, setTimeStart] = useState('');
     const [timeEnd, setTimeEnd] = useState('');
     const [editableRowId, setEditableRowId] = useState(null);
@@ -50,7 +56,7 @@ const AvailableTime = () => {
 
     const fetchBarbers = async () => {
         try {
-            const response = await api.get('/api/barbers');
+            const response = await api.get('/api/barber');
             setBarbers(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             toast.error('Erro ao buscar barbeiros.');
@@ -58,35 +64,50 @@ const AvailableTime = () => {
         }
     };
 
+    const addThreeHours = (time) => {
+        if (!time) return '';
+        const date = dayjs(`1970-01-01T${time}`);
+        return date.add(3, 'hour').format('HH:mm');
+    };
+
+    const formatToISODateTime = (time) => {
+        if (!time) return '';
+        const today = dayjs().format('YYYY-MM-DD');
+        const dateTime = dayjs(`${today}T${addThreeHours(time)}`);
+        return dateTime.isValid() ? dateTime.toISOString() : '';
+    };
+
+    const formatTimeDisplay = (time) => {
+        return dayjs(time).format('HH:mm');
+    };
+
     const handleAddOrUpdateAvailableTime = async () => {
-        if (!selectedServiceId || !selectedBarberId || !timeStart || !timeEnd) {
+        if (!selectedService || !selectedBarber || !timeStart || !timeEnd) {
             toast.error('Serviço, barbeiro, horário de início e fim são obrigatórios.');
             return;
         }
 
         try {
+            const requestData = {
+                service: Number(selectedService),
+                barber: Number(selectedBarber),
+                timeStart: formatToISODateTime(timeStart),
+                timeEnd: formatToISODateTime(timeEnd),
+                isScheduled: false
+            };
+
             if (editableRowId) {
-                await api.put(`/api/available-times/${editableRowId}`, {
-                    serviceId: selectedServiceId,
-                    barberId: selectedBarberId,
-                    timeStart,
-                    timeEnd
-                });
+                await api.put(`/api/available-times/${editableRowId}`, requestData);
                 toast.success('Horário atualizado com sucesso!');
                 setEditableRowId(null);
             } else {
-                await api.post('/api/available-times', {
-                    serviceId: selectedServiceId,
-                    barberId: selectedBarberId,
-                    timeStart,
-                    timeEnd
-                });
+                await api.post('/api/available-times', requestData);
                 toast.success('Horário adicionado com sucesso!');
             }
 
             fetchAvailableTimes();
-            setSelectedServiceId('');
-            setSelectedBarberId('');
+            setSelectedService('');
+            setSelectedBarber('');
             setTimeStart('');
             setTimeEnd('');
             setIsModalOpen(false);
@@ -111,19 +132,10 @@ const AvailableTime = () => {
         }
     };
 
-    const handleEditClick = (row) => {
-        setEditableRowId(row.id);
-        setSelectedServiceId(row.serviceId);
-        setSelectedBarberId(row.barberId);
-        setTimeStart(row.timeStart);
-        setTimeEnd(row.timeEnd);
-        setIsModalOpen(true);
-    };
-
     const openModalForNewAvailableTime = () => {
         setEditableRowId(null);
-        setSelectedServiceId('');
-        setSelectedBarberId('');
+        setSelectedService('');
+        setSelectedBarber('');
         setTimeStart('');
         setTimeEnd('');
         setIsModalOpen(true);
@@ -146,14 +158,13 @@ const AvailableTime = () => {
 
     const tableRows = availableTimes.map((row, index) => (
         <TableRow key={row.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
-            <TableCell className="text-center px-4 py-2">{getServiceById(row.serviceId)}</TableCell>
-            <TableCell className="text-center px-4 py-2">{getBarberById(row.barberId)}</TableCell>
-            <TableCell className="text-center px-4 py-2">{row.timeStart} - {row.timeEnd}</TableCell>
+            <TableCell className="text-center px-4 py-2">{getServiceById(row.service)}</TableCell>
+            <TableCell className="text-center px-4 py-2">{getBarberById(row.barber)}</TableCell>
+            <TableCell className="text-center px-4 py-2">
+                {`${formatTimeDisplay(row.timeStart)} - ${formatTimeDisplay(row.timeEnd)}`}
+            </TableCell>
             <TableCell className="text-center px-4 py-2">
                 <div className="flex justify-center space-x-4">
-                    <button onClick={() => handleEditClick(row)}>
-                        <Edit3 className="w-4 h-4 text-blue-500 hover:text-blue-700" />
-                    </button>
                     <button onClick={() => openConfirmDeleteModal(row)}>
                         <Trash2 className="w-4 h-4 text-red-500 hover:text-red-700" />
                     </button>
@@ -191,35 +202,20 @@ const AvailableTime = () => {
                 </Table>
             </div>
 
-            {/* Modal de confirmação de exclusão */}
-            {isConfirmDeleteOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg max-w-md w-full">
-                        <h2 className="text-xl font-bold mb-4">Confirmar Exclusão</h2>
-                        <p className="mb-4">Você tem certeza que deseja excluir este horário?</p>
-                        <div className="flex justify-end space-x-4">
-                            <Button variant="outline" onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
-                            <Button onClick={handleRemoveAvailableTimeItem}>Excluir</Button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg max-w-md w-full">
-                        <h2 className="text-xl font-bold mb-4">{editableRowId ? 'Editar Horário' : 'Adicionar Horário'}</h2>
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-6 rounded shadow-lg w-full max-w-lg">
+                        <h2 className="text-2xl font-bold mb-4">{editableRowId ? 'Editar Horário' : 'Adicionar Horário'}</h2>
                         <div className="space-y-4">
                             <div>
-                                <label htmlFor="serviceId" className="block text-sm font-medium text-gray-700">Serviço</label>
+                                <label className="block text-gray-700">Serviço:</label>
                                 <select
-                                    name="serviceId"
-                                    className="border rounded p-2 w-full"
-                                    value={selectedServiceId}
-                                    onChange={(e) => setSelectedServiceId(e.target.value)}
+                                    value={selectedService}
+                                    onChange={(e) => setSelectedService(e.target.value)}
+                                    className="w-full p-2 border rounded"
                                 >
                                     <option value="">Selecione um serviço</option>
-                                    {services.map(service => (
+                                    {services.map((service) => (
                                         <option key={service.id} value={service.id}>
                                             {service.name}
                                         </option>
@@ -227,15 +223,14 @@ const AvailableTime = () => {
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor="barberId" className="block text-sm font-medium text-gray-700">Barbeiro</label>
+                                <label className="block text-gray-700">Barbeiro:</label>
                                 <select
-                                    name="barberId"
-                                    className="border rounded p-2 w-full"
-                                    value={selectedBarberId}
-                                    onChange={(e) => setSelectedBarberId(e.target.value)}
+                                    value={selectedBarber}
+                                    onChange={(e) => setSelectedBarber(e.target.value)}
+                                    className="w-full p-2 border rounded"
                                 >
                                     <option value="">Selecione um barbeiro</option>
-                                    {barbers.map(barber => (
+                                    {barbers.map((barber) => (
                                         <option key={barber.id} value={barber.id}>
                                             {barber.name}
                                         </option>
@@ -243,35 +238,53 @@ const AvailableTime = () => {
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor="timeStart" className="block text-sm font-medium text-gray-700">Horário de Início</label>
+                                <label className="block text-gray-700">Início:</label>
                                 <Input
                                     type="time"
-                                    name="timeStart"
                                     value={timeStart}
                                     onChange={(e) => setTimeStart(e.target.value)}
+                                    className="w-full p-2 border rounded"
                                 />
                             </div>
                             <div>
-                                <label htmlFor="timeEnd" className="block text-sm font-medium text-gray-700">Horário de Fim</label>
+                                <label className="block text-gray-700">Fim:</label>
                                 <Input
                                     type="time"
-                                    name="timeEnd"
                                     value={timeEnd}
                                     onChange={(e) => setTimeEnd(e.target.value)}
+                                    className="w-full p-2 border rounded"
                                 />
                             </div>
+                            <div className="flex justify-end space-x-4">
+                                <Button onClick={handleAddOrUpdateAvailableTime}>
+                                    {editableRowId ? 'Atualizar' : 'Adicionar'}
+                                </Button>
+                                <Button onClick={() => setIsModalOpen(false)} variant="secondary">
+                                    Cancelar
+                                </Button>
+                            </div>
                         </div>
-                        <div className="mt-6 flex justify-end space-x-4">
-                            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-                                Cancelar
+                    </div>
+                </div>
+            )}
+
+            {isConfirmDeleteOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-6 rounded shadow-lg w-full max-w-lg">
+                        <h2 className="text-2xl font-bold mb-4">Confirmação de Exclusão</h2>
+                        <p className="mb-4">Você tem certeza que deseja remover este horário?</p>
+                        <div className="flex justify-end space-x-4">
+                            <Button onClick={handleRemoveAvailableTimeItem} variant="danger">
+                                Confirmar
                             </Button>
-                            <Button onClick={handleAddOrUpdateAvailableTime}>
-                                {editableRowId ? 'Salvar' : 'Adicionar'}
+                            <Button onClick={() => setIsConfirmDeleteOpen(false)} variant="secondary">
+                                Cancelar
                             </Button>
                         </div>
                     </div>
                 </div>
             )}
+
             <ToastContainer />
         </div>
     );

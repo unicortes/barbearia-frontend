@@ -15,11 +15,8 @@ const History = () => {
 
   const fetchHistorysAdmin = async () => {
     try {
-      const response = await api.get('/api/appointments', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }); 
+    
+      const response = await api.get('/api/appointments'); 
       setHistorys(response.data);
     } catch (error) {
       toast.error('Erro ao recuperar historico');
@@ -28,11 +25,8 @@ const History = () => {
 
   const fetchHistorys = async () => {
     try {
-      const response = await api.get(`/api/appointments/barber/${idUser}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }); 
+      
+      const response = await api.get(`/api/appointments/barber/${idUser}`); 
       setHistorys(response.data);
     } catch (error) {
       toast.error('Erro ao recuperar historico');

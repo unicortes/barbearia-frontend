@@ -63,7 +63,7 @@ const router = createBrowserRouter([
         element: <LoyaltyCard />,
       },
       {
-        path: "/sales", // Rota para a página de promoções
+        path: "/promotions", // Rota para a página de promoções
         element: <Sale />,
       },
       {

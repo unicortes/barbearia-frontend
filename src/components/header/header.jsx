@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
-  BsList, BsPeople as BsBarber, BsBasket as BsProductStock, BsScissors as BsService, BsScissors, BsCalendar3Week as BsAppointments, BsBox, BsTag, BsCardChecklist, BsCart as BsProduct, BsPerson, BsClipboardData as BsHistorys,
-  BsClockHistory as BsAvaliableTime
+  BsList, BsPeople as BsBarber, BsBasket as BsProductStock, BsScissors as BsService, BsScissors, BsCalendar3Week as BsAppointments,
+  BsTag, BsCardChecklist, BsCart as BsProduct, BsPerson, BsClipboardData as BsHistorys, BsClockHistory as BsAvaliableTime
 } from "react-icons/bs";
 import Modal from "react-modal";
 
@@ -115,7 +115,7 @@ const Header = () => {
               </Link>
               <Link to="/historys" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
                 <BsHistorys className="mr-2" />
-                Histórico
+                Histórico de Agendamentos
               </Link>
             </>
           )}

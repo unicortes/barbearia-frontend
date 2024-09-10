@@ -144,10 +144,16 @@ const Header = () => {
             </>
           )}
           {userRole === "CLIENT" && (
-            <Link to="/appointment" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
-              <BsAppointments className="mr-2" />
-              Agendar Serviços
-            </Link>
+            <>
+              <Link to="/appointment" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsAppointments className="mr-2" />
+                Agendar Serviços
+              </Link>
+              <Link to="/historysClient" className="text-white block p-2 rounded hover:bg-gray-700 flex items-center">
+                <BsHistorys className="mr-2" />
+                Histórico de Agendamentos
+              </Link>
+            </>                       
           )}
         </nav>
       </div>

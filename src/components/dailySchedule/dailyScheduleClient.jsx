@@ -57,7 +57,7 @@ const DailyScheduleClient = () => {
     }
   };
 
-  const fetchAvailableTimes = async (barber, service) => {
+  const fetchAvailableTimes = async (service) => {
     try {
       const response = await api.get(`/api/available-times?service=${service}`);
       console.log("Fetched Available Times:", response.data);
@@ -85,7 +85,7 @@ const DailyScheduleClient = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Input Change - ${name}: ${value}`); // Adicionado para depuração
+    console.log(`Input Change - ${name}: ${value}`); 
     setNewAppointment((prev) => ({
       ...prev,
       [name]: value,
@@ -99,14 +99,13 @@ const DailyScheduleClient = () => {
         return;
       }
       const selectedTime = availableTimes.find(time => time.id === parseInt(newAppointment.availableTime, 10));
-      console.log("Selected Time:", selectedTime); // Adicionado para depuração
       
       if (!selectedTime) {
         toast.error('Horário selecionado é inválido.');
         return;
       }
 
-      const timeStart = selectedTime.timeStart; // Mantém o formato de hora
+      const timeStart = selectedTime.timeStart; 
       const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD');
       const appointmentDateTime = `${formattedDate}T${timeStart}:00`;
 
@@ -117,7 +116,6 @@ const DailyScheduleClient = () => {
         availableTime: parseInt(newAppointment.availableTime, 10),
         appointmentDateTime,
       };
-      console.log("Appointment Data:", appointmentData); // Adicionado para depuração
       await api.post("/api/appointments", appointmentData);
       setIsModalOpen(false);
       setNewAppointment({

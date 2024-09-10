@@ -200,6 +200,16 @@ const HomePage = () => {
                 </CardHeader>
               </Card>
             </Link>
+            <Link to="/historys" className="w-full">
+                <Card className="h-[180px] flex flex-col justify-between p-4">
+                  <CardHeader className="flex flex-col items-center flex-grow">
+                    <FaHistory className="text-gray-800 w-16 h-16" />
+                    <CardTitle className="mt-2 text-center text-lg font-semibold">
+                      Histórico
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </Link>
             {/* 
             <Link to="/*" className="w-full">
               <Card className="h-[180px] flex flex-col justify-between p-4">

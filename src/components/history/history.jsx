@@ -23,10 +23,19 @@ const History = () => {
     }
   };
 
-  const fetchHistorys = async () => {
+  const fetchHistorysBarber = async () => {
     try {
       
       const response = await api.get(`/api/appointments/barber/${idUser}`); 
+      setHistorys(response.data);
+    } catch (error) {
+      toast.error('Erro ao recuperar historico');
+    }
+  };
+  const fetchHistorysClient = async () => {
+    try {
+      
+      const response = await api.get(`/api/appointments/client/${idUser}`); 
       setHistorys(response.data);
     } catch (error) {
       toast.error('Erro ao recuperar historico');
@@ -48,7 +57,9 @@ const History = () => {
       if (role?.trim() === 'ADMIN') {
         fetchHistorysAdmin();
       }else if(role?.trim() =='BARBER'){
-        fetchHistorys();
+        fetchHistorysBarber();
+      }else if(role?.trim() =='CLIENT'){
+        fetchHistorysClient();
       }
       
     }
